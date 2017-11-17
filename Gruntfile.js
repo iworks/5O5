@@ -31,16 +31,14 @@ module.exports = function( grunt ) {
 		js_files_concat: {
 			'{js}admin/5o5.js': [
 				'{js}admin/src/datepicker.js',
-				'{js}admin/src/invoice.js',
+				'{js}admin/src/boat.js',
 				'{js}admin/src/select2.js'
 			]
 		},
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-				'{css}admin/post-type-invoice.css': '{css}src/admin/post-type-invoice.scss',
-				'{css}admin/wordpress-admin-dashboard.css': '{css}src/admin/wordpress-admin-dashboard.scss',
-				'{css}admin/reports.css': '{css}src/admin/reports.scss'
+				'{css}admin/post-type-boat.css': '{css}src/admin/post-type-boat.scss'
 		},
 		css_files_concat: {
 			'{css}5o5-admin.css': [ '{css}admin/*.css' ]
