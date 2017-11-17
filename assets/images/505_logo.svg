@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   style="shape-rendering:crispEdges"
+   viewBox="0 0 1062.9921 1062.9921"
+   height="30cm"
+   width="30cm"
+   version="1.1"
+   id="svg4282">
+  <title
+     id="title4280">505 International</title>
+  <metadata
+     id="metadata4288">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>505 International</dc:title>
+        <dc:publisher>
+          <cc:Agent>
+            <dc:title>Marcin Pietrzak</dc:title>
+          </cc:Agent>
+        </dc:publisher>
+        <dc:subject>
+          <rdf:Bag>
+            <rdf:li>505</rdf:li>
+          </rdf:Bag>
+        </dc:subject>
+        <cc:license
+           rdf:resource="http://creativecommons.org/publicdomain/zero/1.0/" />
+      </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/publicdomain/zero/1.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+      </cc:License>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4286" />
+  <path
+     id="path5188"
+     d="m 765.46852,239.56526 -18.87562,183.1886 c 84.9027,-32.259 172.09601,-27.562 172.09601,21.693 0,52.446 -104.64834,54.529 -175.49019,11.035 l -4.97437,48.433 c -34.60699,-84.317 -117.50185,-143.696 -214.2619,-143.696 -88.16542,0 -164.81869,49.299 -203.92122,121.842 4.13012,-12.14 6.36834,-25.814 6.29661,-41.099 -0.27717,-59.07 -54.87867,-124.008 -165.14476,-96.465 l 3.30513,-35.267 142.49121,0 7.34446,-69.0564 -213.5788,0 -18.875582,183.1884 c 84.902822,-32.259 172.097172,-27.562 172.097172,21.693 0,52.447 -104.64955,54.529 -175.491399,11.035 l -6.546104,63.736 c 65.222413,53.198 192.570673,55.913 237.895603,-16.236 -11.21062,27.194 -17.39766,56.99 -17.39766,88.233 0,127.911 103.65799,231.604 231.52534,231.604 127.8672,0 231.52412,-103.693 231.52412,-231.604 0,-22.771 -3.28834,-44.774 -9.41046,-65.562 83.78651,57.494 245.57742,42.418 244.97517,-85.907 -0.2772,-59.07 -54.87861,-124.008 -165.14477,-96.466 l 3.30513,-35.267 142.4912,0 7.34446,-69.0556 z m -241.50607,189.1896 c 89.56699,0 162.17468,72.634 162.17468,162.232 0,89.597 -72.60769,162.23 -162.17468,162.23 -89.56701,0 -162.17585,-72.633 -162.17585,-162.23 0,-89.598 72.60884,-162.232 162.17585,-162.232 z"
+     style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:4.99999952;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+</svg>

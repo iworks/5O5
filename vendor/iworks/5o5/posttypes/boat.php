@@ -32,7 +32,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_boat';
 	private $custom_field_year = 'year';
-	private $contractor_post_type_object = null;
+	private $builder_post_type_object = null;
 
 	public function __construct() {
 		parent::__construct();
@@ -50,12 +50,12 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 						'default' => date_i18n( 'Y-m-d', time() ),
 					),
 				),
-				'contractor' => array(
+				'builder' => array(
 					'type' => 'select2',
-					'label' => __( 'Contractor', '5o5' ),
+					'label' => __( 'builder', '5o5' ),
 					'args' => array(
-						'data-source' => 'contractor',
-						'data-nonce-action' => 'get-contractors-list',
+						'data-source' => 'builder',
+						'data-nonce-action' => 'get-builders-list',
 					),
 				),
 				'description' => array(
@@ -285,7 +285,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'exclude_from_search'   => true,
 			'publicly_queryable'    => false,
 			'capability_type'       => 'page',
-			'menu_icon'             => 'dashicons-book',
+			'menu_icon'             => plugins_url( '/assets/images/505_logo.svg', $this->base ),
 			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
 		);
 		register_post_type( $this->post_type_name, $args );
@@ -468,8 +468,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
-			case 'contractor':
-				$id = get_post_meta( $post_id, $this->get_custom_field_basic_contractor_name() , true );
+			case 'builder':
+				$id = get_post_meta( $post_id, $this->get_custom_field_basic_builder_name() , true );
 				if ( empty( $id ) ) {
 					echo '-';
 				} else {
@@ -477,12 +477,12 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 						'<a href="%s">%s</a>',
 						add_query_arg(
 							array(
-								'contractor' => $id,
+								'builder' => $id,
 								'post_type' => 'iworks_5o5_boat',
 							),
 							admin_url( 'edit.php' )
 						),
-						get_post_meta( $id, 'iworks_5o5_contractor_data_full_name', true )
+						get_post_meta( $id, 'iworks_5o5_builder_data_full_name', true )
 					);
 				}
 			break;
@@ -547,7 +547,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	 */
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
-		$columns['contractor'] = __( 'Contractor', '5o5' );
+		$columns['builder'] = __( 'builder', '5o5' );
 		$columns['date_of_boat'] = __( 'Date', '5o5' );
 		$columns['symbol'] = '<span class="dashicons dashicons-admin-generic"></span>';
 		$columns['description'] = __( 'Description', '5o5' );
@@ -601,7 +601,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 			$query->set( 'orderby', 'meta_value_num' );
-			if ( isset( $_REQUEST['contractor'] ) && $_REQUEST['contractor'] ) {
+			if ( isset( $_REQUEST['builder'] ) && $_REQUEST['builder'] ) {
 				$query->set(
 					'meta_query',
 					array(
@@ -611,8 +611,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 							'compare' => 'EXISTS',
 						),
 						array(
-							'key' => $this->options->get_option_name( 'basic_contractor' ),
-							'value' => intval( $_REQUEST['contractor'] ),
+							'key' => $this->options->get_option_name( 'basic_builder' ),
+							'value' => intval( $_REQUEST['builder'] ),
 						),
 					)
 				);
@@ -646,14 +646,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	}
 
 	/**
-	 * Get "basic_contractor" custom filed name.
+	 * Get "basic_builder" custom filed name.
 	 *
 	 * @since 1.0.0
 	 *
 	 * @return string Custom Field meta_key.
 	 */
-	public function get_custom_field_basic_contractor_name() {
-		return $this->options->get_option_name( 'basic_contractor' );
+	public function get_custom_field_basic_builder_name() {
+		return $this->options->get_option_name( 'basic_builder' );
 	}
 }
 
