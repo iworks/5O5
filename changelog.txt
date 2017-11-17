@@ -1,0 +1,5 @@
+Plugin Name: 5O5
+Author: Marcin Pietrzak ( iworks.pl )
+
+== Changelog ==
+
