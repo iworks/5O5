@@ -78,6 +78,7 @@ function iworks_5o5_activate() {
 	$iworks_5o5_options->set_option_function_name( 'iworks_5o5_options' );
 	$iworks_5o5_options->set_option_prefix( IWORKS_5O5_PREFIX );
 	$iworks_5o5_options->activate();
+	add_role( 'sailor', __( 'Sailor', '5o5' ), array( 'read' => true, 'level_0' => true ) );
 }
 
 function iworks_5o5_deactivate() {

@@ -33,6 +33,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	protected $post_type_name = 'iworks_5o5_boat';
 	private $custom_field_year = 'year';
 	private $builder_post_type_object = null;
+	protected $taxonomy_name_builder = 'iworks_5o5_boat_builder';
 
 	public function __construct() {
 		parent::__construct();
@@ -238,7 +239,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	}
 
 	public function register() {
-
 		$labels = array(
 			'name'                  => _x( 'Boats', 'Boat General Name', '5o5' ),
 			'singular_name'         => _x( 'Boat', 'Boat Singular Name', '5o5' ),
@@ -272,7 +272,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'label'                 => __( 'Boat', '5o5' ),
 			'description'           => __( 'Boat Description', '5o5' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title' ),
+			'supports'              => array( 'title', 'editor' ),
 			'taxonomies'            => array(),
 			'hierarchical'          => false,
 			'public'                => false,
@@ -289,6 +289,38 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
 		);
 		register_post_type( $this->post_type_name, $args );
+		$labels = array(
+			'name'                       => _x( 'Builders', 'Taxonomy General Name', 'text_domain' ),
+			'singular_name'              => _x( 'Builder', 'Taxonomy Singular Name', 'text_domain' ),
+			'menu_name'                  => __( 'Builder', 'text_domain' ),
+			'all_items'                  => __( 'All Builders', 'text_domain' ),
+			'parent_item'                => __( 'Parent Builder', 'text_domain' ),
+			'parent_item_colon'          => __( 'Parent Builder:', 'text_domain' ),
+			'new_item_name'              => __( 'New Builder Name', 'text_domain' ),
+			'add_new_item'               => __( 'Add New Builder', 'text_domain' ),
+			'edit_item'                  => __( 'Edit Builder', 'text_domain' ),
+			'update_item'                => __( 'Update Builder', 'text_domain' ),
+			'view_item'                  => __( 'View Builder', 'text_domain' ),
+			'separate_items_with_commas' => __( 'Separate items with commas', 'text_domain' ),
+			'add_or_remove_items'        => __( 'Add or remove items', 'text_domain' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
+			'popular_items'              => __( 'Popular Builders', 'text_domain' ),
+			'search_items'               => __( 'Search Builders', 'text_domain' ),
+			'not_found'                  => __( 'Not Found', 'text_domain' ),
+			'no_terms'                   => __( 'No items', 'text_domain' ),
+			'items_list'                 => __( 'Builders list', 'text_domain' ),
+			'items_list_navigation'      => __( 'Builders list navigation', 'text_domain' ),
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => false,
+			'public'                     => true,
+			'show_ui'                    => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+		);
+		register_taxonomy( $this->taxonomy_name_builder, array( $this->post_type_name ), $args );
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {
@@ -380,8 +412,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 		foreach ( $the_query->posts as $post_id ) {
 			/**
-		 * check is car related cost
-		 */
+			 * check is car related cost
+			 */
 			$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
 			$is_car_related = 'yes' == $is_car_related;
 
@@ -477,8 +509,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 						'<a href="%s">%s</a>',
 						add_query_arg(
 							array(
-								'builder' => $id,
-								'post_type' => 'iworks_5o5_boat',
+							'builder' => $id,
+							'post_type' => 'iworks_5o5_boat',
 							),
 							admin_url( 'edit.php' )
 						),

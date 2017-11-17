@@ -31,6 +31,7 @@ class iworks_5o5_posttypes {
 	protected $options;
 	protected $fields;
 	protected $post_type_objects = array();
+	protected $base;
 
 	public function __construct() {
 		global $iworks_5o5_options;
@@ -40,6 +41,7 @@ class iworks_5o5_posttypes {
 		 * save post
 		 */
 		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 3 );
+		$this->base = preg_replace( '/iworks.+/', '', __FILE__ );
 	}
 
 	public function get_name() {
