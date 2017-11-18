@@ -31,163 +31,65 @@ require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_boat';
-	private $custom_field_year = 'year';
-	private $builder_post_type_object = null;
 	protected $taxonomy_name_builder = 'iworks_5o5_boat_builder';
 
 	public function __construct() {
 		parent::__construct();
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
+		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
+		add_filter( 'default_title', array( $this, 'default_title' ), 10, 2 );
 		/**
 		 * fields
 		 */
 		$this->fields = array(
-			'basic' => array(
-				'date' => array(
+			'boat' => array(
+				'build_year' => array(
 					'type' => 'date',
-					'label' => __( 'Event date', '5o5' ),
+					'label' => __( 'Year of building', '5o5' ),
 					'args' => array(
 						'class' => array( 'medium-text' ),
-						'default' => date_i18n( 'Y-m-d', time() ),
-					),
-				),
-				'builder' => array(
-					'type' => 'select2',
-					'label' => __( 'builder', '5o5' ),
-					'args' => array(
-						'data-source' => 'builder',
-						'data-nonce-action' => 'get-builders-list',
-					),
-				),
-				'description' => array(
-					'label' => __( 'Boat description', '5o5' ),
-				),
-				'type' => array(
-					'type' => 'radio',
-					'args' => array(
-						'options' => array(
-							'income' => array(
-								'label' => __( 'Income', '5o5' ),
-							),
-							'expense' => array(
-								'label' => __( 'Expense', '5o5' ),
-							),
-							'salary' => array(
-								'label' => __( 'Salary', '5o5' ),
-							),
-							'asset' => array(
-								'label' => __( 'Asset', '5o5' ),
-							),
-							'insurance' => array(
-								'label' => __( 'Insurance', '5o5' ),
-							),
+						'default' => date_i18n( 'Y', time() ),
+						'data' => array(
+							'date-format' => 'yy',
 						),
-						'default' => 'expense',
-					),
-					'label' => __( 'Type', '5o5' ),
-				),
-			),
-			'income' => array(
-				'description' => array(
-					'type' => 'description',
-					'args' => array(
-						'value' => __( 'Please first choose boat type.', '5o5' ),
-						'class' => 'description',
 					),
 				),
-				'sale' => array(
-					'type' => 'money',
-					'label' => __( 'Value of goods and services sold', '5o5' ),
+				'name' => array(
+					'label' => __( 'Boat name', '5o5' ),
 				),
-				'other' => array(
-					'type' => 'money',
-					'label' => __( 'Other income', '5o5' ),
+				'color_top' => array(
+					'label' => __( 'Color top', '5o5' ),
 				),
-				'vat' => array(
-					'type' => 'money',
-					'label' => __( 'VAT', '5o5' ),
+				'color_side' => array(
+					'label' => __( 'Color side', '5o5' ),
 				),
-				'vat_type' => array(
-					'type' => 'radio',
+				'color_bottom' => array(
+					'label' => __( 'Color bottom', '5o5' ),
+				),
+				'in_poland_date' => array(
+					'type' => 'date',
+					'label' => __( 'In Poland:', '5o5' ),
 					'args' => array(
-						'options' => array(
-							'c01' => array(
-								'label' => __( '1. Dostawa towarów oraz świadczenie usług na terytorium kraju, zwolnione od podatku', '5o5' ),
-							),
-							'c06' => array(
-								'label' => __( '6. Dostawa towarów oraz świadczenie usług na terytorium kraju, opodatkowane stawką 22% albo 23%', '5o5' ),
-							),
+						'class' => array( 'medium-text' ),
+						'default' => date_i18n( 'Y-m', time() ),
+						'data' => array(
+							'date-format' => 'yy-mm',
 						),
-						'default' => 'c06',
 					),
 				),
-			),
-			'expense' => array(
-				'description' => array(
-					'type' => 'description',
-					'args' => array(
-						'value' => __( 'Please first choose boat type.', '5o5' ),
-						'class' => 'description',
-					),
+				'sails' => array(
+					'label' => __( 'Sails producer name', '5o5' ),
 				),
-				'purchase' => array(
-					'type' => 'money',
-					'label' => __( 'The purchase of commercial goods and materials, according to the purchase price', '5o5' ),
+				'mast' => array(
+					'label' => __( 'Mast', '5o5' ),
 				),
-				'cost_of_purchase' => array(
-					'type' => 'money',
-					'label' => __( 'Incidental costs of purchase', '5o5' ),
+				'location' => array(
+					'label' => __( 'Location', '5o5' ),
 				),
-				'other' => array(
-					'type' => 'money',
-					'label' => __( 'Other expenses', '5o5' ),
-				),
-				'vat' => array(
-					'type' => 'money',
-					'label' => __( 'VAT', '5o5' ),
-				),
-				'car' => array(
+				'double_pole' => array(
+					'label' => __( 'Double pole', '5o5' ),
 					'type' => 'checkbox',
-					'label' => __( 'Car related', '5o5' ),
-					'description' => __( 'It will be calculated as half VAT return.', '5o5' ),
-					'type' => 'radio',
-					'args' => array(
-						'options' => array(
-							'yes' => array(
-								'label' => __( 'Yes', '5o5' ),
-							),
-							'no' => array(
-								'label' => __( 'No', '5o5' ),
-							),
-						),
-						'default' => 'no',
-					),
-				),
-			),
-			'salary' => array(
-				'salary' => array(
-					'type' => 'money',
-					'label' => __( 'Salary in cash and in kind', '5o5' ),
-				),
-			),
-			'asset' => array(
-				'depreciation' => array(
-					'type' => 'money',
-					'label' => __( 'Depreciation of asset', '5o5' ),
-				),
-			),
-			'insurance' => array(
-				'zus51' => array(
-					'type' => 'money',
-					'label' => __( 'ZUS 51', '5o5' ),
-				),
-				'zus52' => array(
-					'type' => 'money',
-					'label' => __( 'ZUS 52', '5o5' ),
-				),
-				'zus53' => array(
-					'type' => 'money',
-					'label' => __( 'ZUS 53', '5o5' ),
+					'args' => array(),
 				),
 			),
 		);
@@ -272,21 +174,24 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'label'                 => __( 'Boat', '5o5' ),
 			'description'           => __( 'Boat Description', '5o5' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor' ),
-			'taxonomies'            => array(),
+			'supports'              => array( 'title', 'editor', 'thumbnail' ),
+			'taxonomies'            => array( $this->taxonomy_name_builder ),
 			'hierarchical'          => false,
-			'public'                => false,
+			'public'                => true,
 			'show_ui'               => true,
 			'show_in_menu'          => true,
 			'show_in_admin_bar'     => true,
-			'show_in_nav_menus'     => false,
+			'show_in_nav_menus'     => true,
 			'can_export'            => true,
 			'has_archive'           => true,
 			'exclude_from_search'   => true,
-			'publicly_queryable'    => false,
+			'publicly_queryable'    => true,
 			'capability_type'       => 'page',
 			'menu_icon'             => plugins_url( '/assets/images/505_logo.svg', $this->base ),
 			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
+			'rewrite' => array(
+				'slug' => '5o5-boat',
+			),
 		);
 		register_post_type( $this->post_type_name, $args );
 		$labels = array(
@@ -314,11 +219,11 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		$args = array(
 			'labels'                     => $labels,
 			'hierarchical'               => false,
-			'public'                     => true,
-			'show_ui'                    => true,
 			'show_admin_column'          => true,
-			'show_in_nav_menus'          => true,
-			'show_tagcloud'              => true,
+			'show_in_quick_edit' => true,
+			'rewrite' => array(
+				'slug' => '5o5-manufacturer',
+			),
 		);
 		register_taxonomy( $this->taxonomy_name_builder, array( $this->post_type_name ), $args );
 	}
@@ -334,159 +239,102 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	 */
 	public function enter_title_here( $title, $post ) {
 		if ( $post->post_type == $this->post_type_name ) {
-			return __( 'Enter boat number', '5o5' );
+			return __( 'Enter boat number eg. POL 7020', '5o5' );
+		}
+		return $title;
+	}
+	/**
+	 *
+	 * @since 1.0
+	 */
+	public function default_title( $title, $post ) {
+		if ( ! empty( $title ) ) {
+			return $title;
+		}
+		if ( $post->post_type == $this->post_type_name ) {
+			return __( 'POL ', '5o5' );
 		}
 		return $title;
 	}
 
-	public function register_meta_boxes( $post ) {
-		add_meta_box( 'basic', __( 'Basic Data', '5o5' ), array( $this, 'basic' ), $this->post_type_name );
-		add_meta_box( 'income', __( 'Incomes', '5o5' ), array( $this, 'income' ), $this->post_type_name );
-		add_meta_box( 'expense', __( 'Expenses (costs)', '5o5' ), array( $this, 'expense' ), $this->post_type_name );
-		add_meta_box( 'salary', __( 'Salaries', '5o5' ), array( $this, 'salary' ), $this->post_type_name );
-		add_meta_box( 'asset', __( 'Assets', '5o5' ), array( $this, 'asset' ), $this->post_type_name );
-		add_meta_box( 'insurance', __( 'Insurances (ZUS)', '5o5' ), array( $this, 'insurance' ), $this->post_type_name );
-	}
-
-	public function basic( $post ) {
-		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
-	}
-
-	public function income( $post ) {
-		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
-	}
-
-	public function expense( $post ) {
-		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
-	}
-
-	public function salary( $post ) {
-		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
-	}
-
-	public function asset( $post ) {
-		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
-	}
-
-	public function insurance( $post ) {
-		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
-	}
-
-	public function save_year_month_to_extra_field( $post_id, $option_name, $value, $key, $data ) {
-		if ( 'date' == $key ) {
-			$name = $this->get_custom_field_year_month_name();
-			$value = date( 'Y-m', $value );
-			$result = add_post_meta( $post_id, $name, $value, true );
-			if ( ! $result ) {
-				update_post_meta( $post_id, $name, $value );
-			}
+	/**
+	 *
+	 * @since 1.0
+	 */
+	public function the_content( $content ) {
+		if ( ! is_singular() ) {
+			return $content;
 		}
-	}
-
-	public function close_meta_boxes( $classes ) {
-		$classes[] = 'closed';
-		return $classes;
-	}
-
-	public function month_table( $month ) {
-		$args = array(
-			'post_type' => $this->get_name(),
-			'meta_value' => $month,
-			'meta_key' => $this->get_custom_field_year_month_name(),
-			'nopaging' => true,
-			'fields' => 'ids',
-			'post_status' => array( 'published' ),
-		);
-		$the_query = new WP_Query( $args );
-
-		$data = array(
-			'income' => 0,
-			'expense' => 0,
-			'expense_vat' => 0,
-			'vat_income' => 0,
-			'vat_expense' => 0,
-			'vat_zero' => 0,
-			'salary' => 0,
-			'asset' => 0,
-		);
-
-		foreach ( $the_query->posts as $post_id ) {
-			/**
-			 * check is car related cost
-			 */
-			$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
-			$is_car_related = 'yes' == $is_car_related;
-
-			$data['income'] += $this->add_value( $post_id, 'income_sale' );
-			$data['income'] += $this->add_value( $post_id, 'income_other' );
-			$data['vat_income'] += $this->add_value( $post_id, 'income_vat' );
-
-			$expense = 0;
-			$expense += $this->add_value( $post_id, 'expense_purchase' );
-			$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
-			$expense += $this->add_value( $post_id, 'expense_other' );
-			$data['expense'] += $expense;
-
-			$salary = 0;
-			$salary += $this->add_value( $post_id, 'salary_salary' );
-			$data['salary'] += $salary;
-			$data['expense'] += $salary;
-
-			$asset = 0;
-			$asset += $this->add_value( $post_id, 'asset_depreciation' );
-			$data['asset'] += $asset;
-			$data['expense'] += $asset;
-
-			$vat_expense = $this->add_value( $post_id, 'expense_vat' );
-			if ( $vat_expense ) {
-				if ( $is_car_related ) {
-					$vat_expense /= 2;
-					$data['vat_expense'] += $vat_expense;
-					$data['expense_vat'] += $expense + $vat_expense;
-					$data['expense'] += $vat_expense;
+		$post_type = get_post_type();
+		if ( $post_type == $this->post_type_name ) {
+			$text = '';
+			$options = array(
+				'boat_build_year' => __( 'Year of building:', '5o5' ),
+			'producer' => __( 'Hull manufacturer:', '5o5' ),
+			   'boat_in_poland_date' => __( 'In Poland:', '5o5' ),
+			   'boat_name' => __( 'Name:', '5o5' ),
+			   'colors' => __( 'Colors (top/side/bottom):', '5o5' ),
+			   'boat_sails' => __( 'Sails on:', '5o5' ),
+			   'boat_mast' => __( 'Mast:', '5o5' ),
+			   'boat_double_pole' => __( 'Double pole:', '5o5' ),
+			);
+			foreach ( $options as $key => $label ) {
+				$name = $this->options->get_option_name( $key );
+				$value = get_post_meta( get_the_ID(), $name, true );
+				if ( empty( $value ) ) {
+					$value = _x( 'unknown', 'value of boat', '5o5' );
+					$value = '-';
+					switch ( $key ) {
+						/**
+						 * handle colors
+						 */
+						case 'colors':
+							$colors = array();
+							$colors_keys = array( 'top', 'side', 'bottom' );
+							foreach ( $colors_keys as $ckey ) {
+								$cname = $this->options->get_option_name( 'boat_color_'.$ckey );
+								$colors[] = get_post_meta( get_the_ID(), $cname, true );
+							}
+							$value = implode( '/', $colors );
+						break;
+						case 'producer':
+							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_builder );
+						break;
+					}
 				} else {
-					$data['vat_expense'] += $vat_expense;
-					$data['expense_vat'] += $expense;
+					switch ( $key ) {
+						case 'boat_build_year':
+							$value = date_i18n( 'Y', $value );
+						break;
+						case 'boat_in_poland_date':
+							$value = date_i18n( 'Y-m', $value );
+						break;
+					}
 				}
-			} else {
-				$data['vat_zero'] += $expense;
+				$text .= $this->boat_single_row( $key, $label, $value );
+			}
+			if ( ! empty( $text ) ) {
+				$content = sprintf( '<table>%s</table>%s', $text, $content );
 			}
 		}
-
-		$labels = array(
-			'income' => __( 'Incomes', '5o5' ),
-			'expense' => __( 'Expenses', '5o5' ),
-			'expense_vat' => __( 'Expenses (VAT)', '5o5' ),
-			'vat_income' => __( 'VAT (Income) ', '5o5' ),
-			'vat_expense' => __( 'VAT (Expense)', '5o5' ),
-			'vat_zero' => __( 'VAT (zero)', '5o5' ),
-			'salary' => __( 'Salaries', '5o5' ),
-			'asset' => __( 'Depreciation of assets', '5o5' ),
-		);
-		echo '<table class="striped">';
-		echo '<tbody>';
-		foreach ( $labels as $key => $label ) {
-			echo '<tr>';
-			printf( '<td>%s</td>', $label );
-			printf( '<td class="textright">%0.2f</td>', $data[ $key ] / 100 );
-			echo '</tr>';
-		}
-		echo '</tbody>';
-		echo '</table>';
+		return $content;
 	}
 
-	private function add_value( $post_id, $meta_name ) {
-		$value = 0;
-		$v = get_post_meta( $post_id, $this->options->get_option_name( $meta_name ), true );
-		if ( is_array( $v ) ) {
-			if ( isset( $v['integer'] ) ) {
-				$value += 100 * $v['integer'];
-			}
-			if ( isset( $v['fractional'] ) ) {
-				$value += $v['fractional'];
-			}
-		}
-		return $value;
+	private function boat_single_row( $key, $label, $value ) {
+		$text = '';
+		$text .= sprintf( '<tr class="boat-%s">', esc_attr( $key ) );
+		$text .= sprintf( '<td>%s</td>', esc_html( $label ) );
+		$text .= sprintf( '<td>%s</td>', $value );
+		$text .= '</tr>';
+		return $text;
+	}
+
+	public function register_meta_boxes( $post ) {
+		add_meta_box( 'boat', __( 'Boat data', '5o5' ), array( $this, 'boat' ), $this->post_type_name );
+	}
+
+	public function boat( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
 	/**
@@ -519,34 +367,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				}
 			break;
 
-			case 'expense':
-				$expense = 0;
-				$expense += $this->add_value( $post_id, 'expense_purchase' );
-				$expense += $this->add_value( $post_id, 'expense_cost_of_purchase' );
-				$expense += $this->add_value( $post_id, 'expense_other' );
-				$expense += $this->add_value( $post_id, 'expense_vat' );
-				$expense += $this->add_value( $post_id, 'salary_salary' );
-				if ( 0 == $expense ) {
-					echo '&nbsp;';
-				} else {
-					printf( '%0.2f', $expense / 100 );
-				}
-			break;
-
-			case 'income':
-				$income = 0;
-				$income += $this->add_value( $post_id, 'income_sale' );
-				$income += $this->add_value( $post_id, 'income_other' );
-				$income += $this->add_value( $post_id, 'income_vat' );
-				if ( 0 == $income ) {
-					echo '&nbsp;';
-				} else {
-					printf( '%0.2f', $income / 100 );
-				}
-			break;
-
 			case 'date_of_boat':
-				$timestamp = get_post_meta( $post_id, $this->get_custom_field_basic_date_name(), true );
+				$timestamp = get_post_meta( $post_id, 'boat_date', true );
 				if ( empty( $timestamp ) ) {
 					echo '-';
 				} else {
@@ -554,18 +376,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				}
 			break;
 
-			case 'description':
-				echo get_post_meta( $post_id, $this->options->get_option_name( 'basic_description' ), true );
-			break;
-
-			case 'symbol':
-				$is_car_related = get_post_meta( $post_id, $this->options->get_option_name( 'expense_car' ), true );
-				$is_car_related = 'yes' == $is_car_related;
-				if ( $is_car_related ) {
-					echo '<span class="dashicons dashicons-admin-generic"></span>';
-				} else {
-					echo '&nbsp;';
-				}
 		}
 	}
 
@@ -579,12 +389,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	 */
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
-		$columns['builder'] = __( 'builder', '5o5' );
 		$columns['date_of_boat'] = __( 'Date', '5o5' );
-		$columns['symbol'] = '<span class="dashicons dashicons-admin-generic"></span>';
-		$columns['description'] = __( 'Description', '5o5' );
-		$columns['expense'] = __( 'Expense', '5o5' );
-		$columns['income'] = __( 'Income', '5o5' );
 		$columns['title'] = __( 'Boat Number', '5o5' );
 		return $columns;
 	}
@@ -632,38 +437,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
-			$query->set( 'orderby', 'meta_value_num' );
-			if ( isset( $_REQUEST['builder'] ) && $_REQUEST['builder'] ) {
-				$query->set(
-					'meta_query',
-					array(
-						'relation' => 'AND',
-						array(
-							'key' => $this->get_custom_field_basic_date_name(),
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key' => $this->options->get_option_name( 'basic_builder' ),
-							'value' => intval( $_REQUEST['builder'] ),
-						),
-					)
-				);
-			} else {
-				$query->set( 'meta_key', $this->get_custom_field_basic_date_name() );
-			}
 		}
 		return $query;
-	}
-
-	/**
-	 * Get "basic_date" custom filed name.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string Custom Field meta_key.
-	 */
-	public function get_custom_field_basic_date_name() {
-		return $this->options->get_option_name( 'basic_date' );
 	}
 
 	/**
