@@ -31,7 +31,7 @@ require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_boat';
-	protected $taxonomy_name_builder = 'iworks_5o5_boat_builder';
+	protected $taxonomy_name_manufacturer = 'iworks_5o5_boat_manufacturer';
 
 	public function __construct() {
 		parent::__construct();
@@ -49,10 +49,9 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					'args' => array(
 						'class' => array( 'medium-text' ),
 						'default' => date_i18n( 'Y', time() ),
-						'data' => array(
-							'date-format' => 'yy',
-						),
+						'data-date-format' => 'yy',
 					),
+					'date-format' => 'Y',
 				),
 				'name' => array(
 					'label' => __( 'Boat name', '5o5' ),
@@ -72,13 +71,11 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					'args' => array(
 						'class' => array( 'medium-text' ),
 						'default' => date_i18n( 'Y-m', time() ),
-						'data' => array(
-							'date-format' => 'yy-mm',
-						),
+						'data-date-format' => 'yy-mm',
 					),
 				),
 				'sails' => array(
-					'label' => __( 'Sails producer name', '5o5' ),
+					'label' => __( 'Sails manufacturer', '5o5' ),
 				),
 				'mast' => array(
 					'label' => __( 'Mast', '5o5' ),
@@ -103,21 +100,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			}
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
-		}
-
-		/**
-		 * save extra field
-		 */
-		$this->post_type_objects[ $this->get_name() ] = $this;
-		add_action( 'iworks_5o5_posttype_update_post_meta', array( $this, 'save_year_month_to_extra_field' ), 10, 5 );
-
-		/**
-		 * Meta Boxes to close by default
-		 */
-		$meta_boxes_to_close = array( 'income', 'expense' );
-		foreach ( $meta_boxes_to_close as $meta_box ) {
-			$filter = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $meta_box );
-			add_filter( $filter, array( $this, 'close_meta_boxes' ) );
 		}
 
 		/**
@@ -146,7 +128,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'singular_name'         => _x( 'Boat', 'Boat Singular Name', '5o5' ),
 			'menu_name'             => __( '5O5', '5o5' ),
 			'name_admin_bar'        => __( 'Boat', '5o5' ),
-			'archives'              => __( 'Item Archives', '5o5' ),
+			'archives'              => __( 'Boats', '5o5' ),
 			'attributes'            => __( 'Item Attributes', '5o5' ),
 			'parent_item_colon'     => __( 'Parent Boat:', '5o5' ),
 			'all_items'             => __( 'All Boats', '5o5' ),
@@ -172,10 +154,9 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		);
 		$args = array(
 			'label'                 => __( 'Boat', '5o5' ),
-			'description'           => __( 'Boat Description', '5o5' ),
 			'labels'                => $labels,
 			'supports'              => array( 'title', 'editor', 'thumbnail' ),
-			'taxonomies'            => array( $this->taxonomy_name_builder ),
+			'taxonomies'            => array( $this->taxonomy_name_manufacturer ),
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
@@ -183,49 +164,53 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'show_in_admin_bar'     => true,
 			'show_in_nav_menus'     => true,
 			'can_export'            => true,
-			'has_archive'           => true,
-			'exclude_from_search'   => true,
+			'has_archive'           => _x( '5o5-boats', 'slug for archive', '5o5' ),
+			'exclude_from_search'   => false,
 			'publicly_queryable'    => true,
 			'capability_type'       => 'page',
 			'menu_icon'             => plugins_url( '/assets/images/505_logo.svg', $this->base ),
 			'register_meta_box_cb'  => array( $this, 'register_meta_boxes' ),
 			'rewrite' => array(
-				'slug' => '5o5-boat',
+				'slug' => _x( '5o5-boat', 'slug for single boat', '5o5' ),
 			),
 		);
 		register_post_type( $this->post_type_name, $args );
 		$labels = array(
-			'name'                       => _x( 'Builders', 'Taxonomy General Name', 'text_domain' ),
-			'singular_name'              => _x( 'Builder', 'Taxonomy Singular Name', 'text_domain' ),
-			'menu_name'                  => __( 'Builder', 'text_domain' ),
-			'all_items'                  => __( 'All Builders', 'text_domain' ),
-			'parent_item'                => __( 'Parent Builder', 'text_domain' ),
-			'parent_item_colon'          => __( 'Parent Builder:', 'text_domain' ),
-			'new_item_name'              => __( 'New Builder Name', 'text_domain' ),
-			'add_new_item'               => __( 'Add New Builder', 'text_domain' ),
-			'edit_item'                  => __( 'Edit Builder', 'text_domain' ),
-			'update_item'                => __( 'Update Builder', 'text_domain' ),
-			'view_item'                  => __( 'View Builder', 'text_domain' ),
-			'separate_items_with_commas' => __( 'Separate items with commas', 'text_domain' ),
-			'add_or_remove_items'        => __( 'Add or remove items', 'text_domain' ),
-			'choose_from_most_used'      => __( 'Choose from the most used', 'text_domain' ),
-			'popular_items'              => __( 'Popular Builders', 'text_domain' ),
-			'search_items'               => __( 'Search Builders', 'text_domain' ),
-			'not_found'                  => __( 'Not Found', 'text_domain' ),
-			'no_terms'                   => __( 'No items', 'text_domain' ),
-			'items_list'                 => __( 'Builders list', 'text_domain' ),
-			'items_list_navigation'      => __( 'Builders list navigation', 'text_domain' ),
+			'name'                       => _x( 'Manufacturers', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Manufacturer', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Manufacturer', '5o5' ),
+			'all_items'                  => __( 'All Manufacturers', '5o5' ),
+			'parent_item'                => __( 'Parent Manufacturer', '5o5' ),
+			'parent_item_colon'          => __( 'Parent Manufacturer:', '5o5' ),
+			'new_item_name'              => __( 'New Manufacturer Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Manufacturer', '5o5' ),
+			'edit_item'                  => __( 'Edit Manufacturer', '5o5' ),
+			'update_item'                => __( 'Update Manufacturer', '5o5' ),
+			'view_item'                  => __( 'View Manufacturer', '5o5' ),
+			'separate_items_with_commas' => __( 'Separate items with commas', '5o5' ),
+			'add_or_remove_items'        => __( 'Add or remove items', '5o5' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
+			'popular_items'              => __( 'Popular Manufacturers', '5o5' ),
+			'search_items'               => __( 'Search Manufacturers', '5o5' ),
+			'not_found'                  => __( 'Not Found', '5o5' ),
+			'no_terms'                   => __( 'No items', '5o5' ),
+			'items_list'                 => __( 'Manufacturers list', '5o5' ),
+			'items_list_navigation'      => __( 'Manufacturers list navigation', '5o5' ),
 		);
 		$args = array(
 			'labels'                     => $labels,
 			'hierarchical'               => false,
+			'public'                     => true,
 			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_ui'                    => true,
 			'show_in_quick_edit' => true,
 			'rewrite' => array(
 				'slug' => '5o5-manufacturer',
 			),
 		);
-		register_taxonomy( $this->taxonomy_name_builder, array( $this->post_type_name ), $args );
+		register_taxonomy( $this->taxonomy_name_manufacturer, array( $this->post_type_name ), $args );
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {
@@ -270,13 +255,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$text = '';
 			$options = array(
 				'boat_build_year' => __( 'Year of building:', '5o5' ),
-			'producer' => __( 'Hull manufacturer:', '5o5' ),
-			   'boat_in_poland_date' => __( 'In Poland:', '5o5' ),
-			   'boat_name' => __( 'Name:', '5o5' ),
-			   'colors' => __( 'Colors (top/side/bottom):', '5o5' ),
-			   'boat_sails' => __( 'Sails on:', '5o5' ),
-			   'boat_mast' => __( 'Mast:', '5o5' ),
-			   'boat_double_pole' => __( 'Double pole:', '5o5' ),
+				'manufacturer' => __( 'Hull manufacturer:', '5o5' ),
+				'boat_in_poland_date' => __( 'In Poland:', '5o5' ),
+				'boat_name' => __( 'Name:', '5o5' ),
+				'colors' => __( 'Colors (top/side/bottom):', '5o5' ),
+				'boat_sails' => __( 'Sails on:', '5o5' ),
+				'boat_mast' => __( 'Mast:', '5o5' ),
+				'boat_double_pole' => __( 'Double pole:', '5o5' ),
+				'boat_location' => __( 'Location:', '5o5' ),
 			);
 			foreach ( $options as $key => $label ) {
 				$name = $this->options->get_option_name( $key );
@@ -295,10 +281,13 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 								$cname = $this->options->get_option_name( 'boat_color_'.$ckey );
 								$colors[] = get_post_meta( get_the_ID(), $cname, true );
 							}
-							$value = implode( '/', $colors );
+							$colors = array_filter( $colors );
+							if ( ! empty( $colors ) ) {
+								$value = implode( '/', $colors );
+							}
 						break;
-						case 'producer':
-							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_builder );
+						case 'manufacturer':
+							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_manufacturer );
 						break;
 					}
 				} else {
@@ -349,7 +338,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
 			case 'builder':
-				$id = get_post_meta( $post_id, $this->get_custom_field_basic_builder_name() , true );
+				$id = get_post_meta( $post_id, $this->get_custom_field_basic_manufacturer_name() , true );
 				if ( empty( $id ) ) {
 					echo '-';
 				} else {
@@ -362,7 +351,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 							),
 							admin_url( 'edit.php' )
 						),
-						get_post_meta( $id, 'iworks_5o5_builder_data_full_name', true )
+						get_post_meta( $id, 'iworks_5o5_manufacturer_data_full_name', true )
 					);
 				}
 			break;
@@ -412,6 +401,19 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 * do not change outsite th admin area
 		 */
 		if ( ! is_admin() ) {
+			if ( ! $query->is_main_query() ) {
+				return $query;
+			}
+			$post_type = get_query_var( 'post_type' );
+			if ( ! empty( $post_type ) && $post_type === $this->post_type_name ) {
+				$query->set( 'orderby', 'post_title' );
+				return $query;
+			}
+			$taxonomy = get_query_var( $this->taxonomy_name_manufacturer );
+			if ( ! empty( $taxonomy ) ) {
+				$query->set( 'orderby', 'post_title' );
+				return $query;
+			}
 			return $query;
 		}
 		/**
@@ -439,28 +441,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 		}
 		return $query;
-	}
-
-	/**
-	 * Get "year_month" custom filed name.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string Custom Field meta_key.
-	 */
-	public function get_custom_field_year_month_name() {
-		return $this->options->get_option_name( 'year_month' );
-	}
-
-	/**
-	 * Get "basic_builder" custom filed name.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return string Custom Field meta_key.
-	 */
-	public function get_custom_field_basic_builder_name() {
-		return $this->options->get_option_name( 'basic_builder' );
 	}
 }
 
