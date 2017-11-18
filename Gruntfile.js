@@ -27,6 +27,9 @@ module.exports = function( grunt ) {
 		// Folder that contains the CSS files.
 		css_folder: 'assets/styles/',
 
+		// Folder that contains the sass files.
+		sass_folder: 'assets/sass/',
+
 		// Concatenate those JS files into a single file (target: [source, source, ...]).
 		js_files_concat: {
 			'{js}admin/5o5.js': [
@@ -38,7 +41,7 @@ module.exports = function( grunt ) {
 
 		// SASS files to process. Resulting CSS files will be minified as well.
 		css_files_compile: {
-				'{css}admin/post-type-boat.css': '{css}src/admin/post-type-boat.scss'
+			'{css}admin/post-type-boat.css': '{sass}admin/post-type-boat.scss'
 		},
 		css_files_concat: {
 			'{css}5o5-admin.css': [ '{css}admin/*.css' ]
@@ -162,6 +165,12 @@ module.exports = function( grunt ) {
 		delete conf.css_files_concat[key];
 		for ( ind in newval ) { newval[ind] = newval[ind].replace( '{css}', conf.css_folder ); }
 		conf.css_files_concat[newkey] = newval;
+	}
+	for ( key in conf.css_files_compile ) {
+		newkey = key.replace( '{sass}', conf.sass_folder );
+		newval = conf.css_files_compile[key].replace( '{sass}', conf.sass_folder );
+		delete conf.css_files_compile[key];
+		conf.css_files_compile[newkey] = newval;
 	}
 	for ( key in conf.css_files_compile ) {
 		newkey = key.replace( '{css}', conf.css_folder );
@@ -341,7 +350,7 @@ module.exports = function( grunt ) {
 		// WATCH - Watch filesystem for changes during development.
 		watch:  {
 			sass: {
-				files: ['assets/styles/src/**/*.scss', 'assets/styles/src/externals/*.scss'],
+				files: ['assets/sass/**/*.scss', 'assets/sass/externals/*.scss'],
 				tasks: ['sass', 'autoprefixer', 'concat_css', 'cssmin' ],
 				options: {
 					debounceDelay: 500
@@ -565,7 +574,9 @@ module.exports = function( grunt ) {
 
 	// Default task.
 
-	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat_css', 'uglify', 'sass', 'autoprefixer', 'cssmin', 'concat' ] );
+	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat', 'uglify', 'concat_css', 'sass', 'autoprefixer', 'cssmin' ] );
+	grunt.registerTask( 'js', ['jshint', 'concat', 'uglify'] );
+	grunt.registerTask( 'css', ['concat_css', 'sass', 'autoprefixer', 'cssmin' ] );
 	//grunt.registerTask( 'test', ['phpunit', 'jshint'] );
 
 	grunt.task.run( 'clear' );

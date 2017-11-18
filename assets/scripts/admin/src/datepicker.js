@@ -1,5 +1,5 @@
 jQuery( document ).ready(function($) {
     $( function() {
-        $( ".iworks-kpir-row .datepicker" ).datepicker({ dateFormat: 'dd-mm-yy' });
+        $( ".iworks-5o5-row .datepicker" ).datepicker({ dateFormat: 'yy-mm' });
     } );
 });
