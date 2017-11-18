@@ -363,9 +363,16 @@ module.exports = function( grunt ) {
 				options: {
 					debounceDelay: 500
 				}
+			},
+
+			po2mo: {
+				files: ['languages/*.po'],
+				tasks: ['po2mo'],
+				options: {
+					debounceDelay: 500
+				}
 			}
 		},
-
 
 		// BUILD - Remove previous build version and temp files.
 		clean: {
@@ -446,9 +453,18 @@ module.exports = function( grunt ) {
 						poedit: true, // Includes common Poedit headers.
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
+					updatePoFiles: true,
+					exclude: [ 'node_modules', '.git', '.sass-cache', 'release' ],
 					type: 'wp-plugin' // wp-plugin or wp-theme
 				}
 			}
+		},
+
+		po2mo: {
+			files: {
+				src: 'languages/pl_PL.po',
+				dest: 'languages/pl_PL.mo',
+			},
 		},
 
 		// BUILD: Replace conditional tags in code.
@@ -547,6 +563,7 @@ module.exports = function( grunt ) {
 
 		// Generate all translation files (same for pro and free).
 		grunt.task.run( 'makepot' );
+		grunt.task.run( 'po2mo' );
 
 		for ( i in build ) {
 			branch = build[i];
@@ -577,6 +594,7 @@ module.exports = function( grunt ) {
 	grunt.registerTask( 'default', ['clean:temp', 'jshint', 'concat', 'uglify', 'concat_css', 'sass', 'autoprefixer', 'cssmin' ] );
 	grunt.registerTask( 'js', ['jshint', 'concat', 'uglify'] );
 	grunt.registerTask( 'css', ['concat_css', 'sass', 'autoprefixer', 'cssmin' ] );
+	grunt.registerTask( 'i18n', ['makepot', 'po2mo' ] );
 	//grunt.registerTask( 'test', ['phpunit', 'jshint'] );
 
 	grunt.task.run( 'clear' );

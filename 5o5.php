@@ -59,7 +59,7 @@ if ( ! class_exists( 'iworks_options' ) ) {
 /**
  * i18n
  */
-load_plugin_textdomain( '5o5', false, plugin_basename( __FILE__ ).'/languages' );
+load_plugin_textdomain( '5o5', false, plugin_basename( dirname( __FILE__ ) ).'/languages' );
 
 /**
  * load options

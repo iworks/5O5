@@ -1,0 +1,380 @@
+# Copyright (C) 2017 Marcin Pietrzak
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: 5o5 PLUGIN_VERSION\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/5o5\n"
+"POT-Creation-Date: 2017-11-18 21:25:11+00:00\n"
+"PO-Revision-Date: 2017-11-18 22:34+0100\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
+"_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
+"esc_html_x:1,2c\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-Basepath: ..\n"
+"X-Textdomain-Support: yes\n"
+"Last-Translator: Marcin Pietrzak <marcin@iworks.pl>\n"
+"Language-Team: \n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: etc/options.php:10
+msgid "Configuration"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:48
+msgid "Year of building"
+msgstr "Rok budowy"
+
+#: vendor/iworks/5o5/posttypes/boat.php:57
+msgid "Boat name"
+msgstr "Nazwa łodzi"
+
+#: vendor/iworks/5o5/posttypes/boat.php:60
+msgid "Color top"
+msgstr "Kolor pokładu"
+
+#: vendor/iworks/5o5/posttypes/boat.php:63
+msgid "Color side"
+msgstr "Kolor burt"
+
+#: vendor/iworks/5o5/posttypes/boat.php:66
+msgid "Color bottom"
+msgstr "Kolor dna"
+
+#: vendor/iworks/5o5/posttypes/boat.php:70
+#: vendor/iworks/5o5/posttypes/boat.php:259
+msgid "In Poland:"
+msgstr "W Polsce:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:78
+msgid "Sails manufacturer"
+msgstr "Producent żagli"
+
+#: vendor/iworks/5o5/posttypes/boat.php:81
+msgid "Mast"
+msgstr "Maszt"
+
+#: vendor/iworks/5o5/posttypes/boat.php:84
+msgid "Location"
+msgstr "Lokalizacja"
+
+#: vendor/iworks/5o5/posttypes/boat.php:87
+msgid "Double pole"
+msgstr "Podwójny bom spinaker"
+
+#: vendor/iworks/5o5/posttypes/boat.php:129
+msgid "5O5"
+msgstr "5O5"
+
+#: vendor/iworks/5o5/posttypes/boat.php:130
+#: vendor/iworks/5o5/posttypes/boat.php:156
+msgid "Boat"
+msgstr "Łódka"
+
+#: vendor/iworks/5o5/posttypes/boat.php:131
+msgid "Boats"
+msgstr "Łódki"
+
+#: vendor/iworks/5o5/posttypes/boat.php:132
+msgid "Item Attributes"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:133
+msgid "Parent Boat:"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:134
+msgid "All Boats"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:135
+msgid "Add New Boat"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:136
+msgid "Add New"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:137
+msgid "New Boat"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:138
+msgid "Edit Boat"
+msgstr "Edytuj łódkę"
+
+#: vendor/iworks/5o5/posttypes/boat.php:139
+msgid "Update Boat"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:140
+msgid "View Boat"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:141
+msgid "View Boats"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:142
+msgid "Search Boat"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:143
+msgid "Not found"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:144
+msgid "Not found in Trash"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:145
+msgid "Featured Image"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:146
+msgid "Set featured image"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:147
+msgid "Remove featured image"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:148
+msgid "Use as featured image"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:149
+msgid "Insert into item"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:150
+msgid "Uploaded to this item"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:151
+msgid "Items list"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:152
+msgid "Items list navigation"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:153
+msgid "Filter items list"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:181
+msgid "Manufacturer"
+msgstr "Producent"
+
+#: vendor/iworks/5o5/posttypes/boat.php:182
+msgid "All Manufacturers"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:183
+msgid "Parent Manufacturer"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:184
+msgid "Parent Manufacturer:"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:185
+msgid "New Manufacturer Name"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:186
+msgid "Add New Manufacturer"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:187
+msgid "Edit Manufacturer"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:188
+msgid "Update Manufacturer"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:189
+msgid "View Manufacturer"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:190
+msgid "Separate items with commas"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:191
+msgid "Add or remove items"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:192
+msgid "Choose from the most used"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:193
+msgid "Popular Manufacturers"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:194
+msgid "Search Manufacturers"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:195
+msgid "Not Found"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:196
+msgid "No items"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:197
+msgid "Manufacturers list"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:198
+msgid "Manufacturers list navigation"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:227
+msgid "Enter boat number eg. POL 7020"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:240
+msgid "POL "
+msgstr "POL "
+
+#: vendor/iworks/5o5/posttypes/boat.php:257
+msgid "Year of building:"
+msgstr "Rok budowy:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:258
+msgid "Hull manufacturer:"
+msgstr "Producent kadłuba:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:260
+msgid "Name:"
+msgstr "Nazwa:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:261
+msgid "Colors (top/side/bottom):"
+msgstr "Kolory (góra/burty/dno):"
+
+#: vendor/iworks/5o5/posttypes/boat.php:262
+msgid "Sails on:"
+msgstr "Pływa na:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:263
+msgid "Mast:"
+msgstr "Maszt:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:264
+msgid "Double pole:"
+msgstr "Podwójny bom spinaker:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:265
+msgid "Location:"
+msgstr "Lokalizacja:"
+
+#: vendor/iworks/5o5/posttypes/boat.php:322
+msgid "Boat data"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:381
+msgid "Date"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:382
+msgid "Boat Number"
+msgstr ""
+
+#: vendor/iworks/5o5.php:151
+msgid "Settings"
+msgstr ""
+
+#: vendor/iworks/5o5.php:154
+msgid "Donate"
+msgstr ""
+
+#: vendor/iworks/options/options.php:196
+msgid "An error occurred while getting the configuration."
+msgstr ""
+
+#: vendor/iworks/options/options.php:695
+msgid "Upload image"
+msgstr ""
+
+#: vendor/iworks/options/options.php:701
+msgid "Delete image"
+msgstr ""
+
+#: vendor/iworks/options/options.php:769
+msgid "Save Changes"
+msgstr ""
+
+#: vendor/iworks/options/options.php:1553
+msgid "OFF"
+msgstr ""
+
+#: vendor/iworks/options/options.php:1554
+msgid "ON"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "5o5"
+msgstr "5o5"
+
+#. Plugin URI of the plugin/theme
+msgid "http://iworks.pl/5o5/"
+msgstr "http://iworks.pl/5o5/"
+
+#. Description of the plugin/theme
+msgid "5O5 class plugin: regata, boats, crew"
+msgstr "5O5 class plugin: regata, boats, crew"
+
+#. Author of the plugin/theme
+msgid "Marcin Pietrzak"
+msgstr "Marcin Pietrzak"
+
+#. Author URI of the plugin/theme
+msgid "http://iworks.pl/"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:127
+msgctxt "Boat General Name"
+msgid "Boats"
+msgstr "Łódki"
+
+#: vendor/iworks/5o5/posttypes/boat.php:128
+msgctxt "Boat Singular Name"
+msgid "Boat"
+msgstr "Łodka"
+
+#: vendor/iworks/5o5/posttypes/boat.php:167
+msgctxt "slug for archive"
+msgid "5o5-boats"
+msgstr "5o5-boats"
+
+#: vendor/iworks/5o5/posttypes/boat.php:174
+msgctxt "slug for single boat"
+msgid "5o5-boat"
+msgstr "5o5-boat"
+
+#: vendor/iworks/5o5/posttypes/boat.php:179
+msgctxt "Taxonomy General Name"
+msgid "Manufacturers"
+msgstr "Producenci"
+
+#: vendor/iworks/5o5/posttypes/boat.php:180
+msgctxt "Taxonomy Singular Name"
+msgid "Manufacturer"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:271
+msgctxt "value of boat"
+msgid "unknown"
+msgstr ""

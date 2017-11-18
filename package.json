@@ -43,6 +43,7 @@
         "grunt-wp-i18n": "0.5.3",
         "load-grunt-tasks": "^0.2.0",
         "time-grunt": "^0.2.3",
-        "grunt-concat-css": "^0.3.1"
+        "grunt-concat-css": "^0.3.1",
+        "grunt-po2mo": ""
     }
 }
