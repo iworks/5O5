@@ -38,6 +38,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
 		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
 		add_filter( 'default_title', array( $this, 'default_title' ), 10, 2 );
+		add_filter( 'international_5o5_posted_on', array( $this, 'get_manufacturer' ), 10, 2 );
 		/**
 		 * fields
 		 */
@@ -441,6 +442,19 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
 		}
 		return $query;
+	}
+
+	public function get_manufacturer( $content, $post_id ) {
+		$valid_post_type = $this->check_post_type_by_id( $post_id );
+		if ( ! $valid_post_type ) {
+			return $content;
+		}
+		$terms = wp_get_post_terms( $post_id, $this->taxonomy_name_manufacturer );
+		$t = array();
+		foreach ( $terms as $term ) {
+			$t[] = $term->name;
+		}
+		return implode( ', ', $t );
 	}
 }
 
