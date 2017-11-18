@@ -303,7 +303,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				$text .= $this->boat_single_row( $key, $label, $value );
 			}
 			if ( ! empty( $text ) ) {
-				$content = sprintf( '<table>%s</table>%s', $text, $content );
+				$content = sprintf( '<table class="boat-data">%s</table>%s', $text, $content );
 			}
 		}
 		return $content;
