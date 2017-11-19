@@ -40,6 +40,19 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		add_filter( 'default_title', array( $this, 'default_title' ), 10, 2 );
 		add_filter( 'international_5o5_posted_on', array( $this, 'get_manufacturer' ), 10, 2 );
 		/**
+		 * save post
+		 */
+		add_action( 'save_post', array( $this, 'add_thumbnail' ), 10, 3 );
+		/**
+		 * change default columns
+		 */
+		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
+		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
+		/**
+		 * apply default sort order
+		 */
+		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+		/**
 		 * fields
 		 */
 		$this->fields = array(
@@ -81,16 +94,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
 
-				/**
-		 * change default columns
-		 */
-				add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
-				add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
-
-				/**
-		 * apply default sort order
-		 */
-				add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 	}
 
 	/**
@@ -300,26 +303,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				$content = sprintf( '<table class="boat-data">%s</table>%s', $text, $content );
 			}
 			$post_id = get_the_ID();
-			$media = get_attached_media( 'image', $post_id );
-			$ids = array_keys( $media );
-			$args = array(
-				'nopaging' => true,
-				'fields' => 'ids',
-				'post_type' => 'attachment',
-				'post_status' => 'inherit',
-				'tax_query' => array(
-					array(
-						'taxonomy' => 'boat_number',
-						'field'    => 'name',
-						'terms'    => trim( preg_replace( '/POL/', '', get_the_title() ) ),
-					),
-				),
-			);
-			$the_query = new WP_Query( $args );
-			// The Loop
-			if ( $the_query->have_posts() ) {
-				$ids = array_merge( $ids, $the_query->posts );
-			}
+			$ids = $this->get_media( $post_id );
 			if ( ! empty( $ids ) ) {
 				$shortcode = sprintf( '[gallery ids="%s" link="file"]', implode( ',', $ids ) );
 				$content .= do_shortcode( $shortcode );
@@ -328,10 +312,10 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		return $content;
 	}
 
-    private function boat_single_row( $key, $label, $value ) {
-        if ( empty( $value ) || '-' == $value ) {
-            return '';
-        }
+	private function boat_single_row( $key, $label, $value ) {
+		if ( empty( $value ) || '-' == $value ) {
+			return '';
+		}
 		$text = '';
 		$text .= sprintf( '<tr class="boat-%s">', esc_attr( $key ) );
 		$text .= sprintf( '<td>%s</td>', esc_html( $label ) );
@@ -382,16 +366,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					);
 				}
 			break;
-
-			case 'date_of_boat':
-				$timestamp = get_post_meta( $post_id, 'boat_date', true );
-				if ( empty( $timestamp ) ) {
-					echo '-';
-				} else {
-					echo date_i18n( get_option( 'date_format' ), $timestamp );
-				}
+			case 'build_year':
+				$name = $this->options->get_option_name( 'boat_build_year' );
+				echo get_post_meta( $post_id, $name, true );
 			break;
-
+			case 'location':
+				$name = $this->options->get_option_name( 'boat_location' );
+				echo get_post_meta( $post_id, $name, true );
+			break;
 		}
 	}
 
@@ -405,7 +387,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	 */
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
-		$columns['date_of_boat'] = __( 'Date', '5o5' );
+		$columns['build_year'] = __( 'Year of building', '5o5' );
+		$columns['location'] = __( 'Location', '5o5' );
 		$columns['title'] = __( 'Boat Number', '5o5' );
 		return $columns;
 	}
@@ -466,6 +449,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		$screen = get_current_screen();
 		if ( isset( $screen->post_type ) && $this->get_name() == $screen->post_type ) {
+			$query->set( 'orderby', 'post_title' );
 		}
 		return $query;
 	}
@@ -481,6 +465,46 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$t[] = $term->name;
 		}
 		return implode( ', ', $t );
+	}
+
+	public function add_thumbnail( $post_id, $post, $update ) {
+		$valid_post_type = $this->check_post_type_by_id( $post_id );
+		if ( ! $valid_post_type ) {
+			return;
+		}
+		$has_post_thumbnail = has_post_thumbnail();
+		if ( $has_post_thumbnail ) {
+			return;
+		}
+		$ids = $this->get_media( $post_id );
+		if ( empty( $ids ) ) {
+			return;
+		}
+		set_post_thumbnail( $post_id, $ids[0] );
+	}
+
+	private function get_media( $post_id ) {
+		$media = get_attached_media( 'image', $post_id );
+		$ids = array_keys( $media );
+		$args = array(
+			'nopaging' => true,
+			'fields' => 'ids',
+			'post_type' => 'attachment',
+			'post_status' => 'inherit',
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'boat_number',
+					'field'    => 'name',
+					'terms'    => trim( preg_replace( '/POL/', '', get_the_title() ) ),
+				),
+			),
+		);
+		$the_query = new WP_Query( $args );
+		// The Loop
+		if ( $the_query->have_posts() ) {
+			$ids = array_merge( $ids, $the_query->posts );
+		}
+		return $ids;
 	}
 }
 
