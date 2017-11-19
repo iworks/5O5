@@ -44,38 +44,21 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		$this->fields = array(
 			'boat' => array(
-				'build_year' => array(
-					'label' => __( 'Year of building', '5o5' ),
-				),
-				'name' => array(
-					'label' => __( 'Boat name', '5o5' ),
-				),
-				'color_top' => array(
-					'label' => __( 'Color top', '5o5' ),
-				),
-				'color_side' => array(
-					'label' => __( 'Color side', '5o5' ),
-				),
-				'color_bottom' => array(
-					'label' => __( 'Color bottom', '5o5' ),
-				),
-				'in_poland_date' => array(
-					'label' => __( 'In Poland:', '5o5' ),
-				),
-				'sails' => array(
-					'label' => __( 'Sails manufacturer', '5o5' ),
-				),
-				'mast' => array(
-					'label' => __( 'Mast', '5o5' ),
-				),
-				'location' => array(
-					'label' => __( 'Location', '5o5' ),
-				),
+				'build_year' => array( 'label' => __( 'Year of building', '5o5' ) ),
+				'name' => array( 'label' => __( 'Boat name', '5o5' ) ),
+				'color_top' => array( 'label' => __( 'Color top', '5o5' ) ),
+				'color_side' => array( 'label' => __( 'Color side', '5o5' ) ),
+				'color_bottom' => array( 'label' => __( 'Color bottom', '5o5' ) ),
+				'in_poland_date' => array( 'label' => __( 'In Poland:', '5o5' ) ),
+				'sails' => array( 'label' => __( 'Sails manufacturer', '5o5' ) ),
+				'mast' => array( 'label' => __( 'Mast', '5o5' ) ),
+				'location' => array( 'label' => __( 'Location', '5o5' ) ),
 				'double_pole' => array(
 					'label' => __( 'Double pole', '5o5' ),
 					'type' => 'checkbox',
 					'args' => array(),
 				),
+				'hull_material' => array( 'label' => __( 'Hull material', '5o5' ) ),
 				'helm' => array( 'label' => __( 'Helmsman', '5o5' ) ),
 				'crew' => array( 'label' => __( 'Crew', '5o5' ) ),
 			),
@@ -87,8 +70,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'gplus' => array( 'label' => __( 'G+', '5o5' ) ),
 			),
 		);
-
-				/**
+		/**
 		 * add class to metaboxes
 		 */
 		foreach ( array_keys( $this->fields ) as $name ) {
@@ -253,6 +235,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$options = array(
 				'boat_build_year' => __( 'Year of building:', '5o5' ),
 				'manufacturer' => __( 'Hull manufacturer:', '5o5' ),
+				'boat_hull_material' => __( 'Hull material:', '5o5' ),
 				'boat_in_poland_date' => __( 'In Poland:', '5o5' ),
 				'boat_name' => __( 'Name:', '5o5' ),
 				'colors' => __( 'Colors (top/side/bottom):', '5o5' ),
@@ -345,7 +328,10 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		return $content;
 	}
 
-	private function boat_single_row( $key, $label, $value ) {
+    private function boat_single_row( $key, $label, $value ) {
+        if ( empty( $value ) || '-' == $value ) {
+            return '';
+        }
 		$text = '';
 		$text .= sprintf( '<tr class="boat-%s">', esc_attr( $key ) );
 		$text .= sprintf( '<td>%s</td>', esc_html( $label ) );
