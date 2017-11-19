@@ -90,6 +90,13 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					'args' => array(),
 				),
 			),
+			'social' => array(
+				'website' => array( 'label' => __( 'Web site', '5o5' ) ),
+				'facebook' => array( 'label' => __( 'Facebook', '5o5' ) ),
+				'twitter' => array( 'label' => __( 'Twitter', '5o5' ) ),
+				'instagram' => array( 'label' => __( 'Instagram', '5o5' ) ),
+				'gplus' => array( 'label' => __( 'G+', '5o5' ) ),
+			),
 		);
 
 		/**
@@ -264,13 +271,13 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'boat_mast' => __( 'Mast:', '5o5' ),
 				'boat_double_pole' => __( 'Double pole:', '5o5' ),
 				'boat_location' => __( 'Location:', '5o5' ),
+				'social_website' => __( 'Web site', '5o5' ),
+				'social' => __( 'Social Media', '5o5' ),
 			);
 			foreach ( $options as $key => $label ) {
 				$name = $this->options->get_option_name( $key );
 				$value = get_post_meta( get_the_ID(), $name, true );
 				if ( empty( $value ) ) {
-					$value = _x( 'unknown', 'value of boat', '5o5' );
-					$value = '-';
 					switch ( $key ) {
 						/**
 						 * handle colors
@@ -289,7 +296,28 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 						break;
 						case 'manufacturer':
 							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_manufacturer );
-						break;
+							break;
+						case 'social':
+							foreach ( $this->fields['social'] as $social_key => $social ) {
+								if ( 'website' == $social_key ) {
+									continue;
+								}
+								$name = $this->options->get_option_name( 'social_'.$social_key );
+								$social_value = get_post_meta( get_the_ID(), $name, true );
+								if ( empty( $social_value ) ) {
+									continue;
+								}
+								$value .= sprintf(
+									'<a href="%s"><span class="dashicons dashicons-%s"></span></a>',
+									$social_value,
+									$social_key
+								);
+							}
+							break;
+					}
+					if ( empty( $value ) ) {
+						$value = _x( 'unknown', 'value of boat', '5o5' );
+						$value = '-';
 					}
 				} else {
 					switch ( $key ) {
@@ -321,9 +349,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 	public function register_meta_boxes( $post ) {
 		add_meta_box( 'boat', __( 'Boat data', '5o5' ), array( $this, 'boat' ), $this->post_type_name );
+		add_meta_box( 'social', __( 'Social Media', '5o5' ), array( $this, 'social' ), $this->post_type_name );
 	}
 
 	public function boat( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+	public function social( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
