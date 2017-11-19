@@ -76,30 +76,28 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					'type' => 'checkbox',
 					'args' => array(),
 				),
-				'helm' => array(
-				'label' => __( 'Helmsman', '5o5' ),
-				'crew' => array(
-				'label' => __( 'Crew', '5o5' ),
-				),
-				'social' => array(
+				'helm' => array( 'label' => __( 'Helmsman', '5o5' ) ),
+				'crew' => array( 'label' => __( 'Crew', '5o5' ) ),
+			),
+			'social' => array(
 				'website' => array( 'label' => __( 'Web site', '5o5' ) ),
 				'facebook' => array( 'label' => __( 'Facebook', '5o5' ) ),
 				'twitter' => array( 'label' => __( 'Twitter', '5o5' ) ),
 				'instagram' => array( 'label' => __( 'Instagram', '5o5' ) ),
 				'gplus' => array( 'label' => __( 'G+', '5o5' ) ),
-				),
-				);
+			),
+		);
 
 				/**
 		 * add class to metaboxes
 		 */
-				foreach ( array_keys( $this->fields ) as $name ) {
-					if ( 'basic' == $name ) {
-						continue;
-					}
-					$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
-					add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
-				}
+		foreach ( array_keys( $this->fields ) as $name ) {
+			if ( 'basic' == $name ) {
+				continue;
+			}
+			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
+			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
+		}
 
 				/**
 		 * change default columns
