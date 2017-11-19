@@ -51,6 +51,7 @@ class iworks_5o5 extends iworks {
 		 * admin init
 		 */
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
+		add_action( 'init', array( $this, 'register_boat_number' ) );
 	}
 
 	public function admin_init() {
@@ -128,8 +129,7 @@ class iworks_5o5 extends iworks {
 			'' == $this->dev ? '5o5-admin-invoice':'5o5-admin',
 			__CLASS__,
 			array(
-				'messages' => array(
-				),
+				'messages' => array(),
 			)
 		);
 	}
@@ -155,5 +155,42 @@ class iworks_5o5 extends iworks {
 			/* end:free */
 		}
 		return $links;
+	}
+
+	public function register_boat_number() {
+		$labels = array(
+			'name'                       => _x( 'Boat Numbers', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Boat Number', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Boat Number', '5o5' ),
+			'all_items'                  => __( 'All Boat Numbers', '5o5' ),
+			'new_item_name'              => __( 'New Boat Number Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Boat Number', '5o5' ),
+			'edit_item'                  => __( 'Edit Boat Number', '5o5' ),
+			'update_item'                => __( 'Update Boat Number', '5o5' ),
+			'view_item'                  => __( 'View Boat Number', '5o5' ),
+			'separate_items_with_commas' => __( 'Separate Boat Numbers with commas', '5o5' ),
+			'add_or_remove_items'        => __( 'Add or remove Boat Numbers', '5o5' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
+			'popular_items'              => __( 'Popular Boat Numbers', '5o5' ),
+			'search_items'               => __( 'Search Boat Numbers', '5o5' ),
+			'not_found'                  => __( 'Not Found', '5o5' ),
+			'no_terms'                   => __( 'No items', '5o5' ),
+			'items_list'                 => __( 'Boat Numbers list', '5o5' ),
+			'items_list_navigation'      => __( 'Boat Numbers list navigation', '5o5' ),
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => false,
+			'public'                     => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_ui'                    => true,
+			'show_in_quick_edit' => true,
+			'rewrite' => array(
+				'slug' => '5o5-boat-number',
+			),
+		);
+		register_taxonomy( 'boat_number', array( 'attachment' ), $args );
 	}
 }

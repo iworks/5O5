@@ -316,6 +316,31 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			if ( ! empty( $text ) ) {
 				$content = sprintf( '<table class="boat-data">%s</table>%s', $text, $content );
 			}
+			$post_id = get_the_ID();
+			$media = get_attached_media( 'image', $post_id );
+			$ids = array_keys( $media );
+			$args = array(
+				'nopaging' => true,
+				'fields' => 'ids',
+				'post_type' => 'attachment',
+				'post_status' => 'inherit',
+				'tax_query' => array(
+					array(
+						'taxonomy' => 'boat_number',
+						'field'    => 'name',
+						'terms'    => trim( preg_replace( '/POL/', '', get_the_title() ) ),
+					),
+				),
+			);
+			$the_query = new WP_Query( $args );
+			// The Loop
+			if ( $the_query->have_posts() ) {
+				$ids = array_merge( $ids, $the_query->posts );
+			}
+			if ( ! empty( $ids ) ) {
+				$shortcode = sprintf( '[gallery ids="%s" link="file"]', implode( ',', $ids ) );
+				$content .= do_shortcode( $shortcode );
+			}
 		}
 		return $content;
 	}
