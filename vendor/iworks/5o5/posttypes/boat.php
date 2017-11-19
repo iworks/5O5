@@ -32,6 +32,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_boat';
 	protected $taxonomy_name_manufacturer = 'iworks_5o5_boat_manufacturer';
+	protected $taxonomy_name_sails = 'iworks_5o5_sails_manufacturer';
+	protected $taxonomy_name_mast = 'iworks_5o5_mast_manufacturer';
 
 	public function __construct() {
 		parent::__construct();
@@ -67,9 +69,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'mast' => array( 'label' => __( 'Mast', '5o5' ) ),
 				'location' => array( 'label' => __( 'Location', '5o5' ) ),
 				'double_pole' => array(
-					'label' => __( 'Double pole', '5o5' ),
 					'type' => 'checkbox',
-					'args' => array(),
+					'label' => __( 'Double pole', '5o5' ),
 				),
 				'hull_material' => array( 'label' => __( 'Hull material', '5o5' ) ),
 				'helm' => array( 'label' => __( 'Helmsman', '5o5' ) ),
@@ -138,7 +139,11 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'label'                 => __( 'Boat', '5o5' ),
 			'labels'                => $labels,
 			'supports'              => array( 'title', 'editor', 'thumbnail' ),
-			'taxonomies'            => array( $this->taxonomy_name_manufacturer ),
+			'taxonomies'            => array(
+				$this->taxonomy_name_manufacturer,
+				$this->taxonomy_name_sails,
+				$this->taxonomy_name_mast,
+			),
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
@@ -157,27 +162,28 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			),
 		);
 		register_post_type( $this->post_type_name, $args );
+		/**
+		 * Boat hull Manufacturer Taxonomy.
+		 */
 		$labels = array(
-			'name'                       => _x( 'Manufacturers', 'Taxonomy General Name', '5o5' ),
-			'singular_name'              => _x( 'Manufacturer', 'Taxonomy Singular Name', '5o5' ),
-			'menu_name'                  => __( 'Manufacturer', '5o5' ),
-			'all_items'                  => __( 'All Manufacturers', '5o5' ),
-			'parent_item'                => __( 'Parent Manufacturer', '5o5' ),
-			'parent_item_colon'          => __( 'Parent Manufacturer:', '5o5' ),
-			'new_item_name'              => __( 'New Manufacturer Name', '5o5' ),
-			'add_new_item'               => __( 'Add New Manufacturer', '5o5' ),
-			'edit_item'                  => __( 'Edit Manufacturer', '5o5' ),
-			'update_item'                => __( 'Update Manufacturer', '5o5' ),
-			'view_item'                  => __( 'View Manufacturer', '5o5' ),
+			'name'                       => _x( 'Hull Manufacturers', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Hull Manufacturer', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Hull Manufacturer', '5o5' ),
+			'all_items'                  => __( 'All Hull Manufacturers', '5o5' ),
+			'new_item_name'              => __( 'New Hull Manufacturer Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Hull Manufacturer', '5o5' ),
+			'edit_item'                  => __( 'Edit Hull Manufacturer', '5o5' ),
+			'update_item'                => __( 'Update Hull Manufacturer', '5o5' ),
+			'view_item'                  => __( 'View Hull Manufacturer', '5o5' ),
 			'separate_items_with_commas' => __( 'Separate items with commas', '5o5' ),
 			'add_or_remove_items'        => __( 'Add or remove items', '5o5' ),
 			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
-			'popular_items'              => __( 'Popular Manufacturers', '5o5' ),
-			'search_items'               => __( 'Search Manufacturers', '5o5' ),
+			'popular_items'              => __( 'Popular Hull Manufacturers', '5o5' ),
+			'search_items'               => __( 'Search Hull Manufacturers', '5o5' ),
 			'not_found'                  => __( 'Not Found', '5o5' ),
 			'no_terms'                   => __( 'No items', '5o5' ),
-			'items_list'                 => __( 'Manufacturers list', '5o5' ),
-			'items_list_navigation'      => __( 'Manufacturers list navigation', '5o5' ),
+			'items_list'                 => __( 'Hull Manufacturers list', '5o5' ),
+			'items_list_navigation'      => __( 'Hull Manufacturers list navigation', '5o5' ),
 		);
 		$args = array(
 			'labels'                     => $labels,
@@ -193,6 +199,80 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			),
 		);
 		register_taxonomy( $this->taxonomy_name_manufacturer, array( $this->post_type_name ), $args );
+		/**
+		 * Sails Sails Manufacturer Taxonomy.
+		 */
+		$labels = array(
+			'name'                       => _x( 'Sails Manufacturers', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Sails Manufacturer', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Sails Manufacturer', '5o5' ),
+			'all_items'                  => __( 'All Sails Manufacturers', '5o5' ),
+			'new_item_name'              => __( 'New Sails Manufacturer Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Sails Manufacturer', '5o5' ),
+			'edit_item'                  => __( 'Edit Sails Manufacturer', '5o5' ),
+			'update_item'                => __( 'Update Sails Manufacturer', '5o5' ),
+			'view_item'                  => __( 'View Sails Manufacturer', '5o5' ),
+			'separate_items_with_commas' => __( 'Separate items with commas', '5o5' ),
+			'add_or_remove_items'        => __( 'Add or remove items', '5o5' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
+			'popular_items'              => __( 'Popular Sails Manufacturers', '5o5' ),
+			'search_items'               => __( 'Search Sails Manufacturers', '5o5' ),
+			'not_found'                  => __( 'Not Found', '5o5' ),
+			'no_terms'                   => __( 'No items', '5o5' ),
+			'items_list'                 => __( 'Sails Manufacturers list', '5o5' ),
+			'items_list_navigation'      => __( 'Sails Manufacturers list navigation', '5o5' ),
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => false,
+			'public'                     => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_ui'                    => true,
+			'show_in_quick_edit' => true,
+			'rewrite' => array(
+				'slug' => '5o5-sails-manufacturer',
+			),
+		);
+		register_taxonomy( $this->taxonomy_name_sails, array( $this->post_type_name ), $args );
+		/**
+		 * Masts Manufacturer Taxonomy.
+		 */
+		$labels = array(
+			'name'                       => _x( 'Masts Manufacturers', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Masts Manufacturer', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Masts Manufacturer', '5o5' ),
+			'all_items'                  => __( 'All Masts Manufacturers', '5o5' ),
+			'new_item_name'              => __( 'New Masts Manufacturer Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Masts Manufacturer', '5o5' ),
+			'edit_item'                  => __( 'Edit Masts Manufacturer', '5o5' ),
+			'update_item'                => __( 'Update Masts Manufacturer', '5o5' ),
+			'view_item'                  => __( 'View Masts Manufacturer', '5o5' ),
+			'separate_items_with_commas' => __( 'Separate items with commas', '5o5' ),
+			'add_or_remove_items'        => __( 'Add or remove items', '5o5' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
+			'popular_items'              => __( 'Popular Masts Manufacturers', '5o5' ),
+			'search_items'               => __( 'Search Masts Manufacturers', '5o5' ),
+			'not_found'                  => __( 'Not Found', '5o5' ),
+			'no_terms'                   => __( 'No items', '5o5' ),
+			'items_list'                 => __( 'Masts Manufacturers list', '5o5' ),
+			'items_list_navigation'      => __( 'Masts Manufacturers list navigation', '5o5' ),
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => false,
+			'public'                     => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_ui'                    => true,
+			'show_in_quick_edit' => true,
+			'rewrite' => array(
+				'slug' => '5o5-masts-manufacturer',
+			),
+		);
+		register_taxonomy( $this->taxonomy_name_mast, array( $this->post_type_name ), $args );
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {
@@ -242,6 +322,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'boat_in_poland_date' => __( 'In Poland:', '5o5' ),
 				'boat_name' => __( 'Name:', '5o5' ),
 				'colors' => __( 'Colors (top/side/bottom):', '5o5' ),
+				'sails' => __( 'Sails on:', '5o5' ),
+				'mast' => __( 'Mast:', '5o5' ),
 				'boat_sails' => __( 'Sails on:', '5o5' ),
 				'boat_mast' => __( 'Mast:', '5o5' ),
 				'boat_double_pole' => __( 'Double pole:', '5o5' ),
@@ -273,6 +355,12 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 						break;
 						case 'manufacturer':
 							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_manufacturer );
+							break;
+						case 'sails':
+							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_sails );
+							break;
+						case 'mast':
+							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_mast );
 							break;
 						case 'social':
 							foreach ( $this->fields['social'] as $social_key => $social ) {
