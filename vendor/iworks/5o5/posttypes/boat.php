@@ -512,6 +512,16 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				$query->set( 'orderby', 'post_title' );
 				return $query;
 			}
+			$taxonomy = get_query_var( $this->taxonomy_name_sails );
+			if ( ! empty( $taxonomy ) ) {
+				$query->set( 'orderby', 'post_title' );
+				return $query;
+			}
+			$taxonomy = get_query_var( $this->taxonomy_name_sails );
+			if ( ! empty( $taxonomy ) ) {
+				$query->set( 'orderby', 'post_title' );
+				return $query;
+			}
 			return $query;
 		}
 		/**
