@@ -366,7 +366,7 @@ module.exports = function( grunt ) {
 			},
 
 			po2mo: {
-				files: ['languages/*.po'],
+				files: [ 'languages/*.po'],
 				tasks: ['po2mo'],
 				options: {
 					debounceDelay: 500
@@ -462,8 +462,8 @@ module.exports = function( grunt ) {
 
 		po2mo: {
 			files: {
-				src: 'languages/pl_PL.po',
-				dest: 'languages/pl_PL.mo',
+				src: 'languages/5o5-pl_PL.po',
+				dest: 'languages/5o5-pl_PL.mo',
 			},
 		},
 

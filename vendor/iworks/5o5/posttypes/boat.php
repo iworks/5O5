@@ -45,14 +45,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		$this->fields = array(
 			'boat' => array(
 				'build_year' => array(
-					'type' => 'date',
 					'label' => __( 'Year of building', '5o5' ),
-					'args' => array(
-						'class' => array( 'medium-text' ),
-						'default' => date_i18n( 'Y', time() ),
-						'data-date-format' => 'yy',
-					),
-					'date-format' => 'Y',
 				),
 				'name' => array(
 					'label' => __( 'Boat name', '5o5' ),
@@ -67,13 +60,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					'label' => __( 'Color bottom', '5o5' ),
 				),
 				'in_poland_date' => array(
-					'type' => 'date',
 					'label' => __( 'In Poland:', '5o5' ),
-					'args' => array(
-						'class' => array( 'medium-text' ),
-						'default' => date_i18n( 'Y-m', time() ),
-						'data-date-format' => 'yy-mm',
-					),
 				),
 				'sails' => array(
 					'label' => __( 'Sails manufacturer', '5o5' ),
@@ -271,6 +258,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'boat_mast' => __( 'Mast:', '5o5' ),
 				'boat_double_pole' => __( 'Double pole:', '5o5' ),
 				'boat_location' => __( 'Location:', '5o5' ),
+				'boat_helm' => __( 'Helmsman:', '5o5' ),
+				'boat_crew' => __( 'Crew:', '5o5' ),
 				'social_website' => __( 'Web site', '5o5' ),
 				'social' => __( 'Social Media', '5o5' ),
 			);
@@ -318,15 +307,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					if ( empty( $value ) ) {
 						$value = _x( 'unknown', 'value of boat', '5o5' );
 						$value = '-';
-					}
-				} else {
-					switch ( $key ) {
-						case 'boat_build_year':
-							$value = date_i18n( 'Y', $value );
-						break;
-						case 'boat_in_poland_date':
-							$value = date_i18n( 'Y-m', $value );
-						break;
 					}
 				}
 				$text .= $this->boat_single_row( $key, $label, $value );
