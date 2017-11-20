@@ -66,14 +66,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'color_bottom' => array( 'label' => __( 'Color bottom', '5o5' ) ),
 				'in_poland_date' => array( 'label' => __( 'In Poland', '5o5' ) ),
 				'location' => array( 'label' => __( 'Location', '5o5' ) ),
-				'double_pole' => array(
-					'type' => 'switch_button',
-					'label' => __( 'Double pole', '5o5' ),
-					'args' => array(
-						'data-on_label' => __( 'Yes', '5o5' ),
-						'data-off_label' => __( 'No', '5o5' ),
-					),
-				),
 				'hull_material' => array( 'label' => __( 'Hull material', '5o5' ) ),
 				'helm' => array( 'label' => __( 'Helmsman', '5o5' ) ),
 				'crew' => array( 'label' => __( 'Crew', '5o5' ) ),
@@ -325,7 +317,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'colors' => __( 'Colors (top/side/bottom)', '5o5' ),
 				'sails' => __( 'Sails manufacturer', '5o5' ),
 				'mast' => __( 'Mast manufacturer', '5o5' ),
-				'boat_double_pole' => __( 'Double pole', '5o5' ),
 				'boat_location' => __( 'Location', '5o5' ),
 				'boat_helm' => __( 'Helmsman', '5o5' ),
 				'boat_crew' => __( 'Crew', '5o5' ),
@@ -383,12 +374,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 						$value = _x( 'unknown', 'value of boat', '5o5' );
 						$value = '-';
 					}
-				}
-				switch ( $key ) {
-					case 'boat_double_pole':
-						if ( 1 == $value ) {
-							$value = __( 'Yes', '5o5' );
-						}
 				}
 				$text .= $this->boat_single_row( $key, $label, $value );
 			}
