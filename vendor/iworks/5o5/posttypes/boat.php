@@ -66,7 +66,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'color_bottom' => array( 'label' => __( 'Color bottom', '5o5' ) ),
 				'in_poland_date' => array( 'label' => __( 'In Poland', '5o5' ) ),
 				'location' => array( 'label' => __( 'Location', '5o5' ) ),
-				'double_pole' => array( 'type' => 'switch_button', 'label' => __( 'Double pole', '5o5' ) ),
+				'double_pole' => array(
+					'type' => 'switch_button',
+					'label' => __( 'Double pole', '5o5' ),
+					'args' => array(
+						'data-on_label' => __( 'Yes', '5o5' ),
+						'data-off_label' => __( 'No', '5o5' ),
+					),
+				),
 				'hull_material' => array( 'label' => __( 'Hull material', '5o5' ) ),
 				'helm' => array( 'label' => __( 'Helmsman', '5o5' ) ),
 				'crew' => array( 'label' => __( 'Crew', '5o5' ) ),
