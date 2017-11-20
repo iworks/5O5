@@ -1,8 +1,10 @@
 .iworks-5o5-row {
     display: flex;
+    align-items: center;
     padding-bottom: .5em;
     label {
         width: 100px;
+        padding: 5px 10px 5px 0;
     }
     .select2 {
         min-width: 200px;
