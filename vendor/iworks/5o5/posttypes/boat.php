@@ -384,6 +384,12 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 						$value = '-';
 					}
 				}
+				switch ( $key ) {
+					case 'boat_double_pole':
+						if ( 1 == $value ) {
+							$value = __( 'Yes', '5o5' );
+						}
+				}
 				$text .= $this->boat_single_row( $key, $label, $value );
 			}
 			if ( ! empty( $text ) ) {

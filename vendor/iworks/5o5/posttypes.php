@@ -119,7 +119,6 @@ class iworks_5o5_posttypes {
 		if ( $this->post_type_name != $post_type ) {
 			return;
 		}
-
 		foreach ( $fields as $group => $group_data ) {
 			$post_key = $this->options->get_option_name( $group );
 			if ( isset( $_POST[ $post_key ] ) ) {
