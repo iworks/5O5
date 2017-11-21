@@ -188,7 +188,7 @@ class iworks_5o5 extends iworks {
 			'show_ui'                    => true,
 			'show_in_quick_edit' => true,
 			'rewrite' => array(
-				'slug' => '5o5-boat-number',
+				'slug' => _x( '5o5-boat-number', 'slug for images', '5o5' ),
 			),
 		);
 		register_taxonomy( 'boat_number', array( 'attachment' ), $args );
