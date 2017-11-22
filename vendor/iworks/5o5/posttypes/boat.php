@@ -323,6 +323,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'social_website' => __( 'Web site', '5o5' ),
 				'social' => __( 'Social Media', '5o5' ),
 			);
+			$separator = _x( ', ', 'Custom taxonomies separator.', '5o5' );
 			foreach ( $options as $key => $label ) {
 				$name = $this->options->get_option_name( $key );
 				$value = get_post_meta( get_the_ID(), $name, true );
@@ -344,13 +345,31 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 							}
 						break;
 						case 'manufacturer':
-							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_manufacturer );
+							$value = get_the_term_list(
+								get_the_ID(),
+								$this->taxonomy_name_manufacturer,
+								sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_manufacturer ) ),
+								$separator,
+								'</span>'
+							);
 							break;
 						case 'sails':
-							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_sails );
+							$value = get_the_term_list(
+								get_the_ID(),
+								$this->taxonomy_name_sails,
+								sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_sails ) ),
+								$separator,
+								'</span>'
+							);
 							break;
 						case 'mast':
-							$value = get_the_term_list( get_the_ID(), $this->taxonomy_name_mast );
+							$value = get_the_term_list(
+								get_the_ID(),
+								$this->taxonomy_name_mast,
+								sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_mast ) ),
+								$separator,
+								'</span>'
+							);
 							break;
 						case 'social':
 							foreach ( $this->fields['social'] as $social_key => $social ) {
