@@ -36,7 +36,6 @@ class iworks {
 	protected $version;
 
 	public function __construct() {
-
 		/**
 		 * static settings
 		 */
@@ -62,29 +61,20 @@ class iworks {
 		return sprintf( '%s_%s', $this->meta_prefix, sanitize_title( $name ) );
 	}
 
-	public function get_this_post_type() {
-
+	public function get_post_type() {
 		return $this->post_type;
 	}
 
 	public function get_this_capability() {
-
 		return $this->capability;
 	}
 
 	private function slug_name( $name ) {
-
 		return preg_replace( '/[_ ]+/', '-', strtolower( __CLASS__ . '_' . $name ) );
 	}
 
 	public function get_post_meta( $post_id, $meta_key ) {
-
 		return get_post_meta( $post_id, $this->get_meta_name( $meta_key ), true );
-	}
-
-	public function get_post_type() {
-
-		return $this->post_type;
 	}
 
 	protected function print_table_body( $post_id, $fields ) {
@@ -92,7 +82,6 @@ class iworks {
 		foreach ( $fields as $name => $data ) {
 			$key = $this->get_meta_name( $name );
 			$value = $this->get_post_meta( $post_id, $name );
-
 			/**
 			 * extra
 			 */

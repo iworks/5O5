@@ -32,6 +32,7 @@ class iworks_5o5 extends iworks {
 
 	private $capability;
 	private $post_type_boat;
+	private $post_type_person;
 
 	public function __construct() {
 		parent::__construct();
@@ -40,7 +41,7 @@ class iworks_5o5 extends iworks {
 		/**
 		 * post_types
 		 */
-		$post_types = array( 'boat' );
+		$post_types = array( 'boat', 'person' );
 		foreach ( $post_types as $post_type ) {
 			include_once( $this->base.'/iworks/5o5/posttypes/'.$post_type.'.php' );
 			$class = sprintf( 'iworks_5o5_posttypes_%s', $post_type );
@@ -58,6 +59,14 @@ class iworks_5o5 extends iworks {
 		iworks_5o5_options_init();
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
+	}
+
+	public function get_post_type_name( $post_type ) {
+		$value = sprintf( 'post_type_%s', $post_type );
+		if ( isset( $this->$value ) ) {
+			return $this->$value->get_name();
+		}
+		return new WP_Error( 'broke', __( '5o5 do not have such post type!', '5O5' ) );
 	}
 
 	public function admin_enqueue_scripts() {
@@ -126,7 +135,7 @@ class iworks_5o5 extends iworks {
 		 * @since 1.0.0
 		 */
 		wp_localize_script(
-			'' == $this->dev ? '5o5-admin-invoice':'5o5-admin',
+			'5o5-admin',
 			__CLASS__,
 			array(
 				'messages' => array(),

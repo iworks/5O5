@@ -100,6 +100,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	}
 
 	public function register() {
+		global $iworks_5o5;
+		$show_in_menu = add_query_arg( 'post_type', $iworks_5o5->get_post_type_name( 'person' ), 'edit.php' );
 		$labels = array(
 			'name'                  => _x( 'Boats', 'Boat General Name', '5o5' ),
 			'singular_name'         => _x( 'Boat', 'Boat Singular Name', '5o5' ),
@@ -107,7 +109,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'name_admin_bar'        => __( 'Boat', '5o5' ),
 			'archives'              => __( 'Boats', '5o5' ),
 			'attributes'            => __( 'Item Attributes', '5o5' ),
-			'all_items'             => __( 'All Boats', '5o5' ),
+			'all_items'             => __( 'Boats', '5o5' ),
 			'add_new_item'          => __( 'Add New Boat', '5o5' ),
 			'add_new'               => __( 'Add New', '5o5' ),
 			'new_item'              => __( 'New Boat', '5o5' ),
@@ -140,7 +142,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
-			'show_in_menu'          => true,
+			'show_in_menu'          => $show_in_menu,
 			'show_in_admin_bar'     => true,
 			'show_in_nav_menus'     => true,
 			'can_export'            => true,
