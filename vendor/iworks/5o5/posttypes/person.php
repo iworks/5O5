@@ -32,8 +32,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_person';
 	protected $taxonomy_name_club = 'iworks_5o5_club';
-	private $signle_boat_field_name;
-	private $nonce_single_boat;
+	private $nonce_list;
 
 	public function __construct() {
 		parent::__construct();
@@ -48,6 +47,11 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+		/**
+		 * AJAX list
+		 */
+		$this->nonce_list = $this->options->get_option_name( 'persons_list_nonce' );
+		add_action( 'wp_ajax_iworks_5o5_persons_list', array( $this, 'get_select2_list' ) );
 		/**
 		 * add nonce
 		 */
@@ -78,8 +82,6 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
-		$this->signle_boat_field_name = $this->options->get_option_name( 'boat' );
-		$this->nonce_single_boat = $this->options->get_option_name( 'nonce_single_boat' );
 	}
 
 	/**
@@ -185,9 +187,6 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	public function save_post_meta( $post_id, $post, $update ) {
 		$result = $this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
-		if ( $result && isset( $_POST[ $this->signle_boat_field_name ] ) ) {
-			l( $_POST[ $this->options->get_option_name( 'boat' ) ] );
-		}
 	}
 	/**
 	 *
@@ -201,43 +200,8 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	}
 
 	public function register_meta_boxes( $post ) {
-		add_meta_box( 'boat', __( 'Sailing on', '5o5' ), array( $this, 'boat' ), $this->post_type_name );
 		add_meta_box( 'social', __( 'Social Media', '5o5' ), array( $this, 'social' ), $this->post_type_name );
 		add_meta_box( 'contact', __( 'Contact data', '5o5' ), array( $this, 'contact' ), $this->post_type_name );
-	}
-
-	public function boat( $post ) {
-		add_action( 'admin_footer', array( $this, 'print_js_templates' ) );
-?>
-    <div id="iworks-boats-list"></div>
-    <button class="iworks-add-boat"><?php esc_html_e( 'Assign boat', '5o5' ); ?></button>
-<?php
-	}
-
-	public function print_js_templates() {
-?>
-<script type="text/html" id="tmpl-iworks-person-boat">
-<div class="iworks-boat-single" id="iworks-boat-single-{{{data.id}}}">
-    <span class="iworks-boat-current">
-        <label><input type="checkbox" name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][current]" /> <?php esc_html_e( 'Current boat', '5o5' ); ?></label>
-    </span>
-    <span class="iworks-boat-role">
-        <ul>
-            <li><label><input type="radio" name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][role][]" value="helmsman" /> <?php esc_html_e( 'Helmsman', '5o5' ); ?></label></li>
-            <li><label><input type="radio" name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][role][]" value="crew" /> <?php esc_html_e( 'Crew', '5o5' ); ?></label></li>
-        </ul>
-    </span>
-    <span>
-        <select name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][number]">
-            <option value=""><?php esc_html_e( 'Select a boat', '5o5' ); ?></option>
-        </select>
-    </span>
-    <span>
-        <a href="#" class="iworks-boat-single-delete"><?php esc_html_e( 'Delete', '5o5' ); ?></a>
-    </span>
-</div
-</script>
-<?php
 	}
 
 	public function contact( $post ) {
@@ -345,8 +309,37 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		return implode( ', ', $t );
 	}
 
+	public function get_select2_list() {
+		if ( ! isset( $_POST['_wpnonce'] ) || ! isset( $_POST['user_id'] ) ) {
+			wp_send_json_error();
+		}
+		$nonce = $_POST['_wpnonce'];
+		if ( ! wp_verify_nonce( $nonce, $this->nonce_list.$_POST['user_id'] ) ) {
+			wp_send_json_error();
+		}
+		$data = array();
+		$args = array(
+			'nopaging' => true,
+			'post_type' => $this->get_name(),
+			'orderby' => 'post_title',
+			'order' => 'ASC',
+		);
+		$the_query = new WP_Query( $args );
+		// The Loop
+		if ( $the_query->have_posts() ) {
+			foreach ( $the_query->posts as $post ) {
+				$data[] = array(
+					'id' => $post->ID,
+					'text' => $post->post_title,
+				);
+			}
+			wp_send_json_success( $data );
+		}
+		wp_send_json_error();
+	}
+
 	public function add_nonce( $data ) {
-		$data['nonces'][ $this->nonce_single_boat ] = wp_create_nonce( $this->nonce_single_boat.get_current_user_id() );
+		$data['nonces'][ $this->nonce_list ] = wp_create_nonce( $this->nonce_list.get_current_user_id() );
 		return $data;
 	}
 }

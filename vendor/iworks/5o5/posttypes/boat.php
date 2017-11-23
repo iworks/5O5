@@ -34,6 +34,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	protected $taxonomy_name_manufacturer = 'iworks_5o5_boat_manufacturer';
 	protected $taxonomy_name_sails = 'iworks_5o5_sails_manufacturer';
 	protected $taxonomy_name_mast = 'iworks_5o5_mast_manufacturer';
+	private $single_crew_field_name;
 
 	public function __construct() {
 		parent::__construct();
@@ -54,14 +55,13 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
-		/**
-		 * AJAX list
-		 */
-		add_action( 'wp_ajax_iworks_5o5_boats_list', array( $this, 'get_select2_list' ) );
+
+		$this->single_crew_field_name = $this->options->get_option_name( 'crew' );
 		/**
 		 * fields
 		 */
 		$this->fields = array(
+			'crew' => array(),
 			'boat' => array(
 				'build_year' => array( 'label' => __( 'Year of building', '5o5' ) ),
 				'name' => array( 'label' => __( 'Boat name', '5o5' ) ),
@@ -92,7 +92,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
-
 	}
 
 	/**
@@ -275,7 +274,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {
-		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+		$result = $this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+		if ( $result && isset( $_POST[ $this->single_crew_field_name ] ) ) {
+			$value = $_POST[ $this->single_crew_field_name ];
+			$result = add_post_meta( $post_id, $this->single_crew_field_name, $value, true );
+			if ( ! $result ) {
+				update_post_meta( $post_id, $this->single_crew_field_name, $value );
+			}
+		}
 	}
 
 	/**
@@ -428,9 +434,121 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	}
 
 	public function register_meta_boxes( $post ) {
+		add_meta_box( 'crew', __( 'Crews data', '5o5' ), array( $this, 'crew' ), $this->post_type_name );
 		add_meta_box( 'boat', __( 'Boat data', '5o5' ), array( $this, 'boat' ), $this->post_type_name );
 		add_meta_box( 'social', __( 'Social Media', '5o5' ), array( $this, 'social' ), $this->post_type_name );
 	}
+
+	public function crew( $post ) {
+		add_action( 'admin_footer', array( $this, 'print_js_templates' ) );
+?>
+    <table class="iworks-crews-list-container">
+        <thead>
+            <tr>
+                <th><?php esc_html_e( 'Current', '5o5' ); ?></th>
+                <th><?php esc_html_e( 'Helmsman', '5o5' ); ?></th>
+                <th><?php esc_html_e( 'Crew', '5o5' ); ?></th>
+                <th><?php esc_html_e( 'Action', '5o5' ); ?></th>
+            </tr>
+        </thead>
+        <tbody id="iworks-crews-list">
+<?php
+		$crews = get_post_meta( $post->ID, $this->single_crew_field_name, true );
+		$current = isset( $crews['current'] )? $crews['current']:'no';
+if ( isset( $crews['crew'] ) ) {
+	$persons = array();
+	foreach ( $crews['crew'] as $key => $data ) {
+		foreach ( array( 'helmsman', 'crew' ) as $role ) {
+			if ( ! isset( $data[ $role ] ) || empty( $data[ $role ] ) ) {
+				continue;
+			}
+			if ( isset( $persons[ $data[ $role ] ] ) ) {
+				continue;
+			}
+			$persons[ $data[ $role ] ] = get_the_title( $data[ $role ] );
+		}
+?>
+<tr class="iworks-crew-single-row" id="iworks-crew-<?php echo esc_attr( $key ); ?>">
+<td class="iworks-crew-current">
+<input type="radio" name="<?php echo $this->single_crew_field_name; ?>[current]" value="<?php echo esc_attr( $key ); ?>" <?php checked( $current, $key ); ?> />
+</td>
+<td class="iworks-crew-helmsman">
+<select name="<?php echo $this->single_crew_field_name; ?>[crew][<?php echo esc_attr( $key ); ?>][helmsman]">
+	<option value=""><?php esc_html_e( 'Select a helmsman', '5o5' ); ?></option>
+<?php
+if ( isset( $data['helmsman'] ) && ! empty( $data['helmsman'] ) && isset( $persons[ $data['helmsman'] ] ) ) {
+	printf(
+		'<option value="%d" selected>%s</option>',
+		esc_attr( $data['helmsman'] ),
+		esc_html( $persons[ $data['helmsman'] ] )
+	);
+}
+?>
+</select>
+</td>
+<td class="iworks-crew-crew">
+<select name="<?php echo $this->single_crew_field_name; ?>[crew][<?php echo esc_attr( $key ); ?>][crew]">
+	<option value=""><?php esc_html_e( 'Select a crew', '5o5' ); ?></option>
+<?php
+if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) && isset( $persons[ $data['crew'] ] ) ) {
+	printf(
+		'<option value="%d" selected>%s</option>',
+		esc_attr( $data['crew'] ),
+		esc_html( $persons[ $data['crew'] ] )
+	);
+}
+?>
+</select>
+</td>
+<td>
+<a href="#" class="iworks-crew-single-delete" data-id="<?php echo esc_attr( $key ); ?>"><?php esc_html_e( 'Delete', '5o5' ); ?></a>
+</td>
+</tr>
+<?php
+	}
+}
+?>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <label>
+                    <input type="radio" name="<?php echo $this->single_crew_field_name; ?>[current]" value="no" <?php checked( 'no', $current ) ?> />
+                        <?php esc_html_e( 'There is no current team', '5o5' ); ?>
+                    </label>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <button class="iworks-add-crew"><?php esc_html_e( 'Add a crew', '5o5' ); ?></button>
+<?php
+	}
+
+	public function print_js_templates() {
+?>
+<script type="text/html" id="tmpl-iworks-boat-crew">
+<tr class="iworks-crew-single-row" id="iworks-crew-{{{data.id}}}">
+    <td class="iworks-crew-current">
+<input type="radio" name="<?php echo $this->single_crew_field_name; ?>[current]" value="{{{data.id}}}" />
+    </td>
+    <td class="iworks-crew-helmsman">
+        <select name="<?php echo $this->single_crew_field_name; ?>[crew][{{{data.id}}}][helmsman]">
+            <option value=""><?php esc_html_e( 'Select a helmsman', '5o5' ); ?></option>
+        </select>
+    </td>
+    <td class="iworks-crew-crew">
+        <select name="<?php echo $this->single_crew_field_name; ?>[crew][{{{data.id}}}][crew]">
+            <option value=""><?php esc_html_e( 'Select a crew', '5o5' ); ?></option>
+        </select>
+    </td>
+    <td>
+        <a href="#" class="iworks-crew-single-delete" data-id="{{{data.id}}}"><?php esc_html_e( 'Delete', '5o5' ); ?></a>
+    </td>
+</tr>
+</script>
+<?php
+	}
+
 
 	public function boat( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
@@ -618,30 +736,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$ids = array_merge( $ids, $the_query->posts );
 		}
 		return $ids;
-	}
-
-	public function get_select2_list() {
-		l( $_POST );
-
-		$data = array();
-
-		$args = array(
-			'nopaging' => true,
-			'post_type' => $this->get_name(),
-			'orderby' => 'post_title',
-		);
-		$the_query = new WP_Query( $args );
-		// The Loop
-		if ( $the_query->have_posts() ) {
-			foreach ( $the_query->posts as $post ) {
-				$data[] = array(
-					'id' => $post->ID,
-					'text' => $post->post_title,
-				);
-			}
-			wp_send_json_success( $data );
-		}
-		wp_send_json_error();
 	}
 }
 

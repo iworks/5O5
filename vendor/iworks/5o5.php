@@ -111,8 +111,10 @@ class iworks_5o5 extends iworks {
 		if ( '' == $this->dev ) {
 			$files = array(
 				'5o5-admin-datepicker' => 'assets/scripts/admin/src/datepicker.js',
-				'5o5-admin-invoice' => 'assets/scripts/admin/src/invoice.js',
 				'5o5-admin-select2' => 'assets/scripts/admin/src/select2.js',
+				'5o5-admin-person' => 'assets/scripts/admin/src/person.js',
+				'5o5-admin-boat' => 'assets/scripts/admin/src/boat.js',
+				'5o5-admin' => 'assets/scripts/admin/src/5o5.js',
 			);
 		}
 		$deps = array(

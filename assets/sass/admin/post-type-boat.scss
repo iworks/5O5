@@ -16,3 +16,17 @@
     }
 }
 
+.post-type-iworks_5o5_boat {
+    .iworks-crews-list-container {
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        td {
+            border-top: 1px solid #aaa;
+            padding: 10px;
+        }
+        select {
+            min-width: 200px;
+            width: 100%;
+        }
+    }
+}
