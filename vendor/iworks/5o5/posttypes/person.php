@@ -72,7 +72,6 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
-
 	}
 
 	/**
@@ -171,9 +170,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			'show_ui'                    => true,
 			'show_in_menu'          => true,
 			'show_in_quick_edit' => true,
-			'rewrite' => array(
-				'slug' => '5o5-club',
-			),
+			'rewrite' => array( 'slug' => '5o5-club' ),
 		);
 		register_taxonomy( $this->taxonomy_name_club, array( $this->post_type_name ), $args );
 	}
@@ -193,8 +190,37 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	}
 
 	public function register_meta_boxes( $post ) {
+		add_meta_box( 'boat', __( 'Sailing on', '5o5' ), array( $this, 'boat' ), $this->post_type_name );
 		add_meta_box( 'social', __( 'Social Media', '5o5' ), array( $this, 'social' ), $this->post_type_name );
 		add_meta_box( 'contact', __( 'Contact data', '5o5' ), array( $this, 'contact' ), $this->post_type_name );
+	}
+
+	public function boat( $post ) {
+		add_action( 'admin_footer', array( $this, 'print_js_templates' ) );
+		echo 'fooo';
+
+?>
+    <div id="iworks-boats-list"></div>
+    <button class="iworks-add-boat"><?php esc_html_e( 'Add boat', '5o5' ); ?></button>
+<?php
+	}
+
+	public function print_js_templates() {
+?>
+<script type="text/html" id="tmpl-iworks-person-boat">
+<div class="iworks-single-boat">
+    <span class="iworks-boat-current">
+        <label><input type="checkbox" name="boat[current][]" /> <?php esc_html_e( 'Current boat', '5o5' ); ?></label>
+    </span>
+    <span class="iworks-boat-role">
+        <ul>
+            <li><label><input type="radio" name="boat[role][]" value="helmsman" /> <?php esc_html_e( 'Helmsman', '5o5' ); ?></label></li>
+            <li><label><input type="radio" name="boat[role][]" value="crew" /> <?php esc_html_e( 'Crew', '5o5' ); ?></label></li>
+        </ul>
+    </span>
+</div
+</script>
+<?php
 	}
 
 	public function contact( $post ) {
@@ -287,6 +313,19 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$query->set( 'orderby', 'post_title' );
 		}
 		return $query;
+	}
+
+	public function get_club( $content, $post_id ) {
+		$valid_post_type = $this->check_post_type_by_id( $post_id );
+		if ( ! $valid_post_type ) {
+			return $content;
+		}
+		$terms = wp_get_post_terms( $post_id, $this->taxonomy_name_club );
+		$t = array();
+		foreach ( $terms as $term ) {
+			$t[] = $term->name;
+		}
+		return implode( ', ', $t );
 	}
 }
 

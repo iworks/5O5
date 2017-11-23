@@ -35,6 +35,7 @@ module.exports = function( grunt ) {
 			'{js}admin/5o5.js': [
 				'{js}admin/src/datepicker.js',
 				'{js}admin/src/boat.js',
+				'{js}admin/src/person.js',
 				'{js}admin/src/select2.js'
 			]
 		},
@@ -136,10 +137,12 @@ module.exports = function( grunt ) {
 		// Regex patterns to exclude from transation.
 		translation: {
 			ignore_files: [
+				'.git*',
+				'inc/external/.*', // External libraries.
 				'node_modules/.*',
 				'(^.php)',		 // Ignore non-php files.
-				'inc/external/.*', // External libraries.
 				'release/.*',	  // Temp release files.
+				'.sass-cache/.*',
 				'tests/.*',		// Unit testing.
 			],
 			pot_dir: 'languages/', // With trailing slash.
@@ -454,7 +457,7 @@ module.exports = function( grunt ) {
 						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
 					},
 					updatePoFiles: true,
-					exclude: [ 'node_modules', '.git', '.sass-cache', 'release' ],
+//					exclude: [ 'node_modules', '.git', '.sass-cache', 'release' ],
 					type: 'wp-plugin' // wp-plugin or wp-theme
 				}
 			}
