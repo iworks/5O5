@@ -55,6 +55,10 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 		/**
+		 * AJAX list
+		 */
+		add_action( 'wp_ajax_iworks_5o5_boats_list', array( $this, 'get_select2_list' ) );
+		/**
 		 * fields
 		 */
 		$this->fields = array(
@@ -614,6 +618,30 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$ids = array_merge( $ids, $the_query->posts );
 		}
 		return $ids;
+	}
+
+	public function get_select2_list() {
+		l( $_POST );
+
+		$data = array();
+
+		$args = array(
+			'nopaging' => true,
+			'post_type' => $this->get_name(),
+			'orderby' => 'post_title',
+		);
+		$the_query = new WP_Query( $args );
+		// The Loop
+		if ( $the_query->have_posts() ) {
+			foreach ( $the_query->posts as $post ) {
+				$data[] = array(
+					'id' => $post->ID,
+					'text' => $post->post_title,
+				);
+			}
+			wp_send_json_success( $data );
+		}
+		wp_send_json_error();
 	}
 }
 

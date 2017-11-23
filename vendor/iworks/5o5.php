@@ -134,12 +134,15 @@ class iworks_5o5 extends iworks {
 		 *
 		 * @since 1.0.0
 		 */
+		$data = array(
+			'messages' => array(),
+			'nonces' => array(),
+			'user_id' => get_current_user_id(),
+		);
 		wp_localize_script(
 			'5o5-admin',
 			__CLASS__,
-			array(
-				'messages' => array(),
-			)
+			apply_filters( 'wp_localize_script_5o5_admin', $data )
 		);
 	}
 

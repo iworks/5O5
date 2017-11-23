@@ -117,7 +117,7 @@ class iworks_5o5_posttypes {
 
 		// If this isn't a Copyricorrect post, don't update it.
 		if ( $this->post_type_name != $post_type ) {
-			return;
+			return false;
 		}
 		foreach ( $fields as $group => $group_data ) {
 			$post_key = $this->options->get_option_name( $group );
@@ -150,6 +150,7 @@ class iworks_5o5_posttypes {
 				}
 			}
 		}
+		return true;
 	}
 
 	/**

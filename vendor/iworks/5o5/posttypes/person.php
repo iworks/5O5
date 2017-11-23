@@ -32,6 +32,8 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_person';
 	protected $taxonomy_name_club = 'iworks_5o5_club';
+	private $signle_boat_field_name;
+	private $nonce_single_boat;
 
 	public function __construct() {
 		parent::__construct();
@@ -46,6 +48,10 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+		/**
+		 * add nonce
+		 */
+		add_filter( 'wp_localize_script_5o5_admin', array( $this, 'add_nonce' ) );
 		/**
 		 * fields
 		 */
@@ -72,6 +78,8 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
+		$this->signle_boat_field_name = $this->options->get_option_name( 'boat' );
+		$this->nonce_single_boat = $this->options->get_option_name( 'nonce_single_boat' );
 	}
 
 	/**
@@ -176,7 +184,10 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {
-		$this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+		$result = $this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+		if ( $result && isset( $_POST[ $this->signle_boat_field_name ] ) ) {
+			l( $_POST[ $this->options->get_option_name( 'boat' ) ] );
+		}
 	}
 	/**
 	 *
@@ -197,26 +208,32 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	public function boat( $post ) {
 		add_action( 'admin_footer', array( $this, 'print_js_templates' ) );
-		echo 'fooo';
-
 ?>
     <div id="iworks-boats-list"></div>
-    <button class="iworks-add-boat"><?php esc_html_e( 'Add boat', '5o5' ); ?></button>
+    <button class="iworks-add-boat"><?php esc_html_e( 'Assign boat', '5o5' ); ?></button>
 <?php
 	}
 
 	public function print_js_templates() {
 ?>
 <script type="text/html" id="tmpl-iworks-person-boat">
-<div class="iworks-single-boat">
+<div class="iworks-boat-single" id="iworks-boat-single-{{{data.id}}}">
     <span class="iworks-boat-current">
-        <label><input type="checkbox" name="boat[current][]" /> <?php esc_html_e( 'Current boat', '5o5' ); ?></label>
+        <label><input type="checkbox" name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][current]" /> <?php esc_html_e( 'Current boat', '5o5' ); ?></label>
     </span>
     <span class="iworks-boat-role">
         <ul>
-            <li><label><input type="radio" name="boat[role][]" value="helmsman" /> <?php esc_html_e( 'Helmsman', '5o5' ); ?></label></li>
-            <li><label><input type="radio" name="boat[role][]" value="crew" /> <?php esc_html_e( 'Crew', '5o5' ); ?></label></li>
+            <li><label><input type="radio" name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][role][]" value="helmsman" /> <?php esc_html_e( 'Helmsman', '5o5' ); ?></label></li>
+            <li><label><input type="radio" name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][role][]" value="crew" /> <?php esc_html_e( 'Crew', '5o5' ); ?></label></li>
         </ul>
+    </span>
+    <span>
+        <select name="<?php echo $this->signle_boat_field_name; ?>[{{{data.id}}}][number]">
+            <option value=""><?php esc_html_e( 'Select a boat', '5o5' ); ?></option>
+        </select>
+    </span>
+    <span>
+        <a href="#" class="iworks-boat-single-delete"><?php esc_html_e( 'Delete', '5o5' ); ?></a>
     </span>
 </div
 </script>
@@ -326,6 +343,11 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$t[] = $term->name;
 		}
 		return implode( ', ', $t );
+	}
+
+	public function add_nonce( $data ) {
+		$data['nonces'][ $this->nonce_single_boat ] = wp_create_nonce( $this->nonce_single_boat.get_current_user_id() );
+		return $data;
 	}
 }
 

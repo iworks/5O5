@@ -1,18 +1,3 @@
-.iworks-5o5-row {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-  padding-bottom: .5em;
-}
-.iworks-5o5-row label {
-  width: 100px;
-  padding: 5px 10px 5px 0;
-}
-.iworks-5o5-row .select2 {
-  min-width: 200px;
-  width: 100%;
-}
 .post-type-iworks_5o5_person #iworks-boats-list .iworks-boat-single {
   display: -ms-flexbox;
   display: flex;
