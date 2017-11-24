@@ -214,4 +214,10 @@ class iworks_5o5 extends iworks {
 	public function get_person_name( $user_post_id ) {
 		return $this->post_type_person->get_person_name_by_id( $user_post_id );
 	}
+	/**
+	 * Get person avatar
+	 */
+	public function get_person_avatar( $user_post_id ) {
+		return $this->post_type_person->get_person_avatar_by_id( $user_post_id );
+	}
 }

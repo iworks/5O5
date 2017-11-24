@@ -63,6 +63,10 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 		/**
+		 * add crew to a boat
+		 */
+		add_action( 'international_5o5_content_template_overlay_end', array( $this, 'add_crew_to_boat' ), 10, 1 );
+		/**
 		 * Sinle crew meta field name
 		 */
 		$this->single_crew_field_name = $this->options->get_option_name( 'crew' );
@@ -308,7 +312,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			/**
 			 * prepare to add to persons
 			 */
-			$before = get_post_meta( $post_id, $this->single_crew_field_name, true );
+			$before = $this->get_crews_data( $post_id );
 			$added_users = array();
 			/**
 			 * delete if empty
@@ -493,7 +497,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 * crews data
 		 */
 		$text = '';
-		$crews = get_post_meta( $post_id, $this->single_crew_field_name, true );
+		$crews = $this->get_crews_data( $post_id );
 		if ( ! empty( $crews ) ) {
 			global $iworks_5o5;
 			$current = isset( $crews['current'] )? $crews['current'] : 'no';
@@ -586,7 +590,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
         </thead>
         <tbody id="iworks-crews-list">
 <?php
-		$crews = get_post_meta( $post->ID, $this->single_crew_field_name, true );
+		$crews = $this->get_crews_data( $post_id );
 		$current = isset( $crews['current'] )? $crews['current']:'no';
 if ( isset( $crews['crew'] ) ) {
 	$persons = array();
@@ -869,6 +873,38 @@ if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) && isset( $persons[ $dat
 			$ids = array_merge( $ids, $the_query->posts );
 		}
 		return $ids;
+	}
+
+	private function get_crews_data( $post_id ) {
+		return get_post_meta( $post_id, $this->single_crew_field_name, true );
+	}
+
+	public function add_crew_to_boat( $post_id ) {
+		global $iworks_5o5;
+		$content = '';
+		$crews = $this->get_crews_data( $post_id );
+		if ( ! isset( $crews['current'] ) || ! isset( $crews['crew'] ) || empty( $crews['crew'] ) ) {
+			return;
+		}
+		if ( ! isset( $crews['crew'][ $crews['current'] ] ) ) {
+			return;
+		}
+		$crew = $crews['crew'][ $crews['current'] ];
+		if ( isset( $crew['helmsman'] ) ) {
+			$user = $iworks_5o5->get_person_avatar( $crew['helmsman'] );
+			if ( ! empty( $user ) ) {
+				$content .= sprintf( '<div class="iworks-5o5-crew-avatar iworks-5o5-helmsman">%s</div>', $user );
+			}
+		}
+		if ( isset( $crew['crew'] ) ) {
+			$user = $iworks_5o5->get_person_avatar( $crew['crew'] );
+			if ( ! empty( $user ) ) {
+				$content .= sprintf( '<div class="iworks-5o5-crew-avatar iworks-5o5-crew">%s</div>', $user );
+			}
+		}
+		if ( ! empty( $content ) ) {
+			printf( '<div class="iworks-5o5-crews-container">%s</div>', $content );
+		}
 	}
 }
 

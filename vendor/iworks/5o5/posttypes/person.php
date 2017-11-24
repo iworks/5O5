@@ -344,6 +344,26 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		return $data;
 	}
 
+	private function get_user( $user_post_id ) {
+		$avatar_size = 100;
+		if ( ! isset( $this->users_list[ $user_post_id ] ) ) {
+			$thumbnail = get_the_post_thumbnail( $user_post_id, array( $avatar_size, $avatar_size ) );
+			if ( empty( $thumbnail ) ) {
+				$email = $this->options->get_option_name( 'contact_email' );
+				$email = get_post_meta( $user_post_id, $email, true );
+				$thumbnail = get_avatar( $email, $avatar_size );
+			}
+			$post = get_post( $user_post_id );
+			$this->users_list[ $user_post_id ] = array(
+				'user_post_id' => $user_post_id,
+				'permalink' => get_permalink( $post ),
+				'post_title' => get_the_title( $post ),
+				'avatar' => $thumbnail,
+			);
+		}
+		return $this->users_list[ $user_post_id ];
+	}
+
 	/**
 	 * Get person name
 	 */
@@ -355,17 +375,30 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		if ( ! $correct_post_type ) {
 			return _x( 'not set', 'Person name on crews list if it is not set', '5o5' );
 		}
-		if ( ! isset( $this->users_list[ $user_post_id ] ) ) {
-			$post = get_post( $user_post_id );
-			$this->users_list[ $user_post_id ] = array(
-				'permalink' => get_permalink( $post ),
-				'post_title' => get_the_title( $post ),
-			);
-		}
+		$user = $this->get_user( $user_post_id );
 		return sprintf(
 			'<a href="%s">%s</a>',
-			esc_url( $this->users_list[ $user_post_id ]['permalink'] ),
-			esc_html( $this->users_list[ $user_post_id ]['post_title'] )
+			esc_url( $user['permalink'] ),
+			esc_html( $user['post_title'] )
+		);
+	}
+
+	/**
+	 * Get person avatar
+	 */
+	public function get_person_avatar_by_id( $user_post_id ) {
+		if ( empty( $user_post_id ) ) {
+			return '';
+		}
+		$correct_post_type = $this->check_post_type_by_id( $user_post_id );
+		if ( ! $correct_post_type ) {
+			return '';
+		}
+		$user = $this->get_user( $user_post_id );
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( $user['permalink'] ),
+			$user['avatar']
 		);
 	}
 }
