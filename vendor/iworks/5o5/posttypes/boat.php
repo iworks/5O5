@@ -590,7 +590,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
         </thead>
         <tbody id="iworks-crews-list">
 <?php
-		$crews = $this->get_crews_data( $post_id );
+		$crews = $this->get_crews_data( $post->ID );
 		$current = isset( $crews['current'] )? $crews['current']:'no';
 if ( isset( $crews['crew'] ) ) {
 	$persons = array();
