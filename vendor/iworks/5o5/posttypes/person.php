@@ -61,6 +61,9 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		 * fields
 		 */
 		$this->fields = array(
+			'personal' => array(
+				'birth_year' => array( 'label' => __( 'Birth year', '5o5' ) ),
+			),
 			'social' => array(
 				'website' => array( 'label' => __( 'Web site', '5o5' ) ),
 				'facebook' => array( 'label' => __( 'Facebook', '5o5' ) ),
@@ -201,6 +204,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	}
 
 	public function register_meta_boxes( $post ) {
+		add_meta_box( 'personal', __( 'Personal data', '5o5' ), array( $this, 'personal' ), $this->post_type_name );
 		add_meta_box( 'social', __( 'Social Media', '5o5' ), array( $this, 'social' ), $this->post_type_name );
 		add_meta_box( 'contact', __( 'Contact data', '5o5' ), array( $this, 'contact' ), $this->post_type_name );
 	}
@@ -210,6 +214,10 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	}
 
 	public function social( $post ) {
+		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+	public function personal( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
@@ -224,6 +232,17 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	 */
 	public function custom_columns( $column, $post_id ) {
 		switch ( $column ) {
+			case 'birth_year':
+				$meta_name = $this->options->get_option_name( 'personal_'.$column );
+				echo get_post_meta( $post_id, $meta_name, true );
+			break;
+			case 'email':
+				$meta_name = $this->options->get_option_name( 'contact_'.$column );
+				$email = get_post_meta( $post_id, $meta_name, true );
+				if ( ! empty( $email ) ) {
+					printf( '<a href="mailto:%s">%s</a>', esc_attr( $email ), esc_html( $email ) );
+				}
+			break;
 		}
 	}
 
@@ -238,6 +257,8 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
 		$columns['title'] = __( 'Name', '5o5' );
+		$columns['birth_year'] = __( 'Birth year', '5o5' );
+		$columns['email'] = __( 'E-mail', '5o5' );
 		return $columns;
 	}
 
@@ -347,11 +368,28 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	private function get_user( $user_post_id ) {
 		$avatar_size = 100;
 		if ( ! isset( $this->users_list[ $user_post_id ] ) ) {
-			$thumbnail = get_the_post_thumbnail( $user_post_id, array( $avatar_size, $avatar_size ) );
+			$thumbnail = '';
+			/**
+			 * try to get gravatar
+			 */
+			$email = $this->options->get_option_name( 'contact_email' );
+			$email = get_post_meta( $user_post_id, $email, true );
+			$avatar = get_avatar( $email, $avatar_size, null );
+			$avatar_meta = get_avatar_data( $email );
+			if ( $avatar_meta['found_avatar'] ) {
+				$thumbnail = $avatar;
+			}
+			/**
+			 * fallback go post thumbnail
+			 */
 			if ( empty( $thumbnail ) ) {
-				$email = $this->options->get_option_name( 'contact_email' );
-				$email = get_post_meta( $user_post_id, $email, true );
-				$thumbnail = get_avatar( $email, $avatar_size );
+				$thumbnail = get_the_post_thumbnail( $user_post_id, array( $avatar_size, $avatar_size ) );
+			}
+			/**
+			 * fallback to default gravatar
+			 */
+			if ( empty( $thumbnail ) ) {
+				$thumbnail = $avatar;
 			}
 			$post = get_post( $user_post_id );
 			$this->users_list[ $user_post_id ] = array(

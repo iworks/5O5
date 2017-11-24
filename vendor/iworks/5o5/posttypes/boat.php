@@ -297,6 +297,9 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		if ( $result && isset( $_POST[ $this->single_crew_field_name ] ) ) {
 			$value = $_POST[ $this->single_crew_field_name ];
+			if ( ! isset( $value['crew'] ) ) {
+				$value['crew'] = array();
+			}
 			/**
 			 * clear empty data
 			 */
@@ -313,6 +316,9 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			 * prepare to add to persons
 			 */
 			$before = $this->get_crews_data( $post_id );
+			if ( ! isset( $before['crew'] ) ) {
+				$before['crew'] = array();
+			}
 			$added_users = array();
 			/**
 			 * delete if empty
