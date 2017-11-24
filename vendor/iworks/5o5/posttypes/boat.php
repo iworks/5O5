@@ -153,7 +153,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		$args = array(
 			'label'                 => __( 'Boat', '5o5' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision', ),
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision' ),
 			'taxonomies'            => array(
 				$this->taxonomy_name_manufacturer,
 				$this->taxonomy_name_sails,
@@ -407,8 +407,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'sails' => __( 'Sails manufacturer', '5o5' ),
 			'mast' => __( 'Mast manufacturer', '5o5' ),
 			'boat_location' => __( 'Location', '5o5' ),
-			'boat_helm' => __( 'Helmsman', '5o5' ),
-			'boat_crew' => __( 'Crew', '5o5' ),
 			'social_website' => __( 'Web site', '5o5' ),
 			'social' => __( 'Social Media', '5o5' ),
 		);
@@ -533,7 +531,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 					$text .= '</tr>';
 				}
 				$text .= '<tbody>';
-				$text .= '<table>';
+				$text .= '</table>';
 			}
 			if ( ! empty( $text ) ) {
 				$content = sprintf(

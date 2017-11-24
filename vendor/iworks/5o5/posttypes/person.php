@@ -126,7 +126,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		$args = array(
 			'label'                 => __( 'person', '5o5' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision', ),
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision' ),
 			'taxonomies'            => array(
 				$this->taxonomy_name_club,
 			),
@@ -396,8 +396,9 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		}
 		$user = $this->get_user( $user_post_id );
 		return sprintf(
-			'<a href="%s">%s</a>',
+			'<a href="%s" title="%s">%s</a>',
 			esc_url( $user['permalink'] ),
+			esc_attr( $user['post_title'] ),
 			$user['avatar']
 		);
 	}
