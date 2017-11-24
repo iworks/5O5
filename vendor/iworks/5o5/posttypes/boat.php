@@ -153,7 +153,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		$args = array(
 			'label'                 => __( 'Boat', '5o5' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'thumbnail' ),
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision', ),
 			'taxonomies'            => array(
 				$this->taxonomy_name_manufacturer,
 				$this->taxonomy_name_sails,

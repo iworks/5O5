@@ -126,7 +126,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		$args = array(
 			'label'                 => __( 'person', '5o5' ),
 			'labels'                => $labels,
-			'supports'              => array( 'title', 'editor', 'thumbnail' ),
+			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision', ),
 			'taxonomies'            => array(
 				$this->taxonomy_name_club,
 			),
