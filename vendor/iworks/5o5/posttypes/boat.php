@@ -34,7 +34,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	protected $taxonomy_name_manufacturer = 'iworks_5o5_boat_manufacturer';
 	protected $taxonomy_name_sails = 'iworks_5o5_sails_manufacturer';
 	protected $taxonomy_name_mast = 'iworks_5o5_mast_manufacturer';
+	/**
+	 * Sinle crew meta field name
+	 */
 	private $single_crew_field_name;
+	/**
+	 * Sinle boat meta field name
+	 */
+	private $single_boat_field_name;
 
 	public function __construct() {
 		parent::__construct();
@@ -55,8 +62,14 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
-
+		/**
+		 * Sinle crew meta field name
+		 */
 		$this->single_crew_field_name = $this->options->get_option_name( 'crew' );
+		/**
+		 * Sinle boat meta field name
+		 */
+		$this->single_boat_field_name = $this->options->get_option_name( 'boat', true );
 		/**
 		 * fields
 		 */
@@ -275,11 +288,68 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 	public function save_post_meta( $post_id, $post, $update ) {
 		$result = $this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+		/**
+		 * save crews
+		 */
 		if ( $result && isset( $_POST[ $this->single_crew_field_name ] ) ) {
 			$value = $_POST[ $this->single_crew_field_name ];
-			$result = add_post_meta( $post_id, $this->single_crew_field_name, $value, true );
-			if ( ! $result ) {
-				update_post_meta( $post_id, $this->single_crew_field_name, $value );
+			/**
+			 * clear empty data
+			 */
+			foreach ( $value['crew'] as $key => $data ) {
+				if ( isset( $data['helmsman'] ) && ! empty( $data['helmsman'] ) ) {
+					continue;
+				}
+				if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) ) {
+					continue;
+				}
+				unset( $value['crew'][ $key ] );
+			}
+			/**
+			 * prepare to add to persons
+			 */
+			$before = get_post_meta( $post_id, $this->single_crew_field_name, true );
+			$added_users = array();
+			/**
+			 * delete if empty
+			 */
+			if ( empty( $value['crew'] ) ) {
+				delete_post_meta( $post_id, $this->single_crew_field_name );
+			} else {
+				$result = add_post_meta( $post_id, $this->single_crew_field_name, $value, true );
+				if ( ! $result ) {
+					update_post_meta( $post_id, $this->single_crew_field_name, $value );
+				}
+				foreach ( $value['crew'] as $key => $data ) {
+					if ( isset( $data['helmsman'] ) && ! empty( $data['helmsman'] ) ) {
+						$added_users[] = $data['helmsman'];
+					}
+					if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) ) {
+						$added_users[] = $data['crew'];
+					}
+				}
+			}
+			/**
+			 * remove users
+			 */
+			foreach ( $before['crew'] as $key => $data ) {
+				foreach ( array( 'helmsman', 'crew' ) as $key ) {
+					if ( isset( $data[ $key ] ) && ! empty( $data[ $key ] ) ) {
+						$user_post_id = $data[ $key ];
+						if ( ! in_array( $user_post_id, $added_users ) ) {
+							delete_post_meta( $user_post_id, $this->single_boat_field_name, $post_id );
+						}
+					}
+				}
+			}
+			/**
+			 * add boat meta to user
+			 */
+			foreach ( $added_users as $user_post_id ) {
+				$assigned_boats = get_post_meta( $user_post_id, $this->single_boat_field_name );
+				if ( ! in_array( $user_post_id, $assigned_boats ) ) {
+					add_post_meta( $user_post_id, $this->single_boat_field_name, $post_id, false );
+				}
 			}
 		}
 	}
@@ -318,106 +388,169 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			return $content;
 		}
 		$post_type = get_post_type();
-		if ( $post_type == $this->post_type_name ) {
-			$text = '';
-			$options = array(
-				'boat_build_year' => __( 'Year of building', '5o5' ),
-				'manufacturer' => __( 'Hull manufacturer', '5o5' ),
-				'boat_hull_material' => __( 'Hull material', '5o5' ),
-				'boat_in_poland_date' => __( 'In Poland', '5o5' ),
-				'boat_name' => __( 'Name', '5o5' ),
-				'colors' => __( 'Colors (top/side/bottom)', '5o5' ),
-				'sails' => __( 'Sails manufacturer', '5o5' ),
-				'mast' => __( 'Mast manufacturer', '5o5' ),
-				'boat_location' => __( 'Location', '5o5' ),
-				'boat_helm' => __( 'Helmsman', '5o5' ),
-				'boat_crew' => __( 'Crew', '5o5' ),
-				'social_website' => __( 'Web site', '5o5' ),
-				'social' => __( 'Social Media', '5o5' ),
-			);
-			$separator = _x( ', ', 'Custom taxonomies separator.', '5o5' );
-			foreach ( $options as $key => $label ) {
-				$name = $this->options->get_option_name( $key );
-				$value = get_post_meta( get_the_ID(), $name, true );
-				if ( empty( $value ) ) {
-					switch ( $key ) {
-						/**
-						 * handle colors
-						 */
-						case 'colors':
-							$colors = array();
-							$colors_keys = array( 'top', 'side', 'bottom' );
-							foreach ( $colors_keys as $ckey ) {
-								$cname = $this->options->get_option_name( 'boat_color_'.$ckey );
-								$colors[] = get_post_meta( get_the_ID(), $cname, true );
+		if ( $post_type != $this->post_type_name ) {
+			return $content;
+		}
+		$post_id = get_the_ID();
+		$text = '';
+		$options = array(
+			'boat_build_year' => __( 'Year of building', '5o5' ),
+			'manufacturer' => __( 'Hull manufacturer', '5o5' ),
+			'boat_hull_material' => __( 'Hull material', '5o5' ),
+			'boat_in_poland_date' => __( 'In Poland', '5o5' ),
+			'boat_name' => __( 'Name', '5o5' ),
+			'colors' => __( 'Colors (top/side/bottom)', '5o5' ),
+			'sails' => __( 'Sails manufacturer', '5o5' ),
+			'mast' => __( 'Mast manufacturer', '5o5' ),
+			'boat_location' => __( 'Location', '5o5' ),
+			'boat_helm' => __( 'Helmsman', '5o5' ),
+			'boat_crew' => __( 'Crew', '5o5' ),
+			'social_website' => __( 'Web site', '5o5' ),
+			'social' => __( 'Social Media', '5o5' ),
+		);
+		$separator = _x( ', ', 'Custom taxonomies separator.', '5o5' );
+		foreach ( $options as $key => $label ) {
+			$name = $this->options->get_option_name( $key );
+			$value = get_post_meta( $post_id, $name, true );
+			if ( empty( $value ) ) {
+				switch ( $key ) {
+					/**
+					 * handle colors
+					 */
+					case 'colors':
+						$colors = array();
+						$colors_keys = array( 'top', 'side', 'bottom' );
+						foreach ( $colors_keys as $ckey ) {
+							$cname = $this->options->get_option_name( 'boat_color_'.$ckey );
+							$colors[] = get_post_meta( $post_id, $cname, true );
+						}
+						$colors = array_filter( $colors );
+						if ( ! empty( $colors ) ) {
+							$value = implode( '/', $colors );
+						}
+					break;
+					case 'manufacturer':
+						$value = get_the_term_list(
+							$post_id,
+							$this->taxonomy_name_manufacturer,
+							sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_manufacturer ) ),
+							$separator,
+							'</span>'
+						);
+					break;
+					case 'sails':
+						$value = get_the_term_list(
+							$post_id,
+							$this->taxonomy_name_sails,
+							sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_sails ) ),
+							$separator,
+							'</span>'
+						);
+					break;
+					case 'mast':
+						$value = get_the_term_list(
+							$post_id,
+							$this->taxonomy_name_mast,
+							sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_mast ) ),
+							$separator,
+							'</span>'
+						);
+					break;
+					case 'social':
+						foreach ( $this->fields['social'] as $social_key => $social ) {
+							if ( 'website' == $social_key ) {
+								continue;
 							}
-							$colors = array_filter( $colors );
-							if ( ! empty( $colors ) ) {
-								$value = implode( '/', $colors );
+							$name = $this->options->get_option_name( 'social_'.$social_key );
+							$social_value = get_post_meta( $post_id, $name, true );
+							if ( empty( $social_value ) ) {
+								continue;
 							}
-						break;
-						case 'manufacturer':
-							$value = get_the_term_list(
-								get_the_ID(),
-								$this->taxonomy_name_manufacturer,
-								sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_manufacturer ) ),
-								$separator,
-								'</span>'
+							$value .= sprintf(
+								'<a href="%s"><span class="dashicons dashicons-%s"></span></a>',
+								$social_value,
+								$social_key
 							);
-							break;
-						case 'sails':
-							$value = get_the_term_list(
-								get_the_ID(),
-								$this->taxonomy_name_sails,
-								sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_sails ) ),
-								$separator,
-								'</span>'
-							);
-							break;
-						case 'mast':
-							$value = get_the_term_list(
-								get_the_ID(),
-								$this->taxonomy_name_mast,
-								sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_mast ) ),
-								$separator,
-								'</span>'
-							);
-							break;
-						case 'social':
-							foreach ( $this->fields['social'] as $social_key => $social ) {
-								if ( 'website' == $social_key ) {
-									continue;
-								}
-								$name = $this->options->get_option_name( 'social_'.$social_key );
-								$social_value = get_post_meta( get_the_ID(), $name, true );
-								if ( empty( $social_value ) ) {
-									continue;
-								}
-								$value .= sprintf(
-									'<a href="%s"><span class="dashicons dashicons-%s"></span></a>',
-									$social_value,
-									$social_key
-								);
-							}
-							break;
-					}
-					if ( empty( $value ) ) {
-						$value = _x( 'unknown', 'value of boat', '5o5' );
-						$value = '-';
-					}
+						}
+					break;
 				}
-				$text .= $this->boat_single_row( $key, $label, $value );
+				if ( empty( $value ) ) {
+					$value = _x( 'unknown', 'value of boat', '5o5' );
+					$value = '-';
+				}
+			}
+			$text .= $this->boat_single_row( $key, $label, $value );
+		}
+		if ( ! empty( $text ) ) {
+			$content = sprintf(
+				'<h2>%s</h2><table class="boat-data">%s</table>%s',
+				esc_html__( 'Boat details', '5o5' ),
+				$text,
+				$content
+			);
+		}
+		/**
+		 * crews data
+		 */
+		$text = '';
+		$crews = get_post_meta( $post_id, $this->single_crew_field_name, true );
+		if ( ! empty( $crews ) ) {
+			global $iworks_5o5;
+			$current = isset( $crews['current'] )? $crews['current'] : 'no';
+			if ( isset( $crews['crew'][ $current ] ) ) {
+				$crew = $crews['crew'][ $current ];
+				$text .= '<div class="iworks-5o5-current-crew">';
+				$text .= sprintf( '<h2>%s</h2>', esc_html__( 'Current crew', '5o5' ) );
+				$text .= '<dl>';
+				$text .= sprintf( '<dt>%s</dt>', esc_html__( 'Helmsman', '5o5' ) );
+				$text .= sprintf( '<dd>%s</dd>', $iworks_5o5->get_person_name( $crew['helmsman'] ) );
+				$text .= sprintf( '<dt>%s</dt>', esc_html__( 'Crew', '5o5' ) );
+				$text .= sprintf( '<dd>%s</dd>', $iworks_5o5->get_person_name( $crew['crew'] ) );
+				$text .= '</dl>';
+				$text .= '<div>';
+				unset( $crews['crew'][ $current ] );
+			}
+			$crews = $crews['crew'];
+			if ( ! empty( $crews ) ) {
+				$text .= '<div class="iworks-5o5-past-crews">';
+				$text .= sprintf( '<h2>%s</h2>', esc_html( _nx( 'Past crew', 'Past crews', count( $crews ), 'Past crews number', '5o5' ) ) );
+				$text .= '<table>';
+				$text .= '<thead>';
+				$text .= '<tr>';
+				$text .= sprintf( '<th>%s</th>', esc_html__( 'Helmsman', '5o5' ) );
+				$text .= sprintf( '<th>%s</th>', esc_html__( 'Crew', '5o5' ) );
+				$text .= '</tr>';
+				$text .= '<thead>';
+				$text .= '<tbody>';
+				foreach ( $crews as $data ) {
+					$text .= '<tr>';
+					$text .= sprintf( '<td class="helmsman">%s</td>', $iworks_5o5->get_person_name( $data['helmsman'] ) );
+					$text .= sprintf( '<td class="crew">%s</td>', $iworks_5o5->get_person_name( $data['crew'] ) );
+					$text .= '</tr>';
+				}
+				$text .= '<tbody>';
+				$text .= '<table>';
 			}
 			if ( ! empty( $text ) ) {
-				$content = sprintf( '<table class="boat-data">%s</table>%s', $text, $content );
-			}
-			$post_id = get_the_ID();
-			$ids = $this->get_media( $post_id );
-			if ( ! empty( $ids ) ) {
-				$shortcode = sprintf( '[gallery ids="%s" link="file"]', implode( ',', $ids ) );
-				$content .= do_shortcode( $shortcode );
+				$content = sprintf(
+					'<div class="iworks-5o5-crews-container">%s</div>%s',
+					$text,
+					$content
+				);
 			}
 		}
+
+		/**
+		 * attach gallery
+		 */
+		$ids = $this->get_media( $post_id );
+		if ( ! empty( $ids ) ) {
+			$shortcode = sprintf( '[gallery ids="%s" link="file"]', implode( ',', $ids ) );
+			$content .= do_shortcode( $shortcode );
+		}
+		/**
+		 * return content
+		 */
 		return $content;
 	}
 
@@ -474,7 +607,7 @@ if ( isset( $crews['crew'] ) ) {
 </td>
 <td class="iworks-crew-helmsman">
 <select name="<?php echo $this->single_crew_field_name; ?>[crew][<?php echo esc_attr( $key ); ?>][helmsman]">
-	<option value=""><?php esc_html_e( 'Select a helmsman', '5o5' ); ?></option>
+	<option value=""><?php esc_html_e( 'Select or remove a helmsman', '5o5' ); ?></option>
 <?php
 if ( isset( $data['helmsman'] ) && ! empty( $data['helmsman'] ) && isset( $persons[ $data['helmsman'] ] ) ) {
 	printf(
@@ -488,7 +621,7 @@ if ( isset( $data['helmsman'] ) && ! empty( $data['helmsman'] ) && isset( $perso
 </td>
 <td class="iworks-crew-crew">
 <select name="<?php echo $this->single_crew_field_name; ?>[crew][<?php echo esc_attr( $key ); ?>][crew]">
-	<option value=""><?php esc_html_e( 'Select a crew', '5o5' ); ?></option>
+	<option value=""><?php esc_html_e( 'Select or remove a  crew', '5o5' ); ?></option>
 <?php
 if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) && isset( $persons[ $data['crew'] ] ) ) {
 	printf(

@@ -32,7 +32,8 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_person';
 	protected $taxonomy_name_club = 'iworks_5o5_club';
-	private $nonce_list;
+	private $nonce_list = '';
+	private $users_list = array();
 
 	public function __construct() {
 		parent::__construct();
@@ -341,6 +342,31 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	public function add_nonce( $data ) {
 		$data['nonces'][ $this->nonce_list ] = wp_create_nonce( $this->nonce_list.get_current_user_id() );
 		return $data;
+	}
+
+	/**
+	 * Get person name
+	 */
+	public function get_person_name_by_id( $user_post_id ) {
+		if ( empty( $user_post_id ) ) {
+			return _x( 'not set', 'Person name on crews list if it is not set', '5o5' );
+		}
+		$correct_post_type = $this->check_post_type_by_id( $user_post_id );
+		if ( ! $correct_post_type ) {
+			return _x( 'not set', 'Person name on crews list if it is not set', '5o5' );
+		}
+		if ( ! isset( $this->users_list[ $user_post_id ] ) ) {
+			$post = get_post( $user_post_id );
+			$this->users_list[ $user_post_id ] = array(
+				'permalink' => get_permalink( $post ),
+				'post_title' => get_the_title( $post ),
+			);
+		}
+		return sprintf(
+			'<a href="%s">%s</a>',
+			esc_url( $this->users_list[ $user_post_id ]['permalink'] ),
+			esc_html( $this->users_list[ $user_post_id ]['post_title'] )
+		);
 	}
 }
 

@@ -207,4 +207,11 @@ class iworks_5o5 extends iworks {
 		);
 		register_taxonomy( 'boat_number', array( 'attachment' ), $args );
 	}
+
+	/**
+	 * Get person name
+	 */
+	public function get_person_name( $user_post_id ) {
+		return $this->post_type_person->get_person_name_by_id( $user_post_id );
+	}
 }
