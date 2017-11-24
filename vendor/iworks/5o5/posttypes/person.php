@@ -375,7 +375,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$email = $this->options->get_option_name( 'contact_email' );
 			$email = get_post_meta( $user_post_id, $email, true );
 			$avatar = get_avatar( $email, $avatar_size, null );
-			$avatar_meta = get_avatar_data( $email );
+			$avatar_meta = get_avatar_data( $email, $avatar_size );
 			if ( $avatar_meta['found_avatar'] ) {
 				$thumbnail = $avatar;
 			}
