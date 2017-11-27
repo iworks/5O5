@@ -70,6 +70,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 				'twitter' => array( 'label' => __( 'Twitter', '5o5' ) ),
 				'instagram' => array( 'label' => __( 'Instagram', '5o5' ) ),
 				'gplus' => array( 'label' => __( 'G+', '5o5' ) ),
+				'endomondo' => array( 'label' => __( 'Endomondo', '5o5' ) ),
 			),
 			'contact' => array(
 				'mobile' => array( 'label' => __( 'Mobile', '5o5' ) ),
@@ -191,16 +192,6 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	public function save_post_meta( $post_id, $post, $update ) {
 		$result = $this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
-	}
-	/**
-	 *
-	 * @since 1.0
-	 */
-	public function the_content( $content ) {
-		if ( ! is_singular() ) {
-			return $content;
-		}
-		return $content;
 	}
 
 	public function register_meta_boxes( $post ) {
@@ -439,6 +430,30 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			esc_attr( $user['post_title'] ),
 			$user['avatar']
 		);
+	}
+
+	/**
+	 *
+	 * @since 1.0
+	 */
+	public function the_content( $content ) {
+		if ( ! is_singular() ) {
+			return $content;
+		}
+		$post_type = get_post_type();
+		if ( $post_type != $this->post_type_name ) {
+			return $content;
+		}
+		$post_id = get_the_ID();
+		/**
+		 * Endomondo
+		 */
+		$name = $this->options->get_option_name( 'social_endomondo' );
+		$value = get_post_meta( $post_id, $name, true );
+		if ( ! empty( $value ) ) {
+			$content .= sprintf( '<iframe src="https://www.endomondo.com/embed/user/summary?id=%d&sport=12&measure=0&zone=Gp0100_SAR&width=400&height=217" width="400" height="217" frameborder="0" scrolling="no" ></iframe>', $value );
+		}
+		return $content;
 	}
 }
 
