@@ -37,11 +37,11 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	/**
 	 * Sinle crew meta field name
 	 */
-	private $single_crew_field_name;
+	private $single_crew_field_name = 'iworks_5o5_boat_crew';
 	/**
 	 * Sinle boat meta field name
 	 */
-	private $single_boat_field_name;
+	private $single_boat_field_name = 'iworks_5o5_boat_boat';
 
 	public function __construct() {
 		parent::__construct();
@@ -67,13 +67,18 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		add_action( 'international_5o5_content_template_overlay_end', array( $this, 'add_crew_to_boat' ), 10, 1 );
 		/**
-		 * Sinle crew meta field name
+		 * replace names to proper
 		 */
-		$this->single_crew_field_name = $this->options->get_option_name( 'crew' );
-		/**
-		 * Sinle boat meta field name
-		 */
-		$this->single_boat_field_name = $this->options->get_option_name( 'boat', true );
+		if ( is_a( $this->options, 'iworks_options' ) ) {
+			/**
+			 * Sinle crew meta field name
+			 */
+			$this->single_crew_field_name = $this->options->get_option_name( 'crew' );
+			/**
+			 * Sinle boat meta field name
+			 */
+			$this->single_boat_field_name = $this->options->get_option_name( 'boat', true );
+		}
 		/**
 		 * fields
 		 */
@@ -90,6 +95,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				'hull_material' => array( 'label' => __( 'Hull material', '5o5' ) ),
 				'helm' => array( 'label' => __( 'Helmsman', '5o5' ) ),
 				'crew' => array( 'label' => __( 'Crew', '5o5' ) ),
+				'first_certified_date' => array( 'type' => 'date', 'label' => __( 'First Certified', '5o5' ) ),
 			),
 			'social' => array(
 				'website' => array( 'label' => __( 'Web site', '5o5' ) ),
@@ -292,10 +298,13 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 
 	public function save_post_meta( $post_id, $post, $update ) {
 		$result = $this->save_post_meta_fields( $post_id, $post, $update, $this->fields );
+		if ( ! $result ) {
+			return;
+		}
 		/**
 		 * save crews
 		 */
-		if ( $result && isset( $_POST[ $this->single_crew_field_name ] ) ) {
+		if ( isset( $_POST[ $this->single_crew_field_name ] ) ) {
 			$value = $_POST[ $this->single_crew_field_name ];
 			if ( ! isset( $value['crew'] ) ) {
 				$value['crew'] = array();
@@ -406,6 +415,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		$options = array(
 			'boat_build_year' => __( 'Year of building', '5o5' ),
 			'manufacturer' => __( 'Hull manufacturer', '5o5' ),
+			'boat_first_certified_date' => __( 'First certified date', '5o5' ),
 			'boat_hull_material' => __( 'Hull material', '5o5' ),
 			'boat_in_poland_date' => __( 'In Poland', '5o5' ),
 			'boat_name' => __( 'Name', '5o5' ),
@@ -417,6 +427,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'social' => __( 'Social Media', '5o5' ),
 		);
 		$separator = _x( ', ', 'Custom taxonomies separator.', '5o5' );
+		$dateformat = get_option( 'date_format' );
 		foreach ( $options as $key => $label ) {
 			$name = $this->options->get_option_name( $key );
 			$value = get_post_meta( $post_id, $name, true );
@@ -485,6 +496,18 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				if ( empty( $value ) ) {
 					$value = _x( 'unknown', 'value of boat', '5o5' );
 					$value = '-';
+				}
+			} else {
+				switch ( $key ) {
+					/**
+					 * handle date
+					 */
+					case 'boat_first_certified_date':
+						$value = date_i18n( $dateformat, $value );
+						break;
+					case 'social_website':
+						$value = sprintf( '<a href="%s" class="boat-website">%s</a>', esc_url( $value ), esc_html( $value ) );
+						break;
 				}
 			}
 			$text .= $this->boat_single_row( $key, $label, $value );

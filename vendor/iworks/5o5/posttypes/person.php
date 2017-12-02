@@ -32,7 +32,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	protected $post_type_name = 'iworks_5o5_person';
 	protected $taxonomy_name_club = 'iworks_5o5_club';
-	private $nonce_list = '';
+	private $nonce_list = 'iworks_5o5_person_persons_list_nonce';
 	private $users_list = array();
 
 	public function __construct() {
@@ -51,7 +51,9 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		/**
 		 * AJAX list
 		 */
-		$this->nonce_list = $this->options->get_option_name( 'persons_list_nonce' );
+		if ( is_a( $this->options, 'iworks_options' ) ) {
+			$this->nonce_list = $this->options->get_option_name( 'persons_list_nonce' );
+		}
 		add_action( 'wp_ajax_iworks_5o5_persons_list', array( $this, 'get_select2_list' ) );
 		/**
 		 * add nonce
