@@ -22,7 +22,7 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-if ( class_exists( 'iworks_5o5_posttypes_invoice' ) ) {
+if ( class_exists( 'iworks_5o5_posttypes' ) ) {
 	return;
 }
 
