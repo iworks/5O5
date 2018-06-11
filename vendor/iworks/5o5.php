@@ -33,6 +33,7 @@ class iworks_5o5 extends iworks {
 	private $capability;
 	private $post_type_boat;
 	private $post_type_person;
+	private $post_type_result;
 
 	public function __construct() {
 		parent::__construct();
@@ -41,7 +42,7 @@ class iworks_5o5 extends iworks {
 		/**
 		 * post_types
 		 */
-		$post_types = array( 'boat', 'person' );
+		$post_types = array( 'boat', 'person', 'result' );
 		foreach ( $post_types as $post_type ) {
 			include_once( $this->base.'/iworks/5o5/posttypes/'.$post_type.'.php' );
 			$class = sprintf( 'iworks_5o5_posttypes_%s', $post_type );
