@@ -221,4 +221,40 @@ class iworks_5o5 extends iworks {
 	public function get_person_avatar( $user_post_id ) {
 		return $this->post_type_person->get_person_avatar_by_id( $user_post_id );
 	}
+
+	public function db_install() {
+		global $wpdb;
+		$version = intval( get_option( '5o5_db_version' ) );
+		/**
+		 * 20180611
+		 */
+		$install = 20180611;
+		if ( $install > $version ) {
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			$table_name = $wpdb->prefix . '505_regatta';
+			$sql = "CREATE TABLE $table_name (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                post_regata_id mediumint(9) NOT NULL,
+                boat_id mediumint(9),
+                helm_id mediumint(9),
+                crew_id mediumint(9),
+                place int,
+                PRIMARY KEY  (id)
+            );";
+			dbDelta( $sql );
+			$table_name = $wpdb->prefix . '505_regatta_race';
+			$sql = "CREATE TABLE $table_name (
+                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                regata_id mediumint(9) NOT NULL,
+                number int,
+                code varchar(4),
+                place int,
+                points int,
+                discard boolean,
+                PRIMARY KEY  (id)
+            );";
+			dbDelta( $sql );
+			update_option( '5o5_db_version', $install );
+		}
+	}
 }

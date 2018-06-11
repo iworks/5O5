@@ -36,6 +36,7 @@ module.exports = function( grunt ) {
 				'{js}admin/src/datepicker.js',
 				'{js}admin/src/boat.js',
 				'{js}admin/src/person.js',
+				'{js}admin/src/result.js',
 				'{js}admin/src/select2.js'
 			]
 		},

@@ -42,32 +42,22 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 
 	public function __construct() {
 		parent::__construct();
-		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
 		/**
 		 * change default columns
 		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
-        add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
-        /**
-         * replace names to proper
-         */
-		if ( is_a( $this->options, 'iworks_options' ) ) {
-			/**
-			 * Sinle crew meta field name
-			 */
-			$this->single_crew_field_name = $this->options->get_option_name( 'result_crew' );
-		}
+		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
 		/**
 		 * fields
 		 */
 		$this->fields = array(
-            'result' => array(
-                'location' => array( 'label' => __( 'Location', '5o5' ) ),
+			'result' => array(
+				'location' => array( 'label' => __( 'Location', '5o5' ) ),
 				'date_start' => array( 'type' => 'date', 'label' => __( 'Event start', '5o5' ) ),
-                'date_end' => array( 'type' => 'date', 'label' => __( 'Event end', '5o5' ) ),
-                'number_of_races' => array( 'type' => 'number', 'label' => __( 'Number of races', '5o5' ), ),
-                'number_of_competitors' => array( 'type' => 'number', 'label' => __( 'Number of competitors', '5o5' ), ),
-			),
+				'date_end' => array( 'type' => 'date', 'label' => __( 'Event end', '5o5' ) ),
+				'number_of_races' => array( 'type' => 'number', 'label' => __( 'Number of races', '5o5' ) ),
+				'number_of_competitors' => array( 'type' => 'number', 'label' => __( 'Number of competitors', '5o5' ) ),
+            ),
 		);
 		/**
 		 * add class to metaboxes
@@ -150,229 +140,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		if ( ! $result ) {
 			return;
 		}
-		/**
-		 * save crews
-		 */
-		if ( isset( $_POST[ $this->single_crew_field_name ] ) ) {
-			$value = $_POST[ $this->single_crew_field_name ];
-			if ( ! isset( $value['crew'] ) ) {
-				$value['crew'] = array();
-			}
-			/**
-			 * clear empty data
-			 */
-			foreach ( $value['crew'] as $key => $data ) {
-				if ( isset( $data['helmsman'] ) && ! empty( $data['helmsman'] ) ) {
-					continue;
-				}
-				if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) ) {
-					continue;
-				}
-				unset( $value['crew'][ $key ] );
-			}
-			/**
-			 * prepare to add to persons
-			 */
-			$before = $this->get_crews_data( $post_id );
-			if ( ! isset( $before['crew'] ) ) {
-				$before['crew'] = array();
-			}
-			$added_users = array();
-			/**
-			 * delete if empty
-			 */
-			if ( empty( $value['crew'] ) ) {
-				delete_post_meta( $post_id, $this->single_crew_field_name );
-			} else {
-				$result = add_post_meta( $post_id, $this->single_crew_field_name, $value, true );
-				if ( ! $result ) {
-					update_post_meta( $post_id, $this->single_crew_field_name, $value );
-				}
-				foreach ( $value['crew'] as $key => $data ) {
-					if ( isset( $data['helmsman'] ) && ! empty( $data['helmsman'] ) ) {
-						$added_users[] = $data['helmsman'];
-					}
-					if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) ) {
-						$added_users[] = $data['crew'];
-					}
-				}
-			}
-			/**
-			 * remove users
-			 */
-			foreach ( $before['crew'] as $key => $data ) {
-				foreach ( array( 'helmsman', 'crew' ) as $key ) {
-					if ( isset( $data[ $key ] ) && ! empty( $data[ $key ] ) ) {
-						$user_post_id = $data[ $key ];
-						if ( ! in_array( $user_post_id, $added_users ) ) {
-							delete_post_meta( $user_post_id, $this->single_result_field_name, $post_id );
-						}
-					}
-				}
-			}
-			/**
-			 * add result meta to user
-			 */
-			foreach ( $added_users as $user_post_id ) {
-				$assigned_results = get_post_meta( $user_post_id, $this->single_result_field_name );
-				if ( ! in_array( $user_post_id, $assigned_results ) ) {
-					add_post_meta( $user_post_id, $this->single_result_field_name, $post_id, false );
-				}
-			}
-		}
-	}
-
-	/**
-	 *
-	 * @since 1.0
-	 */
-	public function the_content( $content ) {
-		if ( ! is_singular() ) {
-			return $content;
-		}
-		$post_type = get_post_type();
-		if ( $post_type != $this->post_type_name ) {
-			return $content;
-		}
-		$post_id = get_the_ID();
-		$text = '';
-		$options = array(
-			'result_build_year' => __( 'Year of building', '5o5' ),
-			'manufacturer' => __( 'Hull manufacturer', '5o5' ),
-			'result_first_certified_date' => __( 'First certified date', '5o5' ),
-			'result_hull_material' => __( 'Hull material', '5o5' ),
-			'result_in_poland_date' => __( 'In Poland', '5o5' ),
-			'result_name' => __( 'Name', '5o5' ),
-			'colors' => __( 'Colors (top/side/bottom)', '5o5' ),
-			'sails' => __( 'Sails manufacturer', '5o5' ),
-			'mast' => __( 'Mast manufacturer', '5o5' ),
-			'result_location' => __( 'Location', '5o5' ),
-			'social_website' => __( 'Web site', '5o5' ),
-			'social' => __( 'Social Media', '5o5' ),
-		);
-		$separator = _x( ', ', 'Custom taxonomies separator.', '5o5' );
-		$dateformat = get_option( 'date_format' );
-		foreach ( $options as $key => $label ) {
-			$name = $this->options->get_option_name( $key );
-			$value = get_post_meta( $post_id, $name, true );
-			if ( empty( $value ) ) {
-				switch ( $key ) {
-					/**
-					 * handle colors
-					 */
-					case 'colors':
-						$colors = array();
-						$colors_keys = array( 'top', 'side', 'bottom' );
-						foreach ( $colors_keys as $ckey ) {
-							$cname = $this->options->get_option_name( 'result_color_'.$ckey );
-							$colors[] = get_post_meta( $post_id, $cname, true );
-						}
-						$colors = array_filter( $colors );
-						if ( ! empty( $colors ) ) {
-							$value = implode( '/', $colors );
-						}
-					break;
-					case 'manufacturer':
-						$value = get_the_term_list(
-							$post_id,
-							$this->taxonomy_name_manufacturer,
-							sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_manufacturer ) ),
-							$separator,
-							'</span>'
-						);
-					break;
-					case 'sails':
-						$value = get_the_term_list(
-							$post_id,
-							$this->taxonomy_name_sails,
-							sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_sails ) ),
-							$separator,
-							'</span>'
-						);
-					break;
-					case 'mast':
-						$value = get_the_term_list(
-							$post_id,
-							$this->taxonomy_name_mast,
-							sprintf( '<span class="%s">', esc_attr( $this->taxonomy_name_mast ) ),
-							$separator,
-							'</span>'
-						);
-					break;
-					case 'social':
-						foreach ( $this->fields['social'] as $social_key => $social ) {
-							if ( 'website' == $social_key ) {
-								continue;
-							}
-							$name = $this->options->get_option_name( 'social_'.$social_key );
-							$social_value = get_post_meta( $post_id, $name, true );
-							if ( empty( $social_value ) ) {
-								continue;
-							}
-							$value .= sprintf(
-								'<a href="%s"><span class="dashicons dashicons-%s"></span></a>',
-								$social_value,
-								$social_key
-							);
-						}
-					break;
-				}
-				if ( empty( $value ) ) {
-					$value = _x( 'unknown', 'value of result', '5o5' );
-					$value = '-';
-				}
-			} else {
-				switch ( $key ) {
-					/**
-					 * handle date
-					 */
-					case 'result_first_certified_date':
-						$value = date_i18n( $dateformat, $value );
-						break;
-					case 'social_website':
-						$value = sprintf( '<a href="%s" class="result-website">%s</a>', esc_url( $value ), esc_html( $value ) );
-						break;
-				}
-			}
-			$text .= $this->result_single_row( $key, $label, $value );
-		}
-		if ( ! empty( $text ) ) {
-			$content = sprintf(
-				'<h2>%s</h2><table class="result-data">%s</table>%s',
-				esc_html__( 'Result details', '5o5' ),
-				$text,
-				$content
-			);
-		}
-
-		/**
-		 * attach gallery
-		 */
-		$ids = $this->get_media( $post_id );
-		if ( ! empty( $ids ) ) {
-			$shortcode = sprintf( '[gallery ids="%s" link="file"]', implode( ',', $ids ) );
-			$content .= do_shortcode( $shortcode );
-		}
-		/**
-		 * return content
-		 */
-		return $content;
-	}
-
-	private function result_single_row( $key, $label, $value ) {
-		if ( empty( $value ) || '-' == $value ) {
-			return '';
-		}
-		$text = '';
-		$text .= sprintf( '<tr class="result-%s">', esc_attr( $key ) );
-		$text .= sprintf( '<td>%s</td>', esc_html( $label ) );
-		$text .= sprintf( '<td>%s</td>', $value );
-		$text .= '</tr>';
-		return $text;
 	}
 
 	public function register_meta_boxes( $post ) {
 		add_meta_box( 'result', __( 'Result data', '5o5' ), array( $this, 'result' ), $this->post_type_name );
+		add_meta_box( 'race', __( 'Races data', '5o5' ), array( $this, 'races' ), $this->post_type_name );
 	}
 
 	public function print_js_templates() {
@@ -403,6 +175,12 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 
 	public function result( $post ) {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
+	}
+
+    public function races( $post ) {
+        echo '<input type="file" name="file" id="file_5o5_races"/>';
+        wp_nonce_field( 'upload-races', __CLASS__ );
+        echo '<button>import</button>';
 	}
 
 	/**
@@ -458,6 +236,5 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$columns['location'] = __( 'Location', '5o5' );
 		return $columns;
 	}
-
 }
 

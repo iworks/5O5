@@ -78,6 +78,11 @@ function iworks_5o5_activate() {
 	$iworks_5o5_options->set_option_function_name( 'iworks_5o5_options' );
 	$iworks_5o5_options->set_option_prefix( IWORKS_5O5_PREFIX );
 	$iworks_5o5_options->activate();
+	/**
+	 * install tables
+	 */
+	$iworks_5o5 = new iworks_5o5;
+	$iworks_5o5->db_install();
 }
 
 function iworks_5o5_deactivate() {
