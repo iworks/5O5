@@ -4,7 +4,7 @@ Plugin Name: 5o5
 Text Domain: 5o5
 Plugin URI: http://iworks.pl/5o5/
 Description: 5O5 class plugin: regata, boats, crew
-Version: PLUGIN_VERSION
+Version: 1.1.0
 Author: Marcin Pietrzak
 Author URI: http://iworks.pl/
 License: GPLv2 or later
@@ -34,7 +34,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * static options
  */
-define( 'IWORKS_5O5_VERSION', 'PLUGIN_VERSION' );
+define( 'IWORKS_5O5_VERSION', '1.1.0' );
 define( 'IWORKS_5O5_PREFIX',  'iworks_5o5_' );
 $base = dirname( __FILE__ );
 $vendor = $base.'/vendor';

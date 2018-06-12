@@ -37,7 +37,7 @@ class iworks_5o5 extends iworks {
 
 	public function __construct() {
 		parent::__construct();
-		$this->version = 'PLUGIN_VERSION';
+		$this->version = '1.1.0';
 		$this->capability = apply_filters( 'iworks_5o5_capability', 'manage_options' );
 		/**
 		 * post_types
@@ -165,9 +165,9 @@ class iworks_5o5 extends iworks {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
 				$links[] = '<a href="themes.php?page='.$this->dir.'/admin/index.php">' . __( 'Settings' ) . '</a>';
 			}
-			/* start:free */
+			
 			$links[] = '<a href="http://iworks.pl/donate/5o5.php">' . __( 'Donate' ) . '</a>';
-			/* end:free */
+			
 		}
 		return $links;
 	}

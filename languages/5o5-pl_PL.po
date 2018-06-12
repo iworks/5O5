@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 5o5 PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/5o5\n"
-"POT-Creation-Date: 2017-12-02 18:11:07+00:00\n"
-"PO-Revision-Date: 2018-01-08 20:59+0100\n"
+"POT-Creation-Date: 2018-06-12 07:14:14+00:00\n"
+"PO-Revision-Date: 2018-06-12 09:16+0200\n"
 "Last-Translator: Marcin Pietrzak <marcin@iworks.pl>\n"
 "Language-Team: \n"
 "Language: pl_PL\n"
@@ -16,7 +16,8 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_x:1,2c;_ex:1,2c;_n:1,2;_nx:1,2,4c;_n_noop:1,2;"
 "_nx_noop:1,2,3c;esc_attr__;esc_html__;esc_attr_e;esc_html_e;esc_attr_x:1,2c;"
 "esc_html_x:1,2c\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: ..\n"
 "X-Textdomain-Support: yes\n"
@@ -72,6 +73,8 @@ msgstr "W Polsce od"
 #: vendor/iworks/5o5/posttypes/boat.php:94
 #: vendor/iworks/5o5/posttypes/boat.php:425
 #: vendor/iworks/5o5/posttypes/boat.php:776
+#: vendor/iworks/5o5/posttypes/result.php:60
+#: vendor/iworks/5o5/posttypes/result.php:246
 msgid "Location"
 msgstr "Lokalizacja"
 
@@ -91,6 +94,7 @@ msgstr "Sternik"
 #: vendor/iworks/5o5/posttypes/boat.php:538
 #: vendor/iworks/5o5/posttypes/boat.php:552
 #: vendor/iworks/5o5/posttypes/boat.php:614
+#: vendor/iworks/5o5/posttypes/result.php:371
 msgid "Crew"
 msgstr "Załogant"
 
@@ -126,11 +130,13 @@ msgstr "G+"
 
 #: vendor/iworks/5o5/posttypes/boat.php:134
 #: vendor/iworks/5o5/posttypes/person.php:107
+#: vendor/iworks/5o5/posttypes/result.php:98
 msgid "5O5"
 msgstr "5O5"
 
 #: vendor/iworks/5o5/posttypes/boat.php:135
 #: vendor/iworks/5o5/posttypes/boat.php:160
+#: vendor/iworks/5o5/posttypes/result.php:369
 msgid "Boat"
 msgstr "Łódka"
 
@@ -141,10 +147,12 @@ msgstr "Łódki"
 
 #: vendor/iworks/5o5/posttypes/boat.php:137
 #: vendor/iworks/5o5/posttypes/person.php:110
+#: vendor/iworks/5o5/posttypes/result.php:101
 msgid "Item Attributes"
-msgstr ""
+msgstr "Atrybuty elementu"
 
 #: vendor/iworks/5o5/posttypes/boat.php:140
+#: vendor/iworks/5o5/posttypes/result.php:104
 msgid "Add New"
 msgstr "Dodaj nową"
 
@@ -174,56 +182,67 @@ msgstr "Szukaj łódki"
 
 #: vendor/iworks/5o5/posttypes/boat.php:147
 #: vendor/iworks/5o5/posttypes/person.php:120
+#: vendor/iworks/5o5/posttypes/result.php:111
 msgid "Not found"
 msgstr "Nie znaleziono"
 
 #: vendor/iworks/5o5/posttypes/boat.php:148
 #: vendor/iworks/5o5/posttypes/person.php:121
+#: vendor/iworks/5o5/posttypes/result.php:112
 msgid "Not found in Trash"
 msgstr "Nie znaleziono w koszu"
 
 #: vendor/iworks/5o5/posttypes/boat.php:149
 #: vendor/iworks/5o5/posttypes/person.php:122
+#: vendor/iworks/5o5/posttypes/result.php:113
 msgid "Featured Image"
 msgstr "Obrazek wyróżniający"
 
 #: vendor/iworks/5o5/posttypes/boat.php:150
 #: vendor/iworks/5o5/posttypes/person.php:123
+#: vendor/iworks/5o5/posttypes/result.php:114
 msgid "Set featured image"
 msgstr "Ustaw obrazek wyróżniający"
 
 #: vendor/iworks/5o5/posttypes/boat.php:151
 #: vendor/iworks/5o5/posttypes/person.php:124
+#: vendor/iworks/5o5/posttypes/result.php:115
 msgid "Remove featured image"
 msgstr "Usuń obrazek wyróżniający"
 
 #: vendor/iworks/5o5/posttypes/boat.php:152
 #: vendor/iworks/5o5/posttypes/person.php:125
+#: vendor/iworks/5o5/posttypes/result.php:116
 msgid "Use as featured image"
 msgstr "Użyj jako obrazek wyróżniający"
 
 #: vendor/iworks/5o5/posttypes/boat.php:153
 #: vendor/iworks/5o5/posttypes/person.php:126
+#: vendor/iworks/5o5/posttypes/result.php:117
 msgid "Insert into item"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:154
 #: vendor/iworks/5o5/posttypes/person.php:127
+#: vendor/iworks/5o5/posttypes/result.php:118
 msgid "Uploaded to this item"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:155
 #: vendor/iworks/5o5/posttypes/person.php:128
+#: vendor/iworks/5o5/posttypes/result.php:119
 msgid "Items list"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:156
 #: vendor/iworks/5o5/posttypes/person.php:129
+#: vendor/iworks/5o5/posttypes/result.php:120
 msgid "Items list navigation"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:157
 #: vendor/iworks/5o5/posttypes/person.php:130
+#: vendor/iworks/5o5/posttypes/result.php:121
 msgid "Filter items list"
 msgstr ""
 
@@ -272,7 +291,7 @@ msgstr ""
 #: vendor/iworks/5o5/posttypes/boat.php:201
 #: vendor/iworks/5o5/posttypes/boat.php:238
 #: vendor/iworks/5o5/posttypes/boat.php:275
-#: vendor/iworks/5o5/posttypes/person.php:172 vendor/iworks/5o5.php:187
+#: vendor/iworks/5o5/posttypes/person.php:172 vendor/iworks/5o5.php:188
 msgid "Choose from the most used"
 msgstr ""
 
@@ -287,14 +306,14 @@ msgstr "Szukaj producenta kadłuba"
 #: vendor/iworks/5o5/posttypes/boat.php:204
 #: vendor/iworks/5o5/posttypes/boat.php:241
 #: vendor/iworks/5o5/posttypes/boat.php:278
-#: vendor/iworks/5o5/posttypes/person.php:175 vendor/iworks/5o5.php:190
+#: vendor/iworks/5o5/posttypes/person.php:175 vendor/iworks/5o5.php:191
 msgid "Not Found"
 msgstr "Nie znaleziono"
 
 #: vendor/iworks/5o5/posttypes/boat.php:205
 #: vendor/iworks/5o5/posttypes/boat.php:242
 #: vendor/iworks/5o5/posttypes/boat.php:279
-#: vendor/iworks/5o5/posttypes/person.php:176 vendor/iworks/5o5.php:191
+#: vendor/iworks/5o5/posttypes/person.php:176 vendor/iworks/5o5.php:192
 msgid "No items"
 msgstr ""
 
@@ -345,7 +364,6 @@ msgid "Popular Sails Manufacturers"
 msgstr "Producent żagli"
 
 #: vendor/iworks/5o5/posttypes/boat.php:240
-#, fuzzy
 msgid "Search Sails Manufacturers"
 msgstr "Szukaj producenta żagli"
 
@@ -425,7 +443,7 @@ msgstr "Producent kadłuba"
 
 #: vendor/iworks/5o5/posttypes/boat.php:418
 msgid "First certified date"
-msgstr ""
+msgstr "Data pierwszego certyfikatu"
 
 #: vendor/iworks/5o5/posttypes/boat.php:421
 #: vendor/iworks/5o5/posttypes/person.php:252
@@ -484,26 +502,29 @@ msgstr "Wybierz lub usuń załoganta"
 
 #: vendor/iworks/5o5/posttypes/boat.php:668
 #: vendor/iworks/5o5/posttypes/boat.php:709
+#: vendor/iworks/5o5/posttypes/result.php:178
 msgid "Delete"
 msgstr "Skasuj"
 
 #: vendor/iworks/5o5/posttypes/boat.php:681
 msgid "There is no current team"
-msgstr ""
+msgstr "Aktualnie brak przypisanej załogi"
 
 #: vendor/iworks/5o5/posttypes/boat.php:687
 msgid "Add a crew"
 msgstr "Dodaj załogę"
 
 #: vendor/iworks/5o5/posttypes/boat.php:700
+#: vendor/iworks/5o5/posttypes/result.php:169
 msgid "Select a helmsman"
 msgstr "Wybierz sternika"
 
 #: vendor/iworks/5o5/posttypes/boat.php:705
+#: vendor/iworks/5o5/posttypes/result.php:174
 msgid "Select a crew"
 msgstr "Wybierz załoganta"
 
-#: vendor/iworks/5o5/posttypes/boat.php:777 vendor/iworks/5o5.php:178
+#: vendor/iworks/5o5/posttypes/boat.php:777 vendor/iworks/5o5.php:179
 msgid "Boat Number"
 msgstr "Numer łodzi"
 
@@ -619,89 +640,173 @@ msgstr "Informacje o łodzi"
 msgid "Contact data"
 msgstr "Informacje o łodzi"
 
-#: vendor/iworks/5o5.php:69
+#: vendor/iworks/5o5/posttypes/result.php:61
+msgid "Event start"
+msgstr "Data rozpoczęcia"
+
+#: vendor/iworks/5o5/posttypes/result.php:62
+msgid "Event end"
+msgstr "Data zakończenia"
+
+#: vendor/iworks/5o5/posttypes/result.php:63
+msgid "Number of races"
+msgstr "Liiczba wyścigów"
+
+#: vendor/iworks/5o5/posttypes/result.php:64
+msgid "Number of competitors"
+msgstr "Liczba załóg"
+
+#: vendor/iworks/5o5/posttypes/result.php:99
+#: vendor/iworks/5o5/posttypes/result.php:124
+msgid "Result"
+msgstr "Wynik"
+
+#: vendor/iworks/5o5/posttypes/result.php:100
+#: vendor/iworks/5o5/posttypes/result.php:102
+msgid "Results"
+msgstr "Wyniki"
+
+#: vendor/iworks/5o5/posttypes/result.php:103
+#, fuzzy
+msgid "Add New Result"
+msgstr "Dodaj osobę"
+
+#: vendor/iworks/5o5/posttypes/result.php:105
+#, fuzzy
+msgid "New Result"
+msgstr "Nowa osoba"
+
+#: vendor/iworks/5o5/posttypes/result.php:106
+#, fuzzy
+msgid "Edit Result"
+msgstr "Edytuj osobę"
+
+#: vendor/iworks/5o5/posttypes/result.php:107
+#, fuzzy
+msgid "Update Result"
+msgstr "Aktualizuj osobę"
+
+#: vendor/iworks/5o5/posttypes/result.php:108
+#, fuzzy
+msgid "View Result"
+msgstr "Podejrzyj osobę"
+
+#: vendor/iworks/5o5/posttypes/result.php:109
+#, fuzzy
+msgid "View Results"
+msgstr "Podejrzyj osoby"
+
+#: vendor/iworks/5o5/posttypes/result.php:110
+#, fuzzy
+msgid "Search Result"
+msgstr "Szukaj osoby"
+
+#: vendor/iworks/5o5/posttypes/result.php:156
+#, fuzzy
+msgid "Result data"
+msgstr "Dane załóg"
+
+#: vendor/iworks/5o5/posttypes/result.php:157
+#, fuzzy
+msgid "Races data"
+msgstr "Dane załóg"
+
+#: vendor/iworks/5o5/posttypes/result.php:368
+msgid "Place"
+msgstr "Miejsce"
+
+#: vendor/iworks/5o5/posttypes/result.php:370
+#, fuzzy
+msgid "Helm"
+msgstr "Sternik"
+
+#: vendor/iworks/5o5/posttypes/result.php:376
+msgid "Sum"
+msgstr "Suma"
+
+#: vendor/iworks/5o5.php:70
 msgid "5o5 do not have such post type!"
 msgstr ""
 
-#: vendor/iworks/5o5.php:165
+#: vendor/iworks/5o5.php:166
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: vendor/iworks/5o5.php:168
+#: vendor/iworks/5o5.php:169
 msgid "Donate"
 msgstr "Złóż datek"
 
-#: vendor/iworks/5o5.php:179
+#: vendor/iworks/5o5.php:180
 msgid "All Boat Numbers"
 msgstr "Wszystkie numer łodzi"
 
-#: vendor/iworks/5o5.php:180
+#: vendor/iworks/5o5.php:181
 msgid "New Boat Number Name"
 msgstr "Nowy numer łodzi"
 
-#: vendor/iworks/5o5.php:181
+#: vendor/iworks/5o5.php:182
 msgid "Add New Boat Number"
 msgstr "Dodaj numer łodzi"
 
-#: vendor/iworks/5o5.php:182
+#: vendor/iworks/5o5.php:183
 msgid "Edit Boat Number"
 msgstr "Edytuj umer łodzi"
 
-#: vendor/iworks/5o5.php:183
+#: vendor/iworks/5o5.php:184
 msgid "Update Boat Number"
 msgstr "Aktualizuj numer łodzi"
 
-#: vendor/iworks/5o5.php:184
+#: vendor/iworks/5o5.php:185
 msgid "View Boat Number"
 msgstr "Podejrzyj numer łodzi"
 
-#: vendor/iworks/5o5.php:185
+#: vendor/iworks/5o5.php:186
 msgid "Separate Boat Numbers with commas"
 msgstr ""
 
-#: vendor/iworks/5o5.php:186
+#: vendor/iworks/5o5.php:187
 msgid "Add or remove Boat Numbers"
 msgstr ""
 
-#: vendor/iworks/5o5.php:188
+#: vendor/iworks/5o5.php:189
 #, fuzzy
 msgid "Popular Boat Numbers"
 msgstr "Numer łodzi"
 
-#: vendor/iworks/5o5.php:189
+#: vendor/iworks/5o5.php:190
 #, fuzzy
 msgid "Search Boat Numbers"
 msgstr "Numer łodzi"
 
-#: vendor/iworks/5o5.php:192
+#: vendor/iworks/5o5.php:193
 msgid "Boat Numbers list"
 msgstr "Lista numerów łodzi"
 
-#: vendor/iworks/5o5.php:193
+#: vendor/iworks/5o5.php:194
 msgid "Boat Numbers list navigation"
 msgstr ""
 
-#: vendor/iworks/options/options.php:199
+#: vendor/iworks/options/options.php:219
 msgid "An error occurred while getting the configuration."
 msgstr ""
 
-#: vendor/iworks/options/options.php:698
+#: vendor/iworks/options/options.php:712
 msgid "Upload image"
 msgstr "Dodaj obrazek"
 
-#: vendor/iworks/options/options.php:704
+#: vendor/iworks/options/options.php:718
 msgid "Delete image"
 msgstr "Skasuj obrazek"
 
-#: vendor/iworks/options/options.php:772
+#: vendor/iworks/options/options.php:786
 msgid "Save Changes"
 msgstr "Zapisz zmiany"
 
-#: vendor/iworks/options/options.php:1605
+#: vendor/iworks/options/options.php:1647
 msgid "OFF"
 msgstr "wyłącz"
 
-#: vendor/iworks/options/options.php:1606
+#: vendor/iworks/options/options.php:1648
 msgid "ON"
 msgstr "włącz"
 
@@ -745,6 +850,12 @@ msgctxt "slug for archive"
 msgid "5o5-persons"
 msgstr "5o5-osoby"
 
+#: vendor/iworks/5o5/posttypes/result.php:135
+#, fuzzy
+msgctxt "slug for archive"
+msgid "5o5-results"
+msgstr "5o5-osoby"
+
 #: vendor/iworks/5o5/posttypes/boat.php:182
 msgctxt "slug for single boat"
 msgid "5o5-boat"
@@ -765,7 +876,7 @@ msgctxt "Taxonomy General Name"
 msgid "Masts Manufacturers"
 msgstr "Producenci masztów"
 
-#: vendor/iworks/5o5.php:176
+#: vendor/iworks/5o5.php:177
 msgctxt "Taxonomy General Name"
 msgid "Boat Numbers"
 msgstr "Numer łodzi"
@@ -785,7 +896,7 @@ msgctxt "Taxonomy Singular Name"
 msgid "Masts Manufacturer"
 msgstr "Producent masztów"
 
-#: vendor/iworks/5o5.php:177
+#: vendor/iworks/5o5.php:178
 msgctxt "Taxonomy Singular Name"
 msgid "Boat Number"
 msgstr "Numer łodzi"
@@ -806,6 +917,7 @@ msgid "Past crew"
 msgid_plural "Past crews"
 msgstr[0] "Poprzednia załoga"
 msgstr[1] "Poprzednie załogi"
+msgstr[2] ""
 
 #: vendor/iworks/5o5/posttypes/person.php:105
 msgctxt "Person General Name"
@@ -838,7 +950,22 @@ msgctxt "Person name on crews list if it is not set"
 msgid "not set"
 msgstr "brak"
 
-#: vendor/iworks/5o5.php:205
+#: vendor/iworks/5o5/posttypes/result.php:96
+msgctxt "Result General Name"
+msgid "Results"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:97
+msgctxt "Result Singular Name"
+msgid "Result"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:142
+msgctxt "slug for single result"
+msgid "result"
+msgstr ""
+
+#: vendor/iworks/5o5.php:206
 msgctxt "slug for images"
 msgid "5o5-boat-number"
 msgstr "5o5-numer"
