@@ -37,7 +37,7 @@ class iworks_5o5 extends iworks {
 
 	public function __construct() {
 		parent::__construct();
-		$this->version = '1.1.0';
+		$this->version = 'PLUGIN_VERSION';
 		$this->capability = apply_filters( 'iworks_5o5_capability', 'manage_options' );
 		/**
 		 * post_types
