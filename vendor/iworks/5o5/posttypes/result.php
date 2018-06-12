@@ -39,9 +39,14 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 	 * Sinle result meta field name
 	 */
 	private $single_result_field_name = 'iworks_5o5_result_result';
+	/**
+	 * sailors to id
+	 */
+	private $sailors = array();
 
 	public function __construct() {
 		parent::__construct();
+		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
 		/**
 		 * change default columns
 		 */
@@ -57,7 +62,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				'date_end' => array( 'type' => 'date', 'label' => __( 'Event end', '5o5' ) ),
 				'number_of_races' => array( 'type' => 'number', 'label' => __( 'Number of races', '5o5' ) ),
 				'number_of_competitors' => array( 'type' => 'number', 'label' => __( 'Number of competitors', '5o5' ) ),
-            ),
+			),
 		);
 		/**
 		 * add class to metaboxes
@@ -69,6 +74,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
+		/**
+		 * handle results
+		 */
+		add_action( 'wp_ajax_iworks_5o5_upload_races', array( $this, 'upload' ) );
+
 	}
 
 	/**
@@ -177,10 +187,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$this->get_meta_box_content( $post, $this->fields, __FUNCTION__ );
 	}
 
-    public function races( $post ) {
-        echo '<input type="file" name="file" id="file_5o5_races"/>';
-        wp_nonce_field( 'upload-races', __CLASS__ );
-        echo '<button>import</button>';
+	public function races( $post ) {
+		echo '<input type="file" name="file" id="file_5o5_races"/>';
+		wp_nonce_field( 'upload-races', __CLASS__ );
+		echo '<button>import</button>';
 	}
 
 	/**
@@ -235,6 +245,173 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		unset( $columns['date'] );
 		$columns['location'] = __( 'Location', '5o5' );
 		return $columns;
+	}
+
+	public function upload() {
+		if ( ! isset( $_POST['id'] ) ) {
+			wp_send_json_error();
+		}
+		if ( ! isset( $_POST['_wpnonce'] ) ) {
+			wp_send_json_error();
+		}
+		if ( ! wp_verify_nonce( $_POST['_wpnonce'], 'upload-races' ) ) {
+			wp_send_json_error();
+		}
+		if ( empty( $_FILES ) || ! isset( $_FILES['file'] ) ) {
+			wp_send_json_error();
+		}
+		$file = $_FILES['file'];
+		if ( 'text/csv' != $file['type'] ) {
+			wp_send_json_error();
+		}
+		$row = 1;
+		$data = array();
+		if ( ($handle = fopen( $file['tmp_name'], 'r' )) !== false ) {
+			while ( ($d = fgetcsv( $handle, 1000, ',' )) !== false ) {
+				$data[] = $d;
+			}
+			fclose( $handle );
+		}
+		if ( empty( $data ) ) {
+			wp_send_json_error();
+		}
+		global $wpdb, $iworks_5o5;
+		$table_name_regatta = $wpdb->prefix . '505_regatta';
+		$table_name_regatta_race = $wpdb->prefix . '505_regatta_race';
+		array_shift( $data );
+		$sailors = $iworks_5o5->get_list_by_post_type( 'person' );
+		$wpdb->delete( $table_name_regatta, array( 'post_regata_id' => $_POST['id'] ), array( '%d' ) );
+		$wpdb->delete( $table_name_regatta_race, array( 'post_regata_id' => $_POST['id'] ), array( '%d' ) );
+		$year = date( 'Y', get_post_meta( $_POST['id'], 'iworks_5o5_result_date_end', true ) );
+		foreach ( $data as $row ) {
+			$boat_id = intval( preg_replace( '/[^\d]+/', '', array_shift( $row ) ) );
+			$helm = trim( array_shift( $row ) );
+			$crew = trim( array_shift( $row ) );
+			$club = trim( array_shift( $row ) );
+			$place = intval( array_pop( $row ) );
+			$points = intval( array_pop( $row ) );
+			$regatta = array(
+				'year' => $year,
+				'post_regata_id' => $_POST['id'],
+				'boat_id' => $boat_id,
+				'helm_id' => isset( $sailors[ $helm ] )? intval( $sailors[ $helm ] ):0,
+				'helm_name' => $helm,
+				'crew_id' => isset( $sailors[ $crew ] )? intval( $sailors[ $crew ] ):0,
+				'crew_name' => $crew,
+				'place' => $place,
+				'points' => $points,
+			);
+			$wpdb->insert( $table_name_regatta, $regatta );
+			$regatta_id = $wpdb->insert_id;
+			$races = array();
+			foreach ( $row as $one ) {
+				$races[] = $one;
+			}
+			$number = 1;
+			foreach ( $races as $one ) {
+				$race = array(
+					'post_regata_id' => $_POST['id'],
+					'regata_id' => $regatta_id,
+					'number' => $number++,
+				);
+				if ( preg_match( '/\*/', $one ) ) {
+					$race['discard'] = true;
+				}
+				$one = preg_replace( '/\*/', '', $one );
+				if ( preg_match( '/^[\s]+$/', $one ) ) {
+					$race['code'] = $one;
+				}
+				$race['points'] = $one;
+				$wpdb->insert( $table_name_regatta_race, $race );
+			}
+		}
+		wp_send_json_success();
+	}
+
+	public function the_content( $content ) {
+		if ( ! is_singular() ) {
+			return $content;
+		}
+		$post_type = get_post_type();
+		if ( $post_type != $this->post_type_name ) {
+			return $content;
+		}
+		$post_id = get_the_ID();
+		global $wpdb, $iworks_5o5;
+		$table_name_regatta = $wpdb->prefix . '505_regatta';
+		$table_name_regatta_race = $wpdb->prefix . '505_regatta_race';
+
+		/**
+		 * get regata data
+		 */
+		$query = $wpdb->prepare( "SELECT * FROM {$table_name_regatta} where post_regata_id = %d order by place", $post_id );
+		$regatta = $wpdb->get_results( $query );
+		/**
+		 * get regata races data
+		 */
+		$query = $wpdb->prepare( "SELECT * FROM {$table_name_regatta_race} where post_regata_id = %d order by regata_id, number", $post_id );
+		$r = $wpdb->get_results( $query );
+
+		$races = array();
+		foreach ( $r as $one ) {
+			if ( ! isset( $races[ $one->regata_id ] ) ) {
+				$races[ $one->regata_id ] = array();
+			}
+			$races[ $one->regata_id ][ $one->number ] = $one->points;
+			if ( $one->discard ) {
+				$races[ $one->regata_id ][ $one->number ] .= '*';
+			}
+		}
+		$content .= '<table>';
+		$content .= '<thead>';
+		$content .= '<tr>';
+		$content .= sprintf( '<td class="place">%s</td>', esc_html__( 'Place', '5o5' ) );
+		$content .= sprintf( '<td class="boat">%s</td>', esc_html__( 'Boat', '5o5' ) );
+		$content .= sprintf( '<td class="helm">%s</td>', esc_html__( 'Helm', '5o5' ) );
+		$content .= sprintf( '<td class="crew">%s</td>', esc_html__( 'Crew', '5o5' ) );
+		$number = intval( get_post_meta( $post_id, 'iworks_5o5_result_number_of_races', true ) );
+		for ( $i = 1; $i <= $number; $i++ ) {
+			$content .= sprintf( '<td class="race race-%d">%d</td>', $i, $i );
+		}
+		$content .= sprintf( '<td class="sum">%s</td>', esc_html__( 'Sum', '5o5' ) );
+		$content .= '</tr>';
+		$content .= '</thead>';
+		$content .= '<tbody>';
+		foreach ( $regatta as $one ) {
+			$content .= '<tr>';
+			$content .= sprintf( '<td class="place">%d</td>', $one->place );
+			$content .= sprintf( '<td class="boat_id">%d</td>', $one->boat_id );
+			/**
+			 * helmsman
+			 */
+			if ( ! empty( $one->helm_id ) ) {
+				$content .= sprintf( '<td class="helm_name"><a href="%s">%s</a></td>', get_permalink( $one->helm_id ), $one->helm_name );
+			} else {
+				$content .= sprintf( '<td class="helm_name">%s</td>', $one->helm_name );
+			}
+			/**
+			 * crew
+			 */
+			if ( ! empty( $one->crew_id ) ) {
+				$content .= sprintf( '<td class="crew_name"><a href="%s">%s</a></td>', get_permalink( $one->crew_id ), $one->crew_name );
+			} else {
+				$content .= sprintf( '<td class="crew_name">%s</td>', $one->crew_name );
+			}
+			foreach ( $races[ $one->ID ] as $race_number => $race_points ) {
+				$class = preg_match( '/\*/', $race_points )? 'race-discard':'';
+				$content .= sprintf(
+					'<td class="race race-%d %s">%s</td>',
+					esc_attr( $race_number ),
+					esc_attr( $class ),
+					esc_html( $race_points )
+				);
+			}
+			$content .= sprintf( '<td class="points">%d</td>', $one->points );
+			$content .= '</tr>';
+		}
+		$content .= '<tbody>';
+		$content .= '</table>';
+		return $content;
 	}
 }
 

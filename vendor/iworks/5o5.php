@@ -222,6 +222,19 @@ class iworks_5o5 extends iworks {
 		return $this->post_type_person->get_person_avatar_by_id( $user_post_id );
 	}
 
+	public function get_list_by_post_type( $type ) {
+		$args = array(
+			'post_type' => $this->{'post_type_'.$type}->get_name(),
+			'nopaging' => true,
+		);
+		$list = array();
+		$posts = get_posts( $args );
+		foreach ( $posts as $post ) {
+			$list[ $post->post_title ] = $post->ID;
+		}
+		return $list;
+	}
+
 	public function db_install() {
 		global $wpdb;
 		$version = intval( get_option( '5o5_db_version' ) );
@@ -230,29 +243,42 @@ class iworks_5o5 extends iworks {
 		 */
 		$install = 20180611;
 		if ( $install > $version ) {
+			$charset_collate = $wpdb->get_charset_collate();
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			$table_name = $wpdb->prefix . '505_regatta';
 			$sql = "CREATE TABLE $table_name (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                ID mediumint(9) NOT NULL AUTO_INCREMENT,
                 post_regata_id mediumint(9) NOT NULL,
+                year year,
                 boat_id mediumint(9),
                 helm_id mediumint(9),
                 crew_id mediumint(9),
+                helm_name text,
+                crew_name text,
                 place int,
-                PRIMARY KEY  (id)
-            );";
+                points int,
+                PRIMARY KEY (ID),
+                KEY ( post_regata_id ),
+                KEY ( year ),
+                KEY ( boat_id ),
+                KEY ( helm_id ),
+                KEY ( crew_id )
+            ) $charset_collate;";
 			dbDelta( $sql );
 			$table_name = $wpdb->prefix . '505_regatta_race';
 			$sql = "CREATE TABLE $table_name (
-                id mediumint(9) NOT NULL AUTO_INCREMENT,
+                ID mediumint(9) NOT NULL AUTO_INCREMENT,
+                post_regata_id mediumint(9) NOT NULL,
                 regata_id mediumint(9) NOT NULL,
                 number int,
                 code varchar(4),
                 place int,
-                points int,
-                discard boolean,
-                PRIMARY KEY  (id)
-            );";
+                points int default 0,
+                discard boolean default 0,
+                PRIMARY KEY (ID),
+                KEY ( post_regata_id ),
+                KEY ( regata_id )
+            ) $charset_collate;";
 			dbDelta( $sql );
 			update_option( '5o5_db_version', $install );
 		}
