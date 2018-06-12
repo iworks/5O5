@@ -54,6 +54,7 @@ class iworks_5o5 extends iworks {
 		 */
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'init', array( $this, 'register_boat_number' ) );
+		add_action( 'init', array( $this, 'db_install' ) );
 	}
 
 	public function admin_init() {
@@ -165,9 +166,9 @@ class iworks_5o5 extends iworks {
 			if ( ! is_multisite() && current_user_can( $this->capability ) ) {
 				$links[] = '<a href="themes.php?page='.$this->dir.'/admin/index.php">' . __( 'Settings' ) . '</a>';
 			}
-			
+
 			$links[] = '<a href="http://iworks.pl/donate/5o5.php">' . __( 'Donate' ) . '</a>';
-			
+
 		}
 		return $links;
 	}

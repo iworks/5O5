@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: 5o5 PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/5o5\n"
 "POT-Creation-Date: 2018-06-12 07:14:14+00:00\n"
-"PO-Revision-Date: 2018-06-12 09:16+0200\n"
+"PO-Revision-Date: 2018-06-12 09:38+0200\n"
 "Last-Translator: Marcin Pietrzak <marcin@iworks.pl>\n"
 "Language-Team: \n"
 "Language: pl_PL\n"
@@ -220,19 +220,19 @@ msgstr "Użyj jako obrazek wyróżniający"
 #: vendor/iworks/5o5/posttypes/person.php:126
 #: vendor/iworks/5o5/posttypes/result.php:117
 msgid "Insert into item"
-msgstr ""
+msgstr "Dodaj do elementu"
 
 #: vendor/iworks/5o5/posttypes/boat.php:154
 #: vendor/iworks/5o5/posttypes/person.php:127
 #: vendor/iworks/5o5/posttypes/result.php:118
 msgid "Uploaded to this item"
-msgstr ""
+msgstr "Prześlij do elementu"
 
 #: vendor/iworks/5o5/posttypes/boat.php:155
 #: vendor/iworks/5o5/posttypes/person.php:128
 #: vendor/iworks/5o5/posttypes/result.php:119
 msgid "Items list"
-msgstr ""
+msgstr "Lista elementów"
 
 #: vendor/iworks/5o5/posttypes/boat.php:156
 #: vendor/iworks/5o5/posttypes/person.php:129
@@ -716,7 +716,6 @@ msgid "Place"
 msgstr "Miejsce"
 
 #: vendor/iworks/5o5/posttypes/result.php:370
-#, fuzzy
 msgid "Helm"
 msgstr "Sternik"
 
@@ -851,10 +850,9 @@ msgid "5o5-persons"
 msgstr "5o5-osoby"
 
 #: vendor/iworks/5o5/posttypes/result.php:135
-#, fuzzy
 msgctxt "slug for archive"
 msgid "5o5-results"
-msgstr "5o5-osoby"
+msgstr "5o5-wyniki"
 
 #: vendor/iworks/5o5/posttypes/boat.php:182
 msgctxt "slug for single boat"
