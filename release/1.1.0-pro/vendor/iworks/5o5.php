@@ -166,8 +166,6 @@ class iworks_5o5 extends iworks {
 				$links[] = '<a href="themes.php?page='.$this->dir.'/admin/index.php">' . __( 'Settings' ) . '</a>';
 			}
 			
-			$links[] = '<a href="http://iworks.pl/donate/5o5.php">' . __( 'Donate' ) . '</a>';
-			
 		}
 		return $links;
 	}

@@ -1,0 +1,32 @@
+.iworks-5o5-row {
+    display: flex;
+    align-items: center;
+    padding-bottom: .5em;
+    label {
+        width: 100px;
+        padding: 5px 10px 5px 0;
+    }
+    .select2 {
+        min-width: 200px;
+        width: 100%;
+    }
+}
+.wp-list-table {
+    tbody {
+    }
+}
+
+.post-type-iworks_5o5_boat {
+    .iworks-crews-list-container {
+        border-collapse: collapse;
+        margin-bottom: 10px;
+        td {
+            border-top: 1px solid #aaa;
+            padding: 10px;
+        }
+        select {
+            min-width: 200px;
+            width: 100%;
+        }
+    }
+}
