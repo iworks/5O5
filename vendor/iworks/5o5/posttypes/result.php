@@ -60,10 +60,15 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$this->fields = array(
 			'result' => array(
 				'location' => array( 'label' => __( 'Location', '5o5' ) ),
+				'organizer' => array( 'label' => __( 'Organizer', '5o5' ) ),
+				'secretary' => array( 'label' => __( 'Secretary', '5o5' ) ),
+				'arbiter' => array( 'label' => __( 'Arbiter', '5o5' ) ),
 				'date_start' => array( 'type' => 'date', 'label' => __( 'Event start', '5o5' ) ),
 				'date_end' => array( 'type' => 'date', 'label' => __( 'Event end', '5o5' ) ),
 				'number_of_races' => array( 'type' => 'number', 'label' => __( 'Number of races', '5o5' ) ),
 				'number_of_competitors' => array( 'type' => 'number', 'label' => __( 'Number of competitors', '5o5' ) ),
+				'wind_direction' => array( 'label' => __( 'Wind direction', '5o5' ) ),
+				'wind_power' => array( 'label' => __( 'Wind power', '5o5' ) ),
 			),
 		);
 		/**
