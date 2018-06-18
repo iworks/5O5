@@ -45,6 +45,7 @@ There are 3 ways to install this plugin:
 
 * Added `country` field in regatta table.
 * Added the boat list on a sailor page.
+* Add year to a single result slug on save.
 
 == Upgrade Notice ==
 

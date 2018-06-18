@@ -51,6 +51,8 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		 * change default columns
 		 */
 		add_filter( "manage_{$this->get_name()}_posts_columns", array( $this, 'add_columns' ) );
+		add_filter( "manage_{$this->get_name()}_posts_custom_column", array( $this, 'column' ), 10, 2 );
+		add_filter( "manage_edit-{$this->post_type_name}_sortable_columns", array( $this, 'add_sortable_columns' ) );
 		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
 		/**
 		 * fields
@@ -81,32 +83,64 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * content filters
 		 */
-        add_filter( 'iworks_5o5_result_sailor_regata_list', array( $this, 'regatta_list_by_sailor_id' ), 10, 2 );
-        add_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
+		add_filter( 'iworks_5o5_result_sailor_regata_list', array( $this, 'regatta_list_by_sailor_id' ), 10, 2 );
+		add_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
+
+		/**
+		 * save custom slug
+		 */
+		add_action( 'save_post', array( $this, 'set_slug' ), 10, 3 );
 	}
 
-    public function add_year_to_title( $title, $post_id ) {
-        $post_type = get_post_type( $post_id );
-        if ( $post_type != $this->post_type_name ) {
-            return $title;
-        }
-        if ( is_admin() ) {
-            $screen = get_current_screen();
-            l($screen);
+	public function set_slug( $post_id, $post, $update ) {
+		if ( $this->post_type_name != $post->post_type ) {
+			return;
+		}
+		if ( wp_is_post_revision( $post_id ) ) {
+			return;
+		}
+		remove_action( 'save_post', array( $this, 'set_slug' ), 10, 3 );
+		$slug = $this->add_year_to_title( $post->post_title, $post_id );
+		$data = array(
+			'ID' => $post_id,
+			'post_name' => wp_unique_post_slug( $slug, $post_id, $post->post_status, $post->post_status ),
+		);
+		wp_update_post( $data );
+	}
 
+	public function column( $column, $post_id ) {
+		switch ( $column ) {
+			case 'year':
+				$year = $this->get_year( $post_id );
+				if ( empty( $year ) ) {
+					esc_html_e( 'Start date is not set.', '5o5' );
+				} else {
+					echo esc_html( $year );
+				}
+			break;
+		}
+	}
 
-            l($post_type);
-        } else {
-            $start = $this->options->get_option_name( 'result_date_start' );
-            $start = get_post_meta( $post_id, $start, true );
-            $year = date( 'Y', $start );
-            if ( ! empty( $year ) ) {
-                return sprintf( '%d - %s', $year, $title );
-            }
-        }
+	private function get_year( $post_id ) {
+		$start = $this->options->get_option_name( 'result_date_start' );
+		$start = get_post_meta( $post_id, $start, true );
+		if ( empty( $start ) ) {
+			return '';
+		}
+		return date( 'Y', $start );
+	}
 
-        return $title;
-    }
+	public function add_year_to_title( $title, $post_id ) {
+		$post_type = get_post_type( $post_id );
+		if ( $post_type != $this->post_type_name ) {
+			return $title;
+		}
+		$year = $this->get_year( $post_id );
+		if ( ! empty( $year ) ) {
+			return sprintf( '%d - %s', $year, $title );
+		}
+		return $title;
+	}
 
 	private function get_list_by_sailor_id( $sailor_id ) {
 		global $wpdb;
@@ -333,6 +367,22 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 	public function add_columns( $columns ) {
 		unset( $columns['date'] );
 		$columns['location'] = __( 'Location', '5o5' );
+		$columns['year'] = __( 'Year', '5o5' );
+		return $columns;
+	}
+
+	/**
+	 * change default columns
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array $columns list of columns.
+	 * @return array $columns list of columns.
+	 */
+	public function add_sortable_columns( $columns ) {
+		unset( $columns['date'] );
+		$columns['location'] = __( 'Location', '5o5' );
+		$columns['year'] = __( 'Year', '5o5' );
 		return $columns;
 	}
 
