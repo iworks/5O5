@@ -284,7 +284,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$wpdb->delete( $table_name_regatta_race, array( 'post_regata_id' => $_POST['id'] ), array( '%d' ) );
 		$year = date( 'Y', get_post_meta( $_POST['id'], 'iworks_5o5_result_date_end', true ) );
 		foreach ( $data as $row ) {
-			$boat_id = intval( preg_replace( '/[^\d]+/', '', array_shift( $row ) ) );
+			$boat = array_shift( $row );
+			$boat_id = intval( preg_replace( '/[^\d]+/', '', $boat ) );
+			$country = preg_replace( '/[^a-zA-Z]+/', '', $boat );
 			$helm = trim( array_shift( $row ) );
 			$crew = trim( array_shift( $row ) );
 			$club = trim( array_shift( $row ) );
@@ -294,6 +296,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				'year' => $year,
 				'post_regata_id' => $_POST['id'],
 				'boat_id' => $boat_id,
+				'country' => $country,
 				'helm_id' => isset( $sailors[ $helm ] )? intval( $sailors[ $helm ] ):0,
 				'helm_name' => $helm,
 				'crew_id' => isset( $sailors[ $crew ] )? intval( $sailors[ $crew ] ):0,
@@ -303,6 +306,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			);
 			$wpdb->insert( $table_name_regatta, $regatta );
 			$regatta_id = $wpdb->insert_id;
+			if ( empty( $row ) ) {
+				continue;
+			}
 			$races = array();
 			foreach ( $row as $one ) {
 				$races[] = $one;
@@ -380,7 +386,12 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		foreach ( $regatta as $one ) {
 			$content .= '<tr>';
 			$content .= sprintf( '<td class="place">%d</td>', $one->place );
-			$content .= sprintf( '<td class="boat_id">%d</td>', $one->boat_id );
+			$content .= sprintf(
+				'<td class="boat_id country-%s">%s %d</td>',
+				esc_attr( strtolower( $one->country ) ),
+				$one->country,
+				$one->boat_id
+			);
 			/**
 			 * helmsman
 			 */
@@ -397,14 +408,16 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			} else {
 				$content .= sprintf( '<td class="crew_name">%s</td>', $one->crew_name );
 			}
-			foreach ( $races[ $one->ID ] as $race_number => $race_points ) {
-				$class = preg_match( '/\*/', $race_points )? 'race-discard':'';
-				$content .= sprintf(
-					'<td class="race race-%d %s">%s</td>',
-					esc_attr( $race_number ),
-					esc_attr( $class ),
-					esc_html( $race_points )
-				);
+			if ( isset( $races[ $one->ID ] ) && ! empty( $races[ $one->ID ] ) ) {
+				foreach ( $races[ $one->ID ] as $race_number => $race_points ) {
+					$class = preg_match( '/\*/', $race_points )? 'race-discard':'';
+					$content .= sprintf(
+						'<td class="race race-%d %s">%s</td>',
+						esc_attr( $race_number ),
+						esc_attr( $class ),
+						esc_html( $race_points )
+					);
+				}
 			}
 			$content .= sprintf( '<td class="points">%d</td>', $one->points );
 			$content .= '</tr>';

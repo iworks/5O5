@@ -283,5 +283,19 @@ class iworks_5o5 extends iworks {
 			dbDelta( $sql );
 			update_option( '5o5_db_version', $install );
 		}
+		/**
+		 * 20180618
+		 */
+		$install = 20180618;
+		if ( $install > $version ) {
+			$charset_collate = $wpdb->get_charset_collate();
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			$table_name = $wpdb->prefix . '505_regatta';
+			$sql = "ALTER TABLE $table_name ADD COLUMN country TEXT AFTER boat_id;";
+			$result = $wpdb->query( $sql );
+			if ( $result ) {
+				update_option( '5o5_db_version', $install );
+			}
+		}
 	}
 }

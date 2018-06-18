@@ -41,5 +41,9 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 1.1.1 =
+
+* Added `country` field in regatta table.
+
 == Upgrade Notice ==
 
