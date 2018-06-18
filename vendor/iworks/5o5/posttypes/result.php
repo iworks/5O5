@@ -81,8 +81,32 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * content filters
 		 */
-		add_filter( 'iworks_5o5_result_sailor_regata_list', array( $this, 'regatta_list_by_sailor_id' ), 10, 2 );
+        add_filter( 'iworks_5o5_result_sailor_regata_list', array( $this, 'regatta_list_by_sailor_id' ), 10, 2 );
+        add_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 	}
+
+    public function add_year_to_title( $title, $post_id ) {
+        $post_type = get_post_type( $post_id );
+        if ( $post_type != $this->post_type_name ) {
+            return $title;
+        }
+        if ( is_admin() ) {
+            $screen = get_current_screen();
+            l($screen);
+
+
+            l($post_type);
+        } else {
+            $start = $this->options->get_option_name( 'result_date_start' );
+            $start = get_post_meta( $post_id, $start, true );
+            $year = date( 'Y', $start );
+            if ( ! empty( $year ) ) {
+                return sprintf( '%d - %s', $year, $title );
+            }
+        }
+
+        return $title;
+    }
 
 	private function get_list_by_sailor_id( $sailor_id ) {
 		global $wpdb;
