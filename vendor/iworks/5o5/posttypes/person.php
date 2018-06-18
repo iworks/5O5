@@ -510,6 +510,10 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 				$content .= '</ul>';
 			}
 		}
+		/**
+		 * regatta
+		 */
+		$content .= apply_filters( 'iworks_5o5_result_sailor_regata_list', '', $post_id );
 
 		/**
 		 * Endomondo

@@ -297,5 +297,23 @@ class iworks_5o5 extends iworks {
 				update_option( '5o5_db_version', $install );
 			}
 		}
+		/**
+		 * 20180619
+		 */
+		$install = 20180619;
+		if ( $install > $version ) {
+			$charset_collate = $wpdb->get_charset_collate();
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			$table_name = $wpdb->prefix . '505_regatta';
+			$sql = "ALTER TABLE $table_name ADD COLUMN date date AFTER year;";
+			$result = $wpdb->query( $sql );
+			if ( $result ) {
+				$sql = "ALTER TABLE $table_name ADD key ( date );";
+				$result = $wpdb->query( $sql );
+			}
+			if ( $result ) {
+				update_option( '5o5_db_version', $install );
+			}
+		}
 	}
 }

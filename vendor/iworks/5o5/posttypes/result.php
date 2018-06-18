@@ -78,7 +78,72 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		 * handle results
 		 */
 		add_action( 'wp_ajax_iworks_5o5_upload_races', array( $this, 'upload' ) );
+		/**
+		 * content filters
+		 */
+		add_filter( 'iworks_5o5_result_sailor_regata_list', array( $this, 'regatta_list_by_sailor_id' ), 10, 2 );
+	}
 
+	private function get_list_by_sailor_id( $sailor_id ) {
+		global $wpdb;
+		$table_name_regatta = $wpdb->prefix . '505_regatta';
+		$sql = $wpdb->prepare(
+			"select * from {$table_name_regatta} where helm_id = %d or crew_id = %d order by date, year desc",
+			$sailor_id,
+			$sailor_id
+		);
+		return $wpdb->get_results( $sql );
+	}
+
+	public function regatta_list_by_sailor_id( $content, $sailor_id ) {
+		if ( empty( $content ) ) {
+			$content = __( 'There is no register regatta for this sailor.', '5o5' );
+		}
+		$regattas = $this->get_list_by_sailor_id( $sailor_id );
+		if ( ! empty( $regattas ) ) {
+			$content = '<table><thead><tr>';
+			$content .= sprintf( '<th class="year">%s</th>', esc_html__( 'Year', '5o5' ) );
+			$content .= sprintf( '<th class="name">%s</th>', esc_html__( 'Name', '5o5' ) );
+			$content .= sprintf( '<th class="helmsman">%s</th>', esc_html__( 'Helmsman', '5o5' ) );
+			$content .= sprintf( '<th class="crew">%s</th>', esc_html__( 'Crew', '5o5' ) );
+			$content .= sprintf( '<th class="place">%s</th>', esc_html__( 'Place', '5o5' ) );
+			$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
+			$content .= '</tr></thead><tbody>';
+			foreach ( $regattas as $regatta ) {
+				$content .= '<tr>';
+				$content .= sprintf( '<td class="year">%d</td>', $regatta->year );
+				$content .= sprintf( '<td class="name"><a href="%s">%s</a></td>', get_permalink( $regatta->post_regata_id ), get_the_title( $regatta->post_regata_id ) );
+				/**
+				 * Helmsman
+				 */
+				if ( $regatta->helm_id ) {
+					$content .= sprintf( '<td class="helmsman"><a href="%s">%s</a></td>', get_permalink( $regatta->helm_id ), get_the_title( $regatta->helm_id ) );
+				} else {
+					$content .= sprintf( '<td class="helmsman">%s</td>', $regatta->helm_name );
+				}
+				/**
+				 * crew
+				 */
+				if ( $regatta->crew_id ) {
+					$content .= sprintf( '<td class="crew"><a href="%s">%s</a></td>', get_permalink( $regatta->crew_id ), get_the_title( $regatta->crew_id ) );
+				} else {
+					$content .= sprintf( '<td class="crew">%s</td>', $regatta->crew_name );
+				}
+				$content .= sprintf( '<td class="place">%d</td>', $regatta->place );
+				$content .= sprintf( '<td class="points">%d</td>', $regatta->points );
+				$content .= '</tr>';
+			}
+			$content .= '</tbody></table>';
+
+		}
+
+		$content = sprintf(
+			'<div class="iworks-5o5-regatta-list"><h2>%s</h2>%s</div>',
+			esc_html__( 'Regatta list', '5o5' ),
+			$content
+		);
+
+		return $content;
 	}
 
 	/**
