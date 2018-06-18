@@ -90,11 +90,32 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		 */
 		add_filter( 'iworks_5o5_result_sailor_regata_list', array( $this, 'regatta_list_by_sailor_id' ), 10, 2 );
 		add_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
-
 		/**
 		 * save custom slug
 		 */
 		add_action( 'save_post', array( $this, 'set_slug' ), 10, 3 );
+		/**
+		 * change default sort order
+		 */
+		add_action( 'pre_get_posts', array( $this, 'change_order' ) );
+	}
+
+	public function change_order( $query ) {
+		if ( is_admin() ) {
+			return;
+		}
+		if (
+			$query->is_main_query()
+			&& isset( $query->query )
+			&& isset( $query->query['post_type'] )
+			&& $this->post_type_name === $query->query['post_type']
+		) {
+			$query->set( 'meta_key', $this->options->get_option_name( 'result_date_start' ) );
+			$query->set( 'meta_value_num', 0 );
+			$query->set( 'meta_compare', '>' );
+			$query->set( 'order', 'DESC' );
+			$query->set( 'orderby', 'meta_value_num' );
+		}
 	}
 
 	public function set_slug( $post_id, $post, $update ) {
