@@ -141,6 +141,10 @@ class iworks_5o5_posttypes {
 						if ( isset( $data['type'] ) && 'date' == $data['type'] ) {
 							$value = strtotime( $value );
 						}
+						/**
+						 * filter
+						 */
+						$value = apply_filters( 'iworks_5o5_meta_value', $value, $post->ID, $option_name );
 						$result = add_post_meta( $post->ID, $option_name, $value, true );
 						if ( ! $result ) {
 							update_post_meta( $post->ID, $option_name, $value );

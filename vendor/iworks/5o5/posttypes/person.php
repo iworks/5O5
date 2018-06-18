@@ -34,6 +34,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 	protected $taxonomy_name_club = 'iworks_5o5_club';
 	private $nonce_list = 'iworks_5o5_person_persons_list_nonce';
 	private $users_list = array();
+	private $boats_list = array();
 
 	public function __construct() {
 		parent::__construct();
@@ -447,6 +448,69 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			return $content;
 		}
 		$post_id = get_the_ID();
+
+		/**
+		 * boats
+		 */
+		$boats = get_post_meta( $post_id, '_iworks_5o5_boat' );
+		if ( ! empty( $boats ) ) {
+			$meta_name = $this->options->get_option_name( 'crew' );
+			$boats = array_unique( $boats );
+			$currently_sails_on = $sails_on = array();
+			foreach ( $boats as $boat_id ) {
+				$crew = get_post_meta( $boat_id, $meta_name, true );
+				if ( ! isset( $crew['crew'] ) ) {
+				}
+				$current = isset( $crew['current'] )? $crew['current']: -1;
+				foreach ( $crew['crew'] as $key => $value ) {
+					if ( $key == $current ) {
+						if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
+							$currently_sails_on[] = sprintf(
+								__( 'Sail on %s as helmsman.', '5o5' ),
+								$this->get_boat( $boat_id )
+							);
+						}
+						if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
+							$currently_sails_on[] = sprintf(
+								__( 'Sail on %s as crew.', '5o5' ),
+								$this->get_boat( $boat_id )
+							);
+						}
+					} else {
+						if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
+							$sails_on[] = sprintf(
+								__( 'Sailed on %s as helmsman.', '5o5' ),
+								$this->get_boat( $boat_id )
+							);
+						}
+						if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
+							$sails_on[] = sprintf(
+								__( 'Sailed on %s as crew.', '5o5' ),
+								$this->get_boat( $boat_id )
+							);
+						}
+					}
+				}
+			}
+			if ( ! empty( $sails_on ) || ! empty( $currently_sails_on ) ) {
+				$content .= sprintf( '<h2>%s</h2>', __( 'Sail or sailed', '5o5' ) );
+				$content .= '<ul>';
+				if ( ! empty( $currently_sails_on ) ) {
+					rsort( $currently_sails_on );
+					foreach ( $currently_sails_on as $one ) {
+						$content .= sprintf( '<li class="int5o5-current">%s</li>', $one );
+					}
+				}
+				if ( ! empty( $sails_on ) ) {
+					rsort( $sails_on );
+					foreach ( $sails_on as $one ) {
+						$content .= sprintf( '<li>%s</li>', $one );
+					}
+				}
+				$content .= '</ul>';
+			}
+		}
+
 		/**
 		 * Endomondo
 		 */
@@ -456,6 +520,28 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$content .= sprintf( '<iframe src="https://www.endomondo.com/embed/user/summary?id=%d&sport=12&measure=0&zone=Gp0100_SAR&width=400&height=217" width="400" height="217" frameborder="0" scrolling="no" ></iframe>', $value );
 		}
 		return $content;
+	}
+
+	/**
+	 * get boat name with link
+	 *
+	 * @since 1.1.1
+	 */
+	private function get_boat( $boat_id ) {
+		if ( isset( $this->boats_list[ $boat_id ] ) ) {
+			return $this->boats_list[ $boat_id ];
+		}
+		$content = get_the_title( $boat_id );
+		$url = get_permalink( $boat_id );
+		if ( ! empty( $url ) ) {
+			$content = sprintf(
+				'<a href="%s">%s</a>',
+				esc_url( $url ),
+				esc_html( $content )
+			);
+		}
+		$this->boats_list[ $boat_id ] = $content;
+		return $this->boats_list[ $boat_id ];
 	}
 }
 

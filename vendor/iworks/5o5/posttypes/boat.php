@@ -366,7 +366,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			 */
 			foreach ( $added_users as $user_post_id ) {
 				$assigned_boats = get_post_meta( $user_post_id, $this->single_boat_field_name );
-				if ( ! in_array( $user_post_id, $assigned_boats ) ) {
+				if ( ! in_array( $post_id, $assigned_boats ) ) {
 					add_post_meta( $user_post_id, $this->single_boat_field_name, $post_id, false );
 				}
 			}

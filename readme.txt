@@ -44,6 +44,7 @@ There are 3 ways to install this plugin:
 = 1.1.1 =
 
 * Added `country` field in regatta table.
+* Added the boat list on a sailor page.
 
 == Upgrade Notice ==
 
