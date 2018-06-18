@@ -103,7 +103,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$slug = $this->add_year_to_title( $post->post_title, $post_id );
 		$data = array(
 			'ID' => $post_id,
-			'post_name' => wp_unique_post_slug( $slug, $post_id, $post->post_status, $post->post_status ),
+			'post_name' => wp_unique_post_slug( $slug, $post_id, $post->post_status, $post->post_status, null ),
 		);
 		wp_update_post( $data );
 	}
@@ -390,6 +390,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		if ( ! isset( $_POST['id'] ) ) {
 			wp_send_json_error();
 		}
+		$post_id = intval( $_POST['id'] );
+		if ( empty( $post_id ) ) {
+			return;
+		}
 		if ( ! isset( $_POST['_wpnonce'] ) ) {
 			wp_send_json_error();
 		}
@@ -419,9 +423,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$table_name_regatta_race = $wpdb->prefix . '505_regatta_race';
 		array_shift( $data );
 		$sailors = $iworks_5o5->get_list_by_post_type( 'person' );
-		$wpdb->delete( $table_name_regatta, array( 'post_regata_id' => $_POST['id'] ), array( '%d' ) );
-		$wpdb->delete( $table_name_regatta_race, array( 'post_regata_id' => $_POST['id'] ), array( '%d' ) );
-		$year = date( 'Y', get_post_meta( $_POST['id'], 'iworks_5o5_result_date_end', true ) );
+		$wpdb->delete( $table_name_regatta, array( 'post_regata_id' => $post_id ), array( '%d' ) );
+		$wpdb->delete( $table_name_regatta_race, array( 'post_regata_id' => $post_id ), array( '%d' ) );
+		$year = date( 'Y', get_post_meta( $post_id, 'iworks_5o5_result_date_end', true ) );
 		foreach ( $data as $row ) {
 			$boat = array_shift( $row );
 			$boat_id = intval( preg_replace( '/[^\d]+/', '', $boat ) );
@@ -433,7 +437,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$points = intval( array_pop( $row ) );
 			$regatta = array(
 				'year' => $year,
-				'post_regata_id' => $_POST['id'],
+				'post_regata_id' => $post_id,
 				'boat_id' => $boat_id,
 				'country' => $country,
 				'helm_id' => isset( $sailors[ $helm ] )? intval( $sailors[ $helm ] ):0,
@@ -463,7 +467,8 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 					$race['discard'] = true;
 				}
 				$one = preg_replace( '/\*/', '', $one );
-				if ( preg_match( '/^[\s]+$/', $one ) ) {
+				$one = trim( $one );
+				if ( preg_match( '/^[a-z]+$/i', $one ) ) {
 					$race['code'] = $one;
 				}
 				$race['points'] = $one;
@@ -503,6 +508,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				$races[ $one->regata_id ] = array();
 			}
 			$races[ $one->regata_id ][ $one->number ] = $one->points;
+			if ( empty( $one->points ) ) {
+				$races[ $one->regata_id ][ $one->number ] = $one->code;
+			}
 			if ( $one->discard ) {
 				$races[ $one->regata_id ][ $one->number ] .= '*';
 			}
