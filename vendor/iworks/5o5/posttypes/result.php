@@ -515,8 +515,40 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$post_id = get_the_ID();
 		global $wpdb, $iworks_5o5;
 		$table_name_regatta = $wpdb->prefix . '505_regatta';
-		$table_name_regatta_race = $wpdb->prefix . '505_regatta_race';
-
+        $table_name_regatta_race = $wpdb->prefix . '505_regatta_race';
+        /**
+         * regata meta
+         */
+        $meta = '';
+        $format = get_option( 'date_format' );
+        foreach( $this->fields['result'] as $key => $data ) {
+            if ( preg_match( '/^wind/', $key ) ) {
+                continue;
+            }
+            $name = $this->options->get_option_name( 'result_'.$key );
+            $value = trim( get_post_meta( $post_id, $name, true ) );
+            if ( empty( $value )) {
+                continue;
+            }
+            switch( $key ) {
+            case 'date_start':
+            case 'date_end':
+                $value = date_i18n( $format, $value );
+                break;
+            case 'location':
+                $url = add_query_arg( 'q', $value, 'https://maps.google.com/' );
+                $value = sprintf( '<a href="%s">%s</a>', $url, $value );
+                break;
+            }
+            $meta .= sprintf(
+                '<dt>%s</dt><dd>%s</dd>',
+                $data['label'],
+                $value
+            );
+        }
+        if ( ! empty( $meta ) ) {
+            $content .= sprintf( '<dl>%s</dl>', $meta );
+        }
 		/**
 		 * get regata data
 		 */
