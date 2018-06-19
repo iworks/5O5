@@ -256,12 +256,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 	public function regatta_list_by_boat_id( $content, $boat_id ) {
 		remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 		$regattas = $this->get_list_by_boat_id( $boat_id );
-
-		l( $regattas );
 		if ( empty( $regattas ) ) {
 			return '';
 		}
-
 		$post_id = get_the_ID();
 		if ( ! empty( $regattas ) ) {
 			$content = '<table class="dinghy-results"><thead><tr>';
