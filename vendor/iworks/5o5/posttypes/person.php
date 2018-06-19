@@ -457,38 +457,60 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			$meta_name = $this->options->get_option_name( 'crew' );
 			$boats = array_unique( $boats );
 			$currently_sails_on = $sails_on = array();
+			$done = array();
+			/**
+			 * past
+			 */
 			foreach ( $boats as $boat_id ) {
 				$crew = get_post_meta( $boat_id, $meta_name, true );
 				if ( ! isset( $crew['crew'] ) ) {
+					continue;
 				}
-				$current = isset( $crew['current'] )? $crew['current']: -1;
+				/**
+				 * current
+				 */
+				if ( isset( $crew['current'] ) && isset( $crew['crew'][ $crew['current'] ] ) ) {
+					$value = $crew['crew'][ $crew['current'] ];
+					unset( $crew['crew'][ $crew['current'] ] );
+					if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
+						$currently_sails_on[] = sprintf(
+							__( 'Sail on %s as helmsman.', '5o5' ),
+							$this->get_boat( $boat_id )
+						);
+						$done[] = $this->get_done_key( 'helmsman', $boat_id, $post_id );
+					}
+					if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
+						$currently_sails_on[] = sprintf(
+							__( 'Sail on %s as crew.', '5o5' ),
+							$this->get_boat( $boat_id )
+						);
+					}
+				}
+				/**
+				 * past
+				 */
 				foreach ( $crew['crew'] as $key => $value ) {
-					if ( $key == $current ) {
-						if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
-							$currently_sails_on[] = sprintf(
-								__( 'Sail on %s as helmsman.', '5o5' ),
-								$this->get_boat( $boat_id )
-							);
+					if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
+						$done_key = $this->get_done_key( 'helmsman', $boat_id, $post_id );
+						if ( in_array( $done_key, $done ) ) {
+							continue;
 						}
-						if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
-							$currently_sails_on[] = sprintf(
-								__( 'Sail on %s as crew.', '5o5' ),
-								$this->get_boat( $boat_id )
-							);
+						$done[] = $done_key;
+						$sails_on[] = sprintf(
+							__( 'Sailed on %s as helmsman.', '5o5' ),
+							$this->get_boat( $boat_id )
+						);
+					}
+					if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
+						$done_key = $this->get_done_key( 'crew', $boat_id, $post_id );
+						if ( in_array( $done_key, $done ) ) {
+							continue;
 						}
-					} else {
-						if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
-							$sails_on[] = sprintf(
-								__( 'Sailed on %s as helmsman.', '5o5' ),
-								$this->get_boat( $boat_id )
-							);
-						}
-						if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
-							$sails_on[] = sprintf(
-								__( 'Sailed on %s as crew.', '5o5' ),
-								$this->get_boat( $boat_id )
-							);
-						}
+						$done[] = $done_key;
+						$sails_on[] = sprintf(
+							__( 'Sailed on %s as crew.', '5o5' ),
+							$this->get_boat( $boat_id )
+						);
 					}
 				}
 			}
@@ -546,6 +568,14 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		}
 		$this->boats_list[ $boat_id ] = $content;
 		return $this->boats_list[ $boat_id ];
+	}
+
+	/**
+	 * generate key
+	 */
+	private function get_done_key( $prefix, $boat_id, $post_id ) {
+		$done_key = 'helmsman-'.$boat_id.'-'.$post_id;
+		return $done_key;
 	}
 }
 
