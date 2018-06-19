@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2018 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -89,6 +89,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		 * content filters
 		 */
 		add_filter( 'iworks_5o5_result_sailor_regata_list', array( $this, 'regatta_list_by_sailor_id' ), 10, 2 );
+		add_filter( 'iworks_5o5_result_boat_regatta_list', array( $this, 'regatta_list_by_boat_id' ), 10, 2 );
 		add_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 		/**
 		 * save custom slug
@@ -179,13 +180,34 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		return $wpdb->get_results( $sql );
 	}
 
+	private function get_list_by_boat_id( $boat_id ) {
+		global $wpdb;
+		$table_name_regatta = $wpdb->prefix . '505_regatta';
+
+		$boat_title = get_the_title( $boat_id );
+		if ( empty( $boat_title ) ) {
+			return array();
+		}
+		$boat_title = intval( preg_replace( '/[^\d]/', '', $boat_title ) );
+		if ( empty( $boat_title ) ) {
+			return array();
+		}
+		$sql = $wpdb->prepare(
+			"select * from {$table_name_regatta} where boat_id = %d order by date, year desc",
+			$boat_title
+		);
+		return $wpdb->get_results( $sql );
+	}
+
 	public function regatta_list_by_sailor_id( $content, $sailor_id ) {
 		if ( empty( $content ) ) {
 			$content = __( 'There is no register regatta for this sailor.', '5o5' );
 		}
+		remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 		$regattas = $this->get_list_by_sailor_id( $sailor_id );
+		$post_id = get_the_ID();
 		if ( ! empty( $regattas ) ) {
-			$content = '<table><thead><tr>';
+			$content = '<table class="dinghy-results"><thead><tr>';
 			$content .= sprintf( '<th class="year">%s</th>', esc_html__( 'Year', '5o5' ) );
 			$content .= sprintf( '<th class="name">%s</th>', esc_html__( 'Name', '5o5' ) );
 			$content .= sprintf( '<th class="helmsman">%s</th>', esc_html__( 'Helmsman', '5o5' ) );
@@ -200,16 +222,20 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				/**
 				 * Helmsman
 				 */
-				if ( $regatta->helm_id ) {
+				if ( $regatta->helm_id && $regatta->helm_id != $post_id ) {
 					$content .= sprintf( '<td class="helmsman"><a href="%s">%s</a></td>', get_permalink( $regatta->helm_id ), get_the_title( $regatta->helm_id ) );
+				} else if ( $regatta->helm_id == $post_id ) {
+					$content .= sprintf( '<td class="helmsman current">%s</td>', $regatta->helm_name );
 				} else {
 					$content .= sprintf( '<td class="helmsman">%s</td>', $regatta->helm_name );
 				}
 				/**
 				 * crew
 				 */
-				if ( $regatta->crew_id ) {
+				if ( $regatta->crew_id && $regatta->crew_id != $post_id ) {
 					$content .= sprintf( '<td class="crew"><a href="%s">%s</a></td>', get_permalink( $regatta->crew_id ), get_the_title( $regatta->crew_id ) );
+				} else if ( $regatta->crew_id == $post_id ) {
+					$content .= sprintf( '<td class="crew current">%s</td>', $regatta->crew_name );
 				} else {
 					$content .= sprintf( '<td class="crew">%s</td>', $regatta->crew_name );
 				}
@@ -218,18 +244,71 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				$content .= '</tr>';
 			}
 			$content .= '</tbody></table>';
-
 		}
-
 		$content = sprintf(
 			'<div class="iworks-5o5-regatta-list"><h2>%s</h2>%s</div>',
 			esc_html__( 'Regatta list', '5o5' ),
 			$content
 		);
-
 		return $content;
 	}
 
+	public function regatta_list_by_boat_id( $content, $boat_id ) {
+		remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
+		$regattas = $this->get_list_by_boat_id( $boat_id );
+
+		l( $regattas );
+		if ( empty( $regattas ) ) {
+			return '';
+		}
+
+		$post_id = get_the_ID();
+		if ( ! empty( $regattas ) ) {
+			$content = '<table class="dinghy-results"><thead><tr>';
+			$content .= sprintf( '<th class="year">%s</th>', esc_html__( 'Year', '5o5' ) );
+			$content .= sprintf( '<th class="name">%s</th>', esc_html__( 'Name', '5o5' ) );
+			$content .= sprintf( '<th class="helmsman">%s</th>', esc_html__( 'Helmsman', '5o5' ) );
+			$content .= sprintf( '<th class="crew">%s</th>', esc_html__( 'Crew', '5o5' ) );
+			$content .= sprintf( '<th class="place">%s</th>', esc_html__( 'Place', '5o5' ) );
+			$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
+			$content .= '</tr></thead><tbody>';
+			foreach ( $regattas as $regatta ) {
+				$content .= '<tr>';
+				$content .= sprintf( '<td class="year">%d</td>', $regatta->year );
+				$content .= sprintf( '<td class="name"><a href="%s">%s</a></td>', get_permalink( $regatta->post_regata_id ), get_the_title( $regatta->post_regata_id ) );
+				/**
+				 * Helmsman
+				 */
+				if ( $regatta->helm_id && $regatta->helm_id != $post_id ) {
+					$content .= sprintf( '<td class="helmsman"><a href="%s">%s</a></td>', get_permalink( $regatta->helm_id ), get_the_title( $regatta->helm_id ) );
+				} else if ( $regatta->helm_id == $post_id ) {
+					$content .= sprintf( '<td class="helmsman current">%s</td>', $regatta->helm_name );
+				} else {
+					$content .= sprintf( '<td class="helmsman">%s</td>', $regatta->helm_name );
+				}
+				/**
+				 * crew
+				 */
+				if ( $regatta->crew_id && $regatta->crew_id != $post_id ) {
+					$content .= sprintf( '<td class="crew"><a href="%s">%s</a></td>', get_permalink( $regatta->crew_id ), get_the_title( $regatta->crew_id ) );
+				} else if ( $regatta->crew_id == $post_id ) {
+					$content .= sprintf( '<td class="crew current">%s</td>', $regatta->crew_name );
+				} else {
+					$content .= sprintf( '<td class="crew">%s</td>', $regatta->crew_name );
+				}
+				$content .= sprintf( '<td class="place">%d</td>', $regatta->place );
+				$content .= sprintf( '<td class="points">%d</td>', $regatta->points );
+				$content .= '</tr>';
+			}
+			$content .= '</tbody></table>';
+		}
+		$content = sprintf(
+			'<div class="iworks-5o5-regatta-list"><h2>%s</h2>%s</div>',
+			esc_html__( 'Regatta list', '5o5' ),
+			$content
+		);
+		return $content;
+	}
 	/**
 	 * Add default class to postbox,
 	 */
@@ -573,7 +652,6 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				$races[ $one->regata_id ][ $one->number ] .= '*';
 			}
 		}
-		remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 		$content .= '<table>';
 		$content .= '<thead>';
 		$content .= '<tr>';

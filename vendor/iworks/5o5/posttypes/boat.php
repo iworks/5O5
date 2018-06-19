@@ -580,6 +580,10 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$content .= do_shortcode( $shortcode );
 		}
 		/**
+		 * regatta
+		 */
+		$content .= apply_filters( 'iworks_5o5_result_boat_regatta_list', '', $post_id );
+		/**
 		 * return content
 		 */
 		return $content;

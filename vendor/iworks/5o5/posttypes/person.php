@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -536,7 +536,6 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		 * regatta
 		 */
 		$content .= apply_filters( 'iworks_5o5_result_sailor_regata_list', '', $post_id );
-
 		/**
 		 * Endomondo
 		 */
