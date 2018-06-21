@@ -55,6 +55,23 @@ class iworks_5o5 extends iworks {
 		add_action( 'admin_init', array( $this, 'admin_init' ) );
 		add_action( 'init', array( $this, 'register_boat_number' ) );
 		add_action( 'init', array( $this, 'db_install' ) );
+		/**
+		 * shortcodes
+		 */
+		add_shortcode( 'dinghy_stats', array( $this, 'stats' ) );
+	}
+
+	public function stats() {
+		$content = '<div class="dinghy-statistsics">';
+		$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Statistics', '5o5' ) );
+		$content .= '<dl>';
+		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of sailors', '5o5' ) );
+
+		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of boats', '5o5' ) );
+		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of event results', '5o5' ) );
+		$content .= '</dl>';
+		$content .= '</div>';
+		return $content;
 	}
 
 	public function admin_init() {
