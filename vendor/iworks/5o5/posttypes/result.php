@@ -123,7 +123,6 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		);
 		if ( 'all' === $year ) {
 				$args['meta_key'] = $this->options->get_option_name( 'result_date_start' );
-
 		} else {
 			$args['meta_query'] = array(
 				array(
@@ -143,7 +142,8 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$format = get_option( 'date_format' );
 		$content = '';
 		$the_query = new WP_Query( $args );
-		if ( $the_query->have_posts() ) {
+        if ( $the_query->have_posts() ) {
+            $content .= sprintf( '<h2>%s</h2>', esc_html__( 'Results', '5o5' ) );
 			remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 			$content .= '<table class="dinghy-results dinghy-results-list">';
 			$content .= '<thead>';
