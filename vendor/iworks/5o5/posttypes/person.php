@@ -50,6 +50,13 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
 		/**
+		 * sort next/previous links by title
+		 */
+		add_filter( 'get_previous_post_sort', array( $this, 'adjacent_post_sort' ), 10, 3 );
+		add_filter( 'get_next_post_sort', array( $this, 'adjacent_post_sort' ), 10, 3 );
+		add_filter( 'get_previous_post_where', array( $this, 'adjacent_post_where' ), 10, 5 );
+		add_filter( 'get_next_post_where', array( $this, 'adjacent_post_where' ), 10, 5 );
+		/**
 		 * AJAX list
 		 */
 		if ( is_a( $this->options, 'iworks_options' ) ) {
