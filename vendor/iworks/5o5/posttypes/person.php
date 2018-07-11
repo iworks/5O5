@@ -286,6 +286,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			}
 			$post_type = get_query_var( 'post_type' );
 			if ( ! empty( $post_type ) && $post_type === $this->post_type_name ) {
+				$query->set( 'order', 'ASC' );
 				$query->set( 'orderby', 'post_title' );
 				return $query;
 			}
