@@ -62,6 +62,10 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 * apply default sort order
 		 */
 		add_action( 'pre_get_posts', array( $this, 'apply_default_sort_order' ) );
+		add_filter( 'get_previous_post_sort', array( $this, 'adjacent_post_sort' ), 10, 3 );
+		add_filter( 'get_next_post_sort', array( $this, 'adjacent_post_sort' ), 10, 3 );
+		add_filter( 'get_previous_post_where', array( $this, 'adjacent_post_where' ), 10, 5 );
+		add_filter( 'get_next_post_where', array( $this, 'adjacent_post_where' ), 10, 5 );
 		/**
 		 * add crew to a boat
 		 */
@@ -115,6 +119,31 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
+	}
+
+	/**
+	 * add where order to prev/next post links
+	 *
+	 * @since 1.0.0
+	 */
+	public function adjacent_post_where( $sql, $in_same_term, $excluded_terms, $taxonomy, $post ) {
+		if ( $post->post_type === $this->post_type_name ) {
+			global $wpdb;
+			$sql = preg_replace( '/p.post_date ([<> ]+) \'[^\']+\'/', "p.post_title $1 '{$post->post_title}'", $sql );
+		}
+		return $sql;
+	}
+
+	/**
+	 * add sort order to prev/next post links
+	 *
+	 * @since 1.0.0
+	 */
+	public function adjacent_post_sort( $sql, $post, $order ) {
+		if ( $post->post_type === $this->post_type_name ) {
+			$sql = sprintf( 'ORDER BY p.post_title %s LIMIT 1', $order );
+		}
+		return $sql;
 	}
 
 	/**

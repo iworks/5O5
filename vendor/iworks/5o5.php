@@ -61,14 +61,21 @@ class iworks_5o5 extends iworks {
 		add_shortcode( 'dinghy_stats', array( $this, 'stats' ) );
 	}
 
+	/**
+	 * Publish dinghy Statistics.
+	 *
+	 * #since 1.0.0
+	 */
 	public function stats() {
 		$content = '<div class="dinghy-statistsics">';
 		$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Statistics', '5o5' ) );
 		$content .= '<dl>';
 		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of sailors', '5o5' ) );
-
+		$content .= sprintf( '<dd>%d</dd>', $this->post_type_person->count() );
 		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of boats', '5o5' ) );
+		$content .= sprintf( '<dd>%d</dd>', $this->post_type_boat->count() );
 		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of event results', '5o5' ) );
+		$content .= sprintf( '<dd>%d</dd>', $this->post_type_result->count() );
 		$content .= '</dl>';
 		$content .= '</div>';
 		return $content;

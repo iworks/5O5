@@ -175,5 +175,24 @@ class iworks_5o5_posttypes {
 		}
 		return false;
 	}
+
+	/**
+	 * Return counter of published posts by post type.
+	 *
+	 * @since 1.0.0
+	 */
+	public function count() {
+		if ( empty( $this->post_type_name ) ) {
+			return 0;
+		}
+		$counter = wp_count_posts( $this->post_type_name );
+		if ( ! is_object( $counter ) ) {
+			return 0;
+		}
+		if ( isset( $counter->publish ) ) {
+			return $counter->publish;
+		}
+		return 0;
+	}
 }
 
