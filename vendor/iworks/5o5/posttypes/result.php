@@ -39,6 +39,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 	 * Sinle result meta field name
 	 */
 	private $single_result_field_name = 'iworks_5o5_result_result';
+	protected $taxonomy_name_serie = 'iworks_dinghy_serie';
 	/**
 	 * sailors to id
 	 */
@@ -142,8 +143,8 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$format = get_option( 'date_format' );
 		$content = '';
 		$the_query = new WP_Query( $args );
-        if ( $the_query->have_posts() ) {
-            $content .= sprintf( '<h2>%s</h2>', esc_html__( 'Results', '5o5' ) );
+		if ( $the_query->have_posts() ) {
+			$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Results', '5o5' ) );
 			remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 			$content .= '<table class="dinghy-results dinghy-results-list">';
 			$content .= '<thead>';
@@ -463,7 +464,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			'label'                 => __( 'Result', '5o5' ),
 			'labels'                => $labels,
 			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision' ),
-			'taxonomies'            => array(),
+			'taxonomies'            => array(
+				$this->taxonomy_name_serie,
+			),
 			'hierarchical'          => false,
 			'public'                => true,
 			'show_ui'               => true,
@@ -482,6 +485,43 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			),
 		);
 		register_post_type( $this->post_type_name, $args );
+		/**
+		 * Serie Taxonomy.
+		 */
+		$labels = array(
+			'name'                       => _x( 'Series', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Serie', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Serie', '5o5' ),
+			'all_items'                  => __( 'All Series', '5o5' ),
+			'new_item_name'              => __( 'New Serie Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Serie', '5o5' ),
+			'edit_item'                  => __( 'Edit Serie', '5o5' ),
+			'update_item'                => __( 'Update Serie', '5o5' ),
+			'view_item'                  => __( 'View Serie', '5o5' ),
+			'separate_items_with_commas' => __( 'Separate items with commas', '5o5' ),
+			'add_or_remove_items'        => __( 'Add or remove series', '5o5' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
+			'popular_items'              => __( 'Popular Series', '5o5' ),
+			'search_items'               => __( 'Search Series', '5o5' ),
+			'not_found'                  => __( 'Not Found', '5o5' ),
+			'no_terms'                   => __( 'No series', '5o5' ),
+			'items_list'                 => __( 'Series list', '5o5' ),
+			'items_list_navigation'      => __( 'Series list navigation', '5o5' ),
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => false,
+			'public'                     => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_ui'                    => true,
+			'show_in_quick_edit' => true,
+			'rewrite' => array(
+				'slug' => '5o5-result-serie',
+			),
+		);
+		register_taxonomy( $this->taxonomy_name_serie, array( $this->post_type_name ), $args );
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {
