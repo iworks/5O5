@@ -29,6 +29,22 @@ function iworks_5o5_options() {
 				),
 				'set_callback_to_null' => true,
 			),
+			'series' => array(
+				'menu' => 'submenu',
+				'parent' => $parent,
+				'page_title'  => __( 'Series', '5o5' ),
+				'menu_title'  => __( 'Series', '5o5' ),
+				'menu_slug' => htmlentities(
+					add_query_arg(
+						array(
+							'taxonomy' => 'iworks_dinghy_serie',
+							'post_type' => 'iworks_5o5_result',
+						),
+						'edit-tags.php'
+					)
+				),
+				'set_callback_to_null' => true,
+			),
 			'hull' => array(
 				'menu' => 'submenu',
 				'parent' => $parent,

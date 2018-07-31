@@ -109,7 +109,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 	public function shortcode_regattas_list( $atts ) {
 		$atts = shortcode_atts( array(
 			'year' => date( 'Y' ),
+			'serie' => null,
 		), $atts, 'dinghy_results_list' );
+		/**
+		 * params: year
+		 */
 		$year = $atts['year'];
 		if ( 'all' !== $year ) {
 			$year = intval( $atts['year'] );
@@ -117,13 +121,23 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				return '';
 			}
 		}
+		/**
+		 * params: year
+		 */
+		$serie = $atts['serie'];
+		/**
+		 * WP Query base args
+		 */
 		$args = array(
 			'post_type' => $this->post_type_name,
 			'nopaging' => true,
 			'orderby' => 'meta_value_num',
 		);
+		/**
+		 * year
+		 */
 		if ( 'all' === $year ) {
-				$args['meta_key'] = $this->options->get_option_name( 'result_date_start' );
+			$args['meta_key'] = $this->options->get_option_name( 'result_date_start' );
 		} else {
 			$args['meta_query'] = array(
 				array(
@@ -140,8 +154,35 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				),
 			);
 		}
+		/**
+		 * serie
+		 */
+		if ( ! empty( $serie ) ) {
+			if ( preg_match( '/^\d+$/', $serie ) ) {
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => $this->taxonomy_name_serie,
+						'terms' => $serie,
+					),
+				);
+			} else {
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => $this->taxonomy_name_serie,
+						'field' => 'name',
+						'terms' => $serie,
+					),
+				);
+			}
+		}
+		/**
+		 * start
+		 */
 		$format = get_option( 'date_format' );
 		$content = '';
+		/**
+		 * WP_Query
+		 */
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
 			$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Results', '5o5' ) );
@@ -161,7 +202,6 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$current = 0;
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
-
 				if ( 'all' === $year ) {
 					$value = $this->get_date( 'start', get_the_ID(), 'Y' );
 					if ( $current != $value ) {
@@ -200,7 +240,6 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$content .= '</table>';
 			/* Restore original Post Data */
 			wp_reset_postdata();
-
 		}
 		return $content;
 	}
