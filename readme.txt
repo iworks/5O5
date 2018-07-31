@@ -41,6 +41,11 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 1.2.0 =
+
+* Added shortcode "dinghy_regattas_list".
+* Added "Series" taxonomy for results.
+
 = 1.1.1 =
 
 * Added `country` field in regatta table.
