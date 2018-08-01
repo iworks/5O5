@@ -71,11 +71,11 @@ class iworks_5o5 extends iworks {
 		$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Statistics', '5o5' ) );
 		$content .= '<dl>';
 		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of sailors', '5o5' ) );
-		$content .= sprintf( '<dd>%d</dd>', $this->post_type_person->count() );
+		$content .= sprintf( '<dd><a href="%s">%d</a></dd>', get_post_type_archive_link( $this->post_type_person->get_name() ), $this->post_type_person->count() );
 		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of boats', '5o5' ) );
-		$content .= sprintf( '<dd>%d</dd>', $this->post_type_boat->count() );
+		$content .= sprintf( '<dd><a href="%s">%d</a></dd>', get_post_type_archive_link( $this->post_type_boat->get_name() ), $this->post_type_boat->count() );
 		$content .= sprintf( '<dt>%s</dt>', esc_html__( 'Number of event results', '5o5' ) );
-		$content .= sprintf( '<dd>%d</dd>', $this->post_type_result->count() );
+		$content .= sprintf( '<dd><a href="%s">%d</a></dd>', get_post_type_archive_link( $this->post_type_result->get_name() ), $this->post_type_result->count() );
 		$content .= '</dl>';
 		$content .= '</div>';
 		return $content;

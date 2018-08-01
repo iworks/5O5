@@ -44,6 +44,7 @@ There are 3 ways to install this plugin:
 = 1.2.0 =
 
 * Added shortcode "dinghy_regattas_list".
+* Added shortcode "dinghy_stats".
 * Added "Series" taxonomy for results.
 
 = 1.1.1 =
