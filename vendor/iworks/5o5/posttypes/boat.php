@@ -75,6 +75,11 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		add_action( 'international_5o5_content_template_overlay_end', array( $this, 'add_crew_to_boat' ), 10, 1 );
 		/**
+		 * save map data
+		 */
+		add_action( 'created_'.$this->taxonomy_name_location, array( $this, 'save_google_map_data' ), 10, 2 );
+		add_action( 'edited_'.$this->taxonomy_name_location, array( $this, 'save_google_map_data' ), 10, 2 );
+		/**
 		 * replace names to proper
 		 */
 		if ( is_a( $this->options, 'iworks_options' ) ) {
@@ -1051,6 +1056,43 @@ if ( isset( $data['crew'] ) && ! empty( $data['crew'] ) && isset( $persons[ $dat
 		if ( ! empty( $content ) ) {
 			printf( '<div class="iworks-5o5-crews-container">%s</div>', $content );
 		}
+	}
+
+	private function get_location_array( $location, $term_id ) {
+		$term = get_term( $term_id, $this->taxonomy_name_location );
+		$location[] = $term->name;
+		if ( 0 != $term->parent ) {
+			return $this->get_location_array( $location, $term->parent );
+		}
+		return $location;
+	}
+
+	public function save_google_map_data( $term_id, $tt_id ) {
+		$location = $this->get_location_array( array(), $term_id );
+		$meta_value = $this->google_get_one( implode( ', ', $location ) );
+		delete_term_meta( $term_id, 'google' );
+		add_term_meta( $term_id, 'google', $meta_value, true );
+	}
+
+	private function google_get_one( $url, $encoded = false ) {
+		$data = array();
+		if ( ! $encoded ) {
+			$url = urlencode( $url );
+		}
+		$args = array(
+			'address' => $url,
+			'sensor' => 'false',
+		);
+		$google_maps_data_url = add_query_arg( $args, 'http://maps.google.com/maps/api/geocode/json' );
+		$response = wp_remote_get( $google_maps_data_url );
+		if ( is_array( $response ) ) {
+			$data = json_decode( $response['body'] );
+			if ( 'OK' == $data->status && count( $data->results ) ) {
+				$data = $data->results[0];
+				$data = json_decode( json_encode( $data ), true );
+			}
+		}
+		return $data;
 	}
 }
 
