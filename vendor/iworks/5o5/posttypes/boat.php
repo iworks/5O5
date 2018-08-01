@@ -34,6 +34,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	protected $taxonomy_name_manufacturer = 'iworks_5o5_boat_manufacturer';
 	protected $taxonomy_name_sails = 'iworks_5o5_sails_manufacturer';
 	protected $taxonomy_name_mast = 'iworks_5o5_mast_manufacturer';
+	protected $taxonomy_name_location = 'iworks_dinghy_location';
 	/**
 	 * Sinle crew meta field name
 	 */
@@ -122,6 +123,75 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			$key = sprintf( 'postbox_classes_%s_%s', $this->get_name(), $name );
 			add_filter( $key, array( $this, 'add_defult_class_to_postbox' ) );
 		}
+		/**
+		 * shortcodes
+		 */
+		add_shortcode( 'dinghy_boats_list', array( $this, 'shortcode_list' ) );
+	}
+
+	public function shortcode_list( $atts ) {
+		$atts = shortcode_atts( array(
+			'location' => null,
+		), $atts, 'dinghy_boats_list' );
+		/**
+		 * params: location
+		 */
+		$location = $atts['location'];
+		/**
+		 * WP Query base args
+		 */
+		$args = array(
+			'post_type' => $this->post_type_name,
+			'nopaging' => true,
+			'orderby' => 'post_title',
+		);
+		/**
+		 * location
+		 */
+		if ( ! empty( $location ) ) {
+			if ( preg_match( '/^[\d+, ]$/', $location ) ) {
+				$locations = array_map( 'trim', explode( ',', $location ) );
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => $this->taxonomy_name_location,
+						'terms' => $locations,
+					),
+				);
+			} else {
+				$locations = array_map( 'trim', explode( ',', $location ) );
+				$args['tax_query'] = array(
+					array(
+						'taxonomy' => $this->taxonomy_name_location,
+						'field' => 'name',
+						'terms' => $locations,
+					),
+				);
+			}
+		}
+		/**
+		 * start
+		 */
+		$format = get_option( 'date_format' );
+		$content = '';
+		/**
+		 * WP_Query
+		 */
+		$the_query = new WP_Query( $args );
+		if ( $the_query->have_posts() ) {
+			$content .= '<ul class="iworks-dinghy-location">';
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
+				$content .= sprintf(
+					'<li><a href="%s">%s</a></li>',
+					get_permalink(),
+					get_the_title()
+				);
+			}
+			$content .= '</ul>';
+			/* Restore original Post Data */
+			wp_reset_postdata();
+		}
+		return $content;
 	}
 
 	/**
@@ -171,6 +241,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 				$this->taxonomy_name_manufacturer,
 				$this->taxonomy_name_sails,
 				$this->taxonomy_name_mast,
+				$this->taxonomy_name_location,
 			),
 			'hierarchical'          => false,
 			'public'                => true,
@@ -301,6 +372,43 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			),
 		);
 		register_taxonomy( $this->taxonomy_name_mast, array( $this->post_type_name ), $args );
+		/**
+		 * Locations  Taxonomy.
+		 */
+		$labels = array(
+			'name'                       => _x( 'Locations', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Locations', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Locations', '5o5' ),
+			'all_items'                  => __( 'All Locations', '5o5' ),
+			'new_item_name'              => __( 'New Locations Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Locations ', '5o5' ),
+			'edit_item'                  => __( 'Edit Locations ', '5o5' ),
+			'update_item'                => __( 'Update Locations ', '5o5' ),
+			'view_item'                  => __( 'View Locations ', '5o5' ),
+			'separate_items_with_commas' => __( 'Separate Locations with commas', '5o5' ),
+			'add_or_remove_items'        => __( 'Add or remove Locations', '5o5' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
+			'popular_items'              => __( 'Popular Locations ', '5o5' ),
+			'search_items'               => __( 'Search Locations ', '5o5' ),
+			'not_found'                  => __( 'Not Found', '5o5' ),
+			'no_terms'                   => __( 'No items', '5o5' ),
+			'items_list'                 => __( 'Locations list', '5o5' ),
+			'items_list_navigation'      => __( 'Locations list navigation', '5o5' ),
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => true,
+			'public'                     => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_ui'                    => true,
+			'show_in_quick_edit' => true,
+			'rewrite' => array(
+				'slug' => 'dinghy-locations',
+			),
+		);
+		register_taxonomy( $this->taxonomy_name_location, array( $this->post_type_name ), $args );
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {

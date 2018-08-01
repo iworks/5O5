@@ -93,6 +93,22 @@ function iworks_5o5_options() {
 				),
 				'set_callback_to_null' => true,
 			),
+			'location' => array(
+				'menu' => 'submenu',
+				'parent' => $parent,
+				'page_title'  => __( 'Locations', '5o5' ),
+				'menu_title'  => __( 'Locations', '5o5' ),
+				'menu_slug' => htmlentities(
+					add_query_arg(
+						array(
+							'taxonomy' => 'iworks_dinghy_location',
+							'post_type' => 'iworks_5o5_person',
+						),
+						'edit-tags.php'
+					)
+				),
+				'set_callback_to_null' => true,
+			),
 		),
 	);
 	return $iworks_5o5_options;

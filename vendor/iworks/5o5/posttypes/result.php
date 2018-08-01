@@ -103,10 +103,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * shortcodes
 		 */
-		add_shortcode( 'dinghy_regattas_list', array( $this, 'shortcode_regattas_list' ) );
+		add_shortcode( 'dinghy_regattas_list', array( $this, 'shortcode_list' ) );
 	}
 
-	public function shortcode_regattas_list( $atts ) {
+	public function shortcode_list( $atts ) {
 		$atts = shortcode_atts( array(
 			'year' => date( 'Y' ),
 			'serie' => null,
