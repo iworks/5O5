@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 5o5 PLUGIN_VERSION\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/5o5\n"
-"POT-Creation-Date: 2018-06-27 16:53:36+00:00\n"
+"POT-Creation-Date: 2018-08-02 06:15:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -28,846 +28,961 @@ msgstr ""
 msgid "Configuration"
 msgstr ""
 
-#: etc/options.php:21 vendor/iworks/5o5/posttypes/boat.php:139
+#: etc/options.php:21 vendor/iworks/5o5/posttypes/boat.php:232
 msgid "Add New Boat"
 msgstr ""
 
 #: etc/options.php:35 etc/options.php:36
-msgid "Hulls Manufaturers"
+msgid "Series"
 msgstr ""
 
 #: etc/options.php:51 etc/options.php:52
-msgid "Sails Manufaturers"
+msgid "Hulls Manufaturers"
 msgstr ""
 
 #: etc/options.php:67 etc/options.php:68
+msgid "Sails Manufaturers"
+msgstr ""
+
+#: etc/options.php:83 etc/options.php:84
 msgid "Masts Manufaturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:88
-#: vendor/iworks/5o5/posttypes/boat.php:416
-#: vendor/iworks/5o5/posttypes/boat.php:779
-msgid "Year of building"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:89
-msgid "Boat name"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:90
-msgid "Color top"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:91
-msgid "Color side"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:92
-msgid "Color bottom"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:93
-#: vendor/iworks/5o5/posttypes/boat.php:420
-msgid "In Poland"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:94
-#: vendor/iworks/5o5/posttypes/boat.php:425
-#: vendor/iworks/5o5/posttypes/boat.php:780
-#: vendor/iworks/5o5/posttypes/result.php:62
-#: vendor/iworks/5o5/posttypes/result.php:585
-#: vendor/iworks/5o5/posttypes/result.php:600
-msgid "Location"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:95
-#: vendor/iworks/5o5/posttypes/boat.php:419
-msgid "Hull material"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:96
-#: vendor/iworks/5o5/posttypes/boat.php:536
-#: vendor/iworks/5o5/posttypes/boat.php:551
-#: vendor/iworks/5o5/posttypes/boat.php:617
-#: vendor/iworks/5o5/posttypes/result.php:326
-#: vendor/iworks/5o5/posttypes/result.php:381
-msgid "Helmsman"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:97
-#: vendor/iworks/5o5/posttypes/boat.php:538
-#: vendor/iworks/5o5/posttypes/boat.php:552
-#: vendor/iworks/5o5/posttypes/boat.php:618
-#: vendor/iworks/5o5/posttypes/result.php:327
-#: vendor/iworks/5o5/posttypes/result.php:382
-#: vendor/iworks/5o5/posttypes/result.php:774
-msgid "Crew"
-msgstr ""
-
-#: vendor/iworks/5o5/posttypes/boat.php:98
-msgid "First Certified"
+#: etc/options.php:99 etc/options.php:100
+#: vendor/iworks/5o5/posttypes/boat.php:397
+msgid "Locations"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:101
-#: vendor/iworks/5o5/posttypes/boat.php:426
-#: vendor/iworks/5o5/posttypes/person.php:71
-msgid "Web site"
+#: vendor/iworks/5o5/posttypes/boat.php:547
+#: vendor/iworks/5o5/posttypes/boat.php:910
+msgid "Year of building"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:102
-#: vendor/iworks/5o5/posttypes/person.php:72
-msgid "Facebook"
+msgid "Boat name"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:103
-#: vendor/iworks/5o5/posttypes/person.php:73
-msgid "Twitter"
+msgid "Color top"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:104
-#: vendor/iworks/5o5/posttypes/person.php:74
-msgid "Instagram"
+msgid "Color side"
 msgstr ""
 
 #: vendor/iworks/5o5/posttypes/boat.php:105
-#: vendor/iworks/5o5/posttypes/person.php:75
+msgid "Color bottom"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:106
+#: vendor/iworks/5o5/posttypes/boat.php:551
+msgid "In Poland"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:107
+#: vendor/iworks/5o5/posttypes/boat.php:556
+#: vendor/iworks/5o5/posttypes/boat.php:911
+#: vendor/iworks/5o5/posttypes/result.php:63
+#: vendor/iworks/5o5/posttypes/result.php:664
+#: vendor/iworks/5o5/posttypes/result.php:679
+msgid "Location"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:108
+#: vendor/iworks/5o5/posttypes/boat.php:550
+msgid "Hull material"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:109
+#: vendor/iworks/5o5/posttypes/boat.php:667
+#: vendor/iworks/5o5/posttypes/boat.php:682
+#: vendor/iworks/5o5/posttypes/boat.php:748
+#: vendor/iworks/5o5/posttypes/result.php:366
+#: vendor/iworks/5o5/posttypes/result.php:421
+msgid "Helmsman"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:110
+#: vendor/iworks/5o5/posttypes/boat.php:669
+#: vendor/iworks/5o5/posttypes/boat.php:683
+#: vendor/iworks/5o5/posttypes/boat.php:749
+#: vendor/iworks/5o5/posttypes/result.php:367
+#: vendor/iworks/5o5/posttypes/result.php:422
+#: vendor/iworks/5o5/posttypes/result.php:853
+msgid "Crew"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:111
+msgid "First Certified"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:114
+#: vendor/iworks/5o5/posttypes/boat.php:557
+#: vendor/iworks/5o5/posttypes/person.php:78
+msgid "Web site"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:115
+#: vendor/iworks/5o5/posttypes/person.php:79
+msgid "Facebook"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:116
+#: vendor/iworks/5o5/posttypes/person.php:80
+msgid "Twitter"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:117
+#: vendor/iworks/5o5/posttypes/person.php:81
+msgid "Instagram"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:118
+#: vendor/iworks/5o5/posttypes/person.php:82
 msgid "G+"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:134
-#: vendor/iworks/5o5/posttypes/person.php:108
-#: vendor/iworks/5o5/posttypes/result.php:437
+#: vendor/iworks/5o5/posttypes/boat.php:227
+#: vendor/iworks/5o5/posttypes/person.php:115
+#: vendor/iworks/5o5/posttypes/result.php:477
 msgid "5O5"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:135
-#: vendor/iworks/5o5/posttypes/boat.php:160
-#: vendor/iworks/5o5/posttypes/result.php:772
+#: vendor/iworks/5o5/posttypes/boat.php:228
+#: vendor/iworks/5o5/posttypes/boat.php:253
+#: vendor/iworks/5o5/posttypes/result.php:851
 msgid "Boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:136
-#: vendor/iworks/5o5/posttypes/boat.php:138
+#: vendor/iworks/5o5/posttypes/boat.php:229
+#: vendor/iworks/5o5/posttypes/boat.php:231
 msgid "Boats"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:137
-#: vendor/iworks/5o5/posttypes/person.php:111
-#: vendor/iworks/5o5/posttypes/result.php:440
+#: vendor/iworks/5o5/posttypes/boat.php:230
+#: vendor/iworks/5o5/posttypes/person.php:118
+#: vendor/iworks/5o5/posttypes/result.php:480
 msgid "Item Attributes"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:140
-#: vendor/iworks/5o5/posttypes/result.php:443
+#: vendor/iworks/5o5/posttypes/boat.php:233
+#: vendor/iworks/5o5/posttypes/result.php:483
 msgid "Add New"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:141
+#: vendor/iworks/5o5/posttypes/boat.php:234
 msgid "New Boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:142
+#: vendor/iworks/5o5/posttypes/boat.php:235
 msgid "Edit Boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:143
+#: vendor/iworks/5o5/posttypes/boat.php:236
 msgid "Update Boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:144
+#: vendor/iworks/5o5/posttypes/boat.php:237
 msgid "View Boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:145
+#: vendor/iworks/5o5/posttypes/boat.php:238
 msgid "View Boats"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:146
+#: vendor/iworks/5o5/posttypes/boat.php:239
 msgid "Search Boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:147
-#: vendor/iworks/5o5/posttypes/person.php:121
-#: vendor/iworks/5o5/posttypes/result.php:450
+#: vendor/iworks/5o5/posttypes/boat.php:240
+#: vendor/iworks/5o5/posttypes/person.php:128
+#: vendor/iworks/5o5/posttypes/result.php:490
 msgid "Not found"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:148
-#: vendor/iworks/5o5/posttypes/person.php:122
-#: vendor/iworks/5o5/posttypes/result.php:451
+#: vendor/iworks/5o5/posttypes/boat.php:241
+#: vendor/iworks/5o5/posttypes/person.php:129
+#: vendor/iworks/5o5/posttypes/result.php:491
 msgid "Not found in Trash"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:149
-#: vendor/iworks/5o5/posttypes/person.php:123
-#: vendor/iworks/5o5/posttypes/result.php:452
+#: vendor/iworks/5o5/posttypes/boat.php:242
+#: vendor/iworks/5o5/posttypes/person.php:130
+#: vendor/iworks/5o5/posttypes/result.php:492
 msgid "Featured Image"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:150
-#: vendor/iworks/5o5/posttypes/person.php:124
-#: vendor/iworks/5o5/posttypes/result.php:453
+#: vendor/iworks/5o5/posttypes/boat.php:243
+#: vendor/iworks/5o5/posttypes/person.php:131
+#: vendor/iworks/5o5/posttypes/result.php:493
 msgid "Set featured image"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:151
-#: vendor/iworks/5o5/posttypes/person.php:125
-#: vendor/iworks/5o5/posttypes/result.php:454
+#: vendor/iworks/5o5/posttypes/boat.php:244
+#: vendor/iworks/5o5/posttypes/person.php:132
+#: vendor/iworks/5o5/posttypes/result.php:494
 msgid "Remove featured image"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:152
-#: vendor/iworks/5o5/posttypes/person.php:126
-#: vendor/iworks/5o5/posttypes/result.php:455
+#: vendor/iworks/5o5/posttypes/boat.php:245
+#: vendor/iworks/5o5/posttypes/person.php:133
+#: vendor/iworks/5o5/posttypes/result.php:495
 msgid "Use as featured image"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:153
-#: vendor/iworks/5o5/posttypes/person.php:127
-#: vendor/iworks/5o5/posttypes/result.php:456
+#: vendor/iworks/5o5/posttypes/boat.php:246
+#: vendor/iworks/5o5/posttypes/person.php:134
+#: vendor/iworks/5o5/posttypes/result.php:496
 msgid "Insert into item"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:154
-#: vendor/iworks/5o5/posttypes/person.php:128
-#: vendor/iworks/5o5/posttypes/result.php:457
+#: vendor/iworks/5o5/posttypes/boat.php:247
+#: vendor/iworks/5o5/posttypes/person.php:135
+#: vendor/iworks/5o5/posttypes/result.php:497
 msgid "Uploaded to this item"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:155
-#: vendor/iworks/5o5/posttypes/person.php:129
-#: vendor/iworks/5o5/posttypes/result.php:458
+#: vendor/iworks/5o5/posttypes/boat.php:248
+#: vendor/iworks/5o5/posttypes/person.php:136
+#: vendor/iworks/5o5/posttypes/result.php:498
 msgid "Items list"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:156
-#: vendor/iworks/5o5/posttypes/person.php:130
-#: vendor/iworks/5o5/posttypes/result.php:459
+#: vendor/iworks/5o5/posttypes/boat.php:249
+#: vendor/iworks/5o5/posttypes/person.php:137
+#: vendor/iworks/5o5/posttypes/result.php:499
 msgid "Items list navigation"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:157
-#: vendor/iworks/5o5/posttypes/person.php:131
-#: vendor/iworks/5o5/posttypes/result.php:460
+#: vendor/iworks/5o5/posttypes/boat.php:250
+#: vendor/iworks/5o5/posttypes/person.php:138
+#: vendor/iworks/5o5/posttypes/result.php:500
 msgid "Filter items list"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:192
+#: vendor/iworks/5o5/posttypes/boat.php:286
 msgid "Hull Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:193
+#: vendor/iworks/5o5/posttypes/boat.php:287
 msgid "All Hull Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:194
+#: vendor/iworks/5o5/posttypes/boat.php:288
 msgid "New Hull Manufacturer Name"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:195
+#: vendor/iworks/5o5/posttypes/boat.php:289
 msgid "Add New Hull Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:196
+#: vendor/iworks/5o5/posttypes/boat.php:290
 msgid "Edit Hull Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:197
+#: vendor/iworks/5o5/posttypes/boat.php:291
 msgid "Update Hull Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:198
+#: vendor/iworks/5o5/posttypes/boat.php:292
 msgid "View Hull Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:199
-#: vendor/iworks/5o5/posttypes/boat.php:236
-#: vendor/iworks/5o5/posttypes/boat.php:273
-#: vendor/iworks/5o5/posttypes/person.php:171
+#: vendor/iworks/5o5/posttypes/boat.php:293
+#: vendor/iworks/5o5/posttypes/boat.php:330
+#: vendor/iworks/5o5/posttypes/boat.php:367
+#: vendor/iworks/5o5/posttypes/person.php:178
+#: vendor/iworks/5o5/posttypes/result.php:540
 msgid "Separate items with commas"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:200
-#: vendor/iworks/5o5/posttypes/boat.php:237
-#: vendor/iworks/5o5/posttypes/boat.php:274
-#: vendor/iworks/5o5/posttypes/person.php:172
+#: vendor/iworks/5o5/posttypes/boat.php:294
+#: vendor/iworks/5o5/posttypes/boat.php:331
+#: vendor/iworks/5o5/posttypes/boat.php:368
+#: vendor/iworks/5o5/posttypes/person.php:179
 msgid "Add or remove items"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:201
-#: vendor/iworks/5o5/posttypes/boat.php:238
-#: vendor/iworks/5o5/posttypes/boat.php:275
-#: vendor/iworks/5o5/posttypes/person.php:173 vendor/iworks/5o5.php:206
+#: vendor/iworks/5o5/posttypes/boat.php:295
+#: vendor/iworks/5o5/posttypes/boat.php:332
+#: vendor/iworks/5o5/posttypes/boat.php:369
+#: vendor/iworks/5o5/posttypes/boat.php:406
+#: vendor/iworks/5o5/posttypes/person.php:180
+#: vendor/iworks/5o5/posttypes/result.php:542 vendor/iworks/5o5.php:213
 msgid "Choose from the most used"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:202
+#: vendor/iworks/5o5/posttypes/boat.php:296
 msgid "Popular Hull Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:203
+#: vendor/iworks/5o5/posttypes/boat.php:297
 msgid "Search Hull Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:204
-#: vendor/iworks/5o5/posttypes/boat.php:241
-#: vendor/iworks/5o5/posttypes/boat.php:278
-#: vendor/iworks/5o5/posttypes/person.php:176 vendor/iworks/5o5.php:209
+#: vendor/iworks/5o5/posttypes/boat.php:298
+#: vendor/iworks/5o5/posttypes/boat.php:335
+#: vendor/iworks/5o5/posttypes/boat.php:372
+#: vendor/iworks/5o5/posttypes/boat.php:409
+#: vendor/iworks/5o5/posttypes/person.php:183
+#: vendor/iworks/5o5/posttypes/result.php:545 vendor/iworks/5o5.php:216
 msgid "Not Found"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:205
-#: vendor/iworks/5o5/posttypes/boat.php:242
-#: vendor/iworks/5o5/posttypes/boat.php:279
-#: vendor/iworks/5o5/posttypes/person.php:177 vendor/iworks/5o5.php:210
+#: vendor/iworks/5o5/posttypes/boat.php:299
+#: vendor/iworks/5o5/posttypes/boat.php:336
+#: vendor/iworks/5o5/posttypes/boat.php:373
+#: vendor/iworks/5o5/posttypes/boat.php:410
+#: vendor/iworks/5o5/posttypes/person.php:184 vendor/iworks/5o5.php:217
 msgid "No items"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:206
+#: vendor/iworks/5o5/posttypes/boat.php:300
 msgid "Hull Manufacturers list"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:207
+#: vendor/iworks/5o5/posttypes/boat.php:301
 msgid "Hull Manufacturers list navigation"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:229
+#: vendor/iworks/5o5/posttypes/boat.php:323
 msgid "Sails Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:230
+#: vendor/iworks/5o5/posttypes/boat.php:324
 msgid "All Sails Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:231
+#: vendor/iworks/5o5/posttypes/boat.php:325
 msgid "New Sails Manufacturer Name"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:232
+#: vendor/iworks/5o5/posttypes/boat.php:326
 msgid "Add New Sails Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:233
+#: vendor/iworks/5o5/posttypes/boat.php:327
 msgid "Edit Sails Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:234
+#: vendor/iworks/5o5/posttypes/boat.php:328
 msgid "Update Sails Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:235
+#: vendor/iworks/5o5/posttypes/boat.php:329
 msgid "View Sails Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:239
+#: vendor/iworks/5o5/posttypes/boat.php:333
 msgid "Popular Sails Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:240
+#: vendor/iworks/5o5/posttypes/boat.php:334
 msgid "Search Sails Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:243
+#: vendor/iworks/5o5/posttypes/boat.php:337
 msgid "Sails Manufacturers list"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:244
+#: vendor/iworks/5o5/posttypes/boat.php:338
 msgid "Sails Manufacturers list navigation"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:266
+#: vendor/iworks/5o5/posttypes/boat.php:360
 msgid "Masts Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:267
+#: vendor/iworks/5o5/posttypes/boat.php:361
 msgid "All Masts Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:268
+#: vendor/iworks/5o5/posttypes/boat.php:362
 msgid "New Masts Manufacturer Name"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:269
+#: vendor/iworks/5o5/posttypes/boat.php:363
 msgid "Add New Masts Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:270
+#: vendor/iworks/5o5/posttypes/boat.php:364
 msgid "Edit Masts Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:271
+#: vendor/iworks/5o5/posttypes/boat.php:365
 msgid "Update Masts Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:272
+#: vendor/iworks/5o5/posttypes/boat.php:366
 msgid "View Masts Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:276
+#: vendor/iworks/5o5/posttypes/boat.php:370
 msgid "Popular Masts Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:277
+#: vendor/iworks/5o5/posttypes/boat.php:371
 msgid "Search Masts Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:280
+#: vendor/iworks/5o5/posttypes/boat.php:374
 msgid "Masts Manufacturers list"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:281
+#: vendor/iworks/5o5/posttypes/boat.php:375
 msgid "Masts Manufacturers list navigation"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:383
+#: vendor/iworks/5o5/posttypes/boat.php:398
+msgid "All Locations"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:399
+msgid "New Locations Name"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:400
+msgid "Add New Locations "
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:401
+msgid "Edit Locations "
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:402
+msgid "Update Locations "
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:403
+msgid "View Locations "
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:404
+msgid "Separate Locations with commas"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:405
+msgid "Add or remove Locations"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:407
+msgid "Popular Locations "
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:408
+msgid "Search Locations "
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:411
+msgid "Locations list"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:412
+msgid "Locations list navigation"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:514
 msgid "Enter boat number eg. POL 7020"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:396
+#: vendor/iworks/5o5/posttypes/boat.php:527
 msgid "POL "
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:417
+#: vendor/iworks/5o5/posttypes/boat.php:548
 msgid "Hull manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:418
+#: vendor/iworks/5o5/posttypes/boat.php:549
 msgid "First certified date"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:421
-#: vendor/iworks/5o5/posttypes/person.php:253
-#: vendor/iworks/5o5/posttypes/result.php:325
-#: vendor/iworks/5o5/posttypes/result.php:380
+#: vendor/iworks/5o5/posttypes/boat.php:552
+#: vendor/iworks/5o5/posttypes/person.php:260
+#: vendor/iworks/5o5/posttypes/result.php:365
+#: vendor/iworks/5o5/posttypes/result.php:420
 msgid "Name"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:422
+#: vendor/iworks/5o5/posttypes/boat.php:553
 msgid "Colors (top/side/bottom)"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:423
+#: vendor/iworks/5o5/posttypes/boat.php:554
 msgid "Sails manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:424
+#: vendor/iworks/5o5/posttypes/boat.php:555
 msgid "Mast manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:427
-#: vendor/iworks/5o5/posttypes/boat.php:607
-#: vendor/iworks/5o5/posttypes/person.php:202
+#: vendor/iworks/5o5/posttypes/boat.php:558
+#: vendor/iworks/5o5/posttypes/boat.php:738
+#: vendor/iworks/5o5/posttypes/person.php:209
 msgid "Social Media"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:518
+#: vendor/iworks/5o5/posttypes/boat.php:649
 msgid "Boat details"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:534
+#: vendor/iworks/5o5/posttypes/boat.php:665
 msgid "Current crew"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:605
+#: vendor/iworks/5o5/posttypes/boat.php:736
 msgid "Crews data"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:606
+#: vendor/iworks/5o5/posttypes/boat.php:737
 msgid "Boat data"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:616
+#: vendor/iworks/5o5/posttypes/boat.php:747
 msgid "Current"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:619
+#: vendor/iworks/5o5/posttypes/boat.php:750
 msgid "Action"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:645
+#: vendor/iworks/5o5/posttypes/boat.php:776
 msgid "Select or remove a helmsman"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:659
+#: vendor/iworks/5o5/posttypes/boat.php:790
 msgid "Select or remove a  crew"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:672
-#: vendor/iworks/5o5/posttypes/boat.php:713
-#: vendor/iworks/5o5/posttypes/result.php:517
+#: vendor/iworks/5o5/posttypes/boat.php:803
+#: vendor/iworks/5o5/posttypes/boat.php:844
+#: vendor/iworks/5o5/posttypes/result.php:596
 msgid "Delete"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:685
+#: vendor/iworks/5o5/posttypes/boat.php:816
 msgid "There is no current team"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:691
+#: vendor/iworks/5o5/posttypes/boat.php:822
 msgid "Add a crew"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:704
-#: vendor/iworks/5o5/posttypes/result.php:508
+#: vendor/iworks/5o5/posttypes/boat.php:835
+#: vendor/iworks/5o5/posttypes/result.php:587
 msgid "Select a helmsman"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:709
-#: vendor/iworks/5o5/posttypes/result.php:513
+#: vendor/iworks/5o5/posttypes/boat.php:840
+#: vendor/iworks/5o5/posttypes/result.php:592
 msgid "Select a crew"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:781 vendor/iworks/5o5.php:197
+#: vendor/iworks/5o5/posttypes/boat.php:912 vendor/iworks/5o5.php:204
 msgid "Boat Number"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:68
-#: vendor/iworks/5o5/posttypes/person.php:254
+#: vendor/iworks/5o5/posttypes/person.php:75
+#: vendor/iworks/5o5/posttypes/person.php:261
 msgid "Birth year"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:76
+#: vendor/iworks/5o5/posttypes/person.php:83
 msgid "Endomondo"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:79
+#: vendor/iworks/5o5/posttypes/person.php:86
 msgid "Mobile"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:80
-#: vendor/iworks/5o5/posttypes/person.php:255
+#: vendor/iworks/5o5/posttypes/person.php:87
+#: vendor/iworks/5o5/posttypes/person.php:262
 msgid "E-mail"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:109
+#: vendor/iworks/5o5/posttypes/person.php:116
 msgid "Person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:110
-#: vendor/iworks/5o5/posttypes/person.php:112
+#: vendor/iworks/5o5/posttypes/person.php:117
+#: vendor/iworks/5o5/posttypes/person.php:119
 msgid "Persons"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:113
-#: vendor/iworks/5o5/posttypes/person.php:114
+#: vendor/iworks/5o5/posttypes/person.php:120
+#: vendor/iworks/5o5/posttypes/person.php:121
 msgid "Add New Person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:115
+#: vendor/iworks/5o5/posttypes/person.php:122
 msgid "New Person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:116
+#: vendor/iworks/5o5/posttypes/person.php:123
 msgid "Edit Person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:117
+#: vendor/iworks/5o5/posttypes/person.php:124
 msgid "Update Person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:118
+#: vendor/iworks/5o5/posttypes/person.php:125
 msgid "View Person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:119
+#: vendor/iworks/5o5/posttypes/person.php:126
 msgid "View Persons"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:120
+#: vendor/iworks/5o5/posttypes/person.php:127
 msgid "Search person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:134
+#: vendor/iworks/5o5/posttypes/person.php:141
 msgid "person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:164
-#: vendor/iworks/5o5/posttypes/person.php:165
+#: vendor/iworks/5o5/posttypes/person.php:171
+#: vendor/iworks/5o5/posttypes/person.php:172
 msgid "Clubs"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:166
+#: vendor/iworks/5o5/posttypes/person.php:173
 msgid "New Club Name"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:167
+#: vendor/iworks/5o5/posttypes/person.php:174
 msgid "Add New Club"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:168
+#: vendor/iworks/5o5/posttypes/person.php:175
 msgid "Edit Club"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:169
+#: vendor/iworks/5o5/posttypes/person.php:176
 msgid "Update Club"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:170
+#: vendor/iworks/5o5/posttypes/person.php:177
 msgid "View Club"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:174
+#: vendor/iworks/5o5/posttypes/person.php:181
 msgid "Popular Clubs"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:175
+#: vendor/iworks/5o5/posttypes/person.php:182
 msgid "Search Clubs"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:178
+#: vendor/iworks/5o5/posttypes/person.php:185
 msgid "Clubs list"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:179
+#: vendor/iworks/5o5/posttypes/person.php:186
 msgid "Clubs list navigation"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:201
+#: vendor/iworks/5o5/posttypes/person.php:208
 msgid "Personal data"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:203
+#: vendor/iworks/5o5/posttypes/person.php:210
 msgid "Contact data"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:477
+#: vendor/iworks/5o5/posttypes/person.php:485
 msgid "Sail on %s as helmsman."
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:484
+#: vendor/iworks/5o5/posttypes/person.php:492
 msgid "Sail on %s as crew."
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:500
+#: vendor/iworks/5o5/posttypes/person.php:508
 msgid "Sailed on %s as helmsman."
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:511
+#: vendor/iworks/5o5/posttypes/person.php:519
 msgid "Sailed on %s as crew."
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:518
+#: vendor/iworks/5o5/posttypes/person.php:526
 msgid "Sail or sailed"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:63
+#: vendor/iworks/5o5/posttypes/result.php:64
 msgid "Organizer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:64
+#: vendor/iworks/5o5/posttypes/result.php:65
 msgid "Secretary"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:65
+#: vendor/iworks/5o5/posttypes/result.php:66
 msgid "Arbiter"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:66
+#: vendor/iworks/5o5/posttypes/result.php:67
 msgid "Event start"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:67
+#: vendor/iworks/5o5/posttypes/result.php:68
 msgid "Event end"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:68
+#: vendor/iworks/5o5/posttypes/result.php:69
 msgid "Number of races"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:69
+#: vendor/iworks/5o5/posttypes/result.php:70
 msgid "Number of competitors"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:70
+#: vendor/iworks/5o5/posttypes/result.php:71
 msgid "Wind direction"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:71
+#: vendor/iworks/5o5/posttypes/result.php:72
 msgid "Wind power"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:146
-#: vendor/iworks/5o5/posttypes/result.php:439
-#: vendor/iworks/5o5/posttypes/result.php:441
+#: vendor/iworks/5o5/posttypes/result.php:188
+#: vendor/iworks/5o5/posttypes/result.php:479
+#: vendor/iworks/5o5/posttypes/result.php:481
 msgid "Results"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:151
+#: vendor/iworks/5o5/posttypes/result.php:193
 msgid "Start date"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:152
+#: vendor/iworks/5o5/posttypes/result.php:194
 msgid "End date"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:153
+#: vendor/iworks/5o5/posttypes/result.php:195
 msgid "Title"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:154
-#: vendor/iworks/5o5/posttypes/result.php:383
-#: vendor/iworks/5o5/posttypes/result.php:771
+#: vendor/iworks/5o5/posttypes/result.php:196
+#: vendor/iworks/5o5/posttypes/result.php:423
+#: vendor/iworks/5o5/posttypes/result.php:850
 msgid "Place"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:155
+#: vendor/iworks/5o5/posttypes/result.php:197
 msgid "Races"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:156
+#: vendor/iworks/5o5/posttypes/result.php:198
 msgid "Teams"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:246
+#: vendor/iworks/5o5/posttypes/result.php:286
 msgid "Start date is not set."
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:317
+#: vendor/iworks/5o5/posttypes/result.php:357
 msgid "There is no register regatta for this sailor."
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:324
-#: vendor/iworks/5o5/posttypes/result.php:379
-#: vendor/iworks/5o5/posttypes/result.php:586
-#: vendor/iworks/5o5/posttypes/result.php:601
+#: vendor/iworks/5o5/posttypes/result.php:364
+#: vendor/iworks/5o5/posttypes/result.php:419
+#: vendor/iworks/5o5/posttypes/result.php:665
+#: vendor/iworks/5o5/posttypes/result.php:680
 msgid "Year"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:328
+#: vendor/iworks/5o5/posttypes/result.php:368
 msgid "Place (of)"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:329
-#: vendor/iworks/5o5/posttypes/result.php:384
+#: vendor/iworks/5o5/posttypes/result.php:369
+#: vendor/iworks/5o5/posttypes/result.php:424
 msgid "Points"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:364
-#: vendor/iworks/5o5/posttypes/result.php:418
+#: vendor/iworks/5o5/posttypes/result.php:404
+#: vendor/iworks/5o5/posttypes/result.php:458
 msgid "Regatta list"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:438
-#: vendor/iworks/5o5/posttypes/result.php:463
+#: vendor/iworks/5o5/posttypes/result.php:478
+#: vendor/iworks/5o5/posttypes/result.php:503
 msgid "Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:442
+#: vendor/iworks/5o5/posttypes/result.php:482
 msgid "Add New Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:444
+#: vendor/iworks/5o5/posttypes/result.php:484
 msgid "New Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:445
+#: vendor/iworks/5o5/posttypes/result.php:485
 msgid "Edit Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:446
+#: vendor/iworks/5o5/posttypes/result.php:486
 msgid "Update Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:447
+#: vendor/iworks/5o5/posttypes/result.php:487
 msgid "View Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:448
+#: vendor/iworks/5o5/posttypes/result.php:488
 msgid "View Results"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:449
+#: vendor/iworks/5o5/posttypes/result.php:489
 msgid "Search Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:495
+#: vendor/iworks/5o5/posttypes/result.php:533
+msgid "Serie"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:534
+msgid "All Series"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:535
+msgid "New Serie Name"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:536
+msgid "Add New Serie"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:537
+msgid "Edit Serie"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:538
+msgid "Update Serie"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:539
+msgid "View Serie"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:541
+msgid "Add or remove series"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:543
+msgid "Popular Series"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:544
+msgid "Search Series"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:546
+msgid "No series"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:547
+msgid "Series list"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:548
+msgid "Series list navigation"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:574
 msgid "Result data"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:496
+#: vendor/iworks/5o5/posttypes/result.php:575
 msgid "Races data"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:773
+#: vendor/iworks/5o5/posttypes/result.php:852
 msgid "Helm"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:779
+#: vendor/iworks/5o5/posttypes/result.php:858
 msgid "Sum"
 msgstr ""
 
-#: vendor/iworks/5o5.php:66
+#: vendor/iworks/5o5.php:71
 msgid "Statistics"
 msgstr ""
 
-#: vendor/iworks/5o5.php:68
+#: vendor/iworks/5o5.php:73
 msgid "Number of sailors"
 msgstr ""
 
-#: vendor/iworks/5o5.php:70
+#: vendor/iworks/5o5.php:75
 msgid "Number of boats"
 msgstr ""
 
-#: vendor/iworks/5o5.php:71
+#: vendor/iworks/5o5.php:77
 msgid "Number of event results"
 msgstr ""
 
-#: vendor/iworks/5o5.php:88
+#: vendor/iworks/5o5.php:95
 msgid "5o5 do not have such post type!"
 msgstr ""
 
-#: vendor/iworks/5o5.php:184
+#: vendor/iworks/5o5.php:191
 msgid "Settings"
 msgstr ""
 
-#: vendor/iworks/5o5.php:187
+#: vendor/iworks/5o5.php:194
 msgid "Donate"
 msgstr ""
 
-#: vendor/iworks/5o5.php:198
+#: vendor/iworks/5o5.php:205
 msgid "All Boat Numbers"
 msgstr ""
 
-#: vendor/iworks/5o5.php:199
+#: vendor/iworks/5o5.php:206
 msgid "New Boat Number Name"
 msgstr ""
 
-#: vendor/iworks/5o5.php:200
+#: vendor/iworks/5o5.php:207
 msgid "Add New Boat Number"
 msgstr ""
 
-#: vendor/iworks/5o5.php:201
+#: vendor/iworks/5o5.php:208
 msgid "Edit Boat Number"
 msgstr ""
 
-#: vendor/iworks/5o5.php:202
+#: vendor/iworks/5o5.php:209
 msgid "Update Boat Number"
 msgstr ""
 
-#: vendor/iworks/5o5.php:203
+#: vendor/iworks/5o5.php:210
 msgid "View Boat Number"
 msgstr ""
 
-#: vendor/iworks/5o5.php:204
+#: vendor/iworks/5o5.php:211
 msgid "Separate Boat Numbers with commas"
 msgstr ""
 
-#: vendor/iworks/5o5.php:205
+#: vendor/iworks/5o5.php:212
 msgid "Add or remove Boat Numbers"
 msgstr ""
 
-#: vendor/iworks/5o5.php:207
+#: vendor/iworks/5o5.php:214
 msgid "Popular Boat Numbers"
 msgstr ""
 
-#: vendor/iworks/5o5.php:208
+#: vendor/iworks/5o5.php:215
 msgid "Search Boat Numbers"
 msgstr ""
 
-#: vendor/iworks/5o5.php:211
+#: vendor/iworks/5o5.php:218
 msgid "Boat Numbers list"
 msgstr ""
 
-#: vendor/iworks/5o5.php:212
+#: vendor/iworks/5o5.php:219
 msgid "Boat Numbers list navigation"
 msgstr ""
 
@@ -915,140 +1030,165 @@ msgstr ""
 msgid "http://iworks.pl/"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:132
+#: vendor/iworks/5o5/posttypes/boat.php:192
+msgctxt "number of boats"
+msgid "Number of boats: %1$d."
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/boat.php:225
 msgctxt "Boat General Name"
 msgid "Boats"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:133
+#: vendor/iworks/5o5/posttypes/boat.php:226
 msgctxt "Boat Singular Name"
 msgid "Boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:175
+#: vendor/iworks/5o5/posttypes/boat.php:269
 msgctxt "slug for archive"
 msgid "5o5-boats"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:147
+#: vendor/iworks/5o5/posttypes/person.php:154
 msgctxt "slug for archive"
 msgid "5o5-persons"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:474
+#: vendor/iworks/5o5/posttypes/result.php:516
 msgctxt "slug for archive"
 msgid "5o5-results"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:182
+#: vendor/iworks/5o5/posttypes/boat.php:276
 msgctxt "slug for single boat"
 msgid "5o5-boat"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:190
+#: vendor/iworks/5o5/posttypes/boat.php:284
 msgctxt "Taxonomy General Name"
 msgid "Hull Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:227
+#: vendor/iworks/5o5/posttypes/boat.php:321
 msgctxt "Taxonomy General Name"
 msgid "Sails Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:264
+#: vendor/iworks/5o5/posttypes/boat.php:358
 msgctxt "Taxonomy General Name"
 msgid "Masts Manufacturers"
 msgstr ""
 
-#: vendor/iworks/5o5.php:195
+#: vendor/iworks/5o5/posttypes/boat.php:395
+msgctxt "Taxonomy General Name"
+msgid "Locations"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:531
+msgctxt "Taxonomy General Name"
+msgid "Series"
+msgstr ""
+
+#: vendor/iworks/5o5.php:202
 msgctxt "Taxonomy General Name"
 msgid "Boat Numbers"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:191
+#: vendor/iworks/5o5/posttypes/boat.php:285
 msgctxt "Taxonomy Singular Name"
 msgid "Hull Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:228
+#: vendor/iworks/5o5/posttypes/boat.php:322
 msgctxt "Taxonomy Singular Name"
 msgid "Sails Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:265
+#: vendor/iworks/5o5/posttypes/boat.php:359
 msgctxt "Taxonomy Singular Name"
 msgid "Masts Manufacturer"
 msgstr ""
 
-#: vendor/iworks/5o5.php:196
+#: vendor/iworks/5o5/posttypes/boat.php:396
+msgctxt "Taxonomy Singular Name"
+msgid "Locations"
+msgstr ""
+
+#: vendor/iworks/5o5/posttypes/result.php:532
+msgctxt "Taxonomy Singular Name"
+msgid "Serie"
+msgstr ""
+
+#: vendor/iworks/5o5.php:203
 msgctxt "Taxonomy Singular Name"
 msgid "Boat Number"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:429
+#: vendor/iworks/5o5/posttypes/boat.php:560
 msgctxt "Custom taxonomies separator."
 msgid ", "
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:497
+#: vendor/iworks/5o5/posttypes/boat.php:628
 msgctxt "value of boat"
 msgid "unknown"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/boat.php:547
+#: vendor/iworks/5o5/posttypes/boat.php:678
 msgctxt "Past crews number"
 msgid "Past crew"
 msgid_plural "Past crews"
 msgstr[0] ""
 msgstr[1] ""
 
-#: vendor/iworks/5o5/posttypes/person.php:106
+#: vendor/iworks/5o5/posttypes/person.php:113
 msgctxt "Person General Name"
 msgid "Persons"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:107
+#: vendor/iworks/5o5/posttypes/person.php:114
 msgctxt "Person Singular Name"
 msgid "Person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:154
+#: vendor/iworks/5o5/posttypes/person.php:161
 msgctxt "slug for single person"
 msgid "5o5-person"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:162
+#: vendor/iworks/5o5/posttypes/person.php:169
 msgctxt "Club General Name"
 msgid "Clubs"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:163
+#: vendor/iworks/5o5/posttypes/person.php:170
 msgctxt "Club Singular Name"
 msgid "Club"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/person.php:404
-#: vendor/iworks/5o5/posttypes/person.php:408
+#: vendor/iworks/5o5/posttypes/person.php:412
+#: vendor/iworks/5o5/posttypes/person.php:416
 msgctxt "Person name on crews list if it is not set"
 msgid "not set"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:435
+#: vendor/iworks/5o5/posttypes/result.php:475
 msgctxt "Result General Name"
 msgid "Results"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:436
+#: vendor/iworks/5o5/posttypes/result.php:476
 msgctxt "Result Singular Name"
 msgid "Result"
 msgstr ""
 
-#: vendor/iworks/5o5/posttypes/result.php:481
+#: vendor/iworks/5o5/posttypes/result.php:523
 msgctxt "slug for single result"
 msgid "result"
 msgstr ""
 
-#: vendor/iworks/5o5.php:224
+#: vendor/iworks/5o5.php:231
 msgctxt "slug for images"
 msgid "5o5-boat-number"
 msgstr ""

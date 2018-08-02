@@ -137,6 +137,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	public function shortcode_list( $atts ) {
 		$atts = shortcode_atts( array(
 			'location' => null,
+			'show_counter' => true,
 		), $atts, 'dinghy_boats_list' );
 		/**
 		 * params: location
@@ -183,7 +184,17 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 */
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
-			$content .= '<ul class="iworks-dinghy-location">';
+			$content .= '<div class="iworks-dinghy-location">';
+			if ( $atts['show_counter'] ) {
+				$content .= sprintf(
+					'<span class="iworks-dinghy-list-count">%s</span>',
+					sprintf(
+						esc_html_x( 'Number of boats: %1$d.', 'number of boats', '5o5' ),
+						$the_query->found_posts
+					)
+				);
+			}
+			$content .= '<ul class="iworks-dinghy-list">';
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
 				$content .= sprintf(
@@ -371,7 +382,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'show_in_nav_menus'          => true,
 			'show_tagcloud'              => true,
 			'show_ui'                    => true,
-			'show_in_quick_edit' => true,
+			'show_in_quick_edit'         => true,
 			'rewrite' => array(
 				'slug' => '5o5-masts-manufacturer',
 			),
@@ -408,7 +419,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			'show_in_nav_menus'          => true,
 			'show_tagcloud'              => true,
 			'show_ui'                    => true,
-			'show_in_quick_edit' => true,
+			'show_in_quick_edit'         => true,
 			'rewrite' => array(
 				'slug' => 'dinghy-locations',
 			),
