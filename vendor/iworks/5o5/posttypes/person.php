@@ -143,6 +143,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision' ),
 			'taxonomies'            => array(
 				$this->taxonomy_name_club,
+				$this->taxonomy_name_location,
 			),
 			'hierarchical'          => false,
 			'public'                => true,

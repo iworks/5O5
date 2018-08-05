@@ -561,6 +561,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			'supports'              => array( 'title', 'editor', 'thumbnail', 'revision' ),
 			'taxonomies'            => array(
 				$this->taxonomy_name_serie,
+				$this->taxonomy_name_location,
 			),
 			'hierarchical'          => false,
 			'public'                => true,

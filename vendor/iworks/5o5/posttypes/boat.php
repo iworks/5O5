@@ -34,7 +34,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	protected $taxonomy_name_manufacturer = 'iworks_5o5_boat_manufacturer';
 	protected $taxonomy_name_sails = 'iworks_5o5_sails_manufacturer';
 	protected $taxonomy_name_mast = 'iworks_5o5_mast_manufacturer';
-	protected $taxonomy_name_location = 'iworks_dinghy_location';
 	/**
 	 * Sinle crew meta field name
 	 */
@@ -74,11 +73,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		 * add crew to a boat
 		 */
 		add_action( 'international_5o5_content_template_overlay_end', array( $this, 'add_crew_to_boat' ), 10, 1 );
-		/**
-		 * save map data
-		 */
-		add_action( 'created_'.$this->taxonomy_name_location, array( $this, 'save_google_map_data' ), 10, 2 );
-		add_action( 'edited_'.$this->taxonomy_name_location, array( $this, 'save_google_map_data' ), 10, 2 );
 		/**
 		 * replace names to proper
 		 */
@@ -388,43 +382,6 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 			),
 		);
 		register_taxonomy( $this->taxonomy_name_mast, array( $this->post_type_name ), $args );
-		/**
-		 * Locations  Taxonomy.
-		 */
-		$labels = array(
-			'name'                       => _x( 'Locations', 'Taxonomy General Name', '5o5' ),
-			'singular_name'              => _x( 'Locations', 'Taxonomy Singular Name', '5o5' ),
-			'menu_name'                  => __( 'Locations', '5o5' ),
-			'all_items'                  => __( 'All Locations', '5o5' ),
-			'new_item_name'              => __( 'New Locations Name', '5o5' ),
-			'add_new_item'               => __( 'Add New Locations ', '5o5' ),
-			'edit_item'                  => __( 'Edit Locations ', '5o5' ),
-			'update_item'                => __( 'Update Locations ', '5o5' ),
-			'view_item'                  => __( 'View Locations ', '5o5' ),
-			'separate_items_with_commas' => __( 'Separate Locations with commas', '5o5' ),
-			'add_or_remove_items'        => __( 'Add or remove Locations', '5o5' ),
-			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
-			'popular_items'              => __( 'Popular Locations ', '5o5' ),
-			'search_items'               => __( 'Search Locations ', '5o5' ),
-			'not_found'                  => __( 'Not Found', '5o5' ),
-			'no_terms'                   => __( 'No items', '5o5' ),
-			'items_list'                 => __( 'Locations list', '5o5' ),
-			'items_list_navigation'      => __( 'Locations list navigation', '5o5' ),
-		);
-		$args = array(
-			'labels'                     => $labels,
-			'hierarchical'               => true,
-			'public'                     => true,
-			'show_admin_column'          => true,
-			'show_in_nav_menus'          => true,
-			'show_tagcloud'              => true,
-			'show_ui'                    => true,
-			'show_in_quick_edit'         => true,
-			'rewrite' => array(
-				'slug' => 'dinghy-locations',
-			),
-		);
-		register_taxonomy( $this->taxonomy_name_location, array( $this->post_type_name ), $args );
 	}
 
 	public function save_post_meta( $post_id, $post, $update ) {

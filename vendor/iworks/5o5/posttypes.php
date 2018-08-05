@@ -32,16 +32,26 @@ class iworks_5o5_posttypes {
 	protected $fields;
 	protected $post_type_objects = array();
 	protected $base;
+	protected $taxonomy_name_location = 'iworks_dinghy_location';
 
 	public function __construct() {
 		global $iworks_5o5_options;
 		$this->options = $iworks_5o5_options;
+		$this->base = preg_replace( '/iworks.+/', '', __FILE__ );
+		/**
+		 * register
+		 */
 		add_action( 'init', array( $this, 'register' ) );
+		add_action( 'init', array( $this, 'register_taxonomy_location' ), 9 );
 		/**
 		 * save post
 		 */
 		add_action( 'save_post', array( $this, 'save_post_meta' ), 10, 3 );
-		$this->base = preg_replace( '/iworks.+/', '', __FILE__ );
+		/**
+		 * save map data
+		 */
+		add_action( 'created_'.$this->taxonomy_name_location, array( $this, 'save_google_map_data' ), 10, 2 );
+		add_action( 'edited_'.$this->taxonomy_name_location, array( $this, 'save_google_map_data' ), 10, 2 );
 	}
 
 	public function get_name() {
@@ -218,6 +228,47 @@ class iworks_5o5_posttypes {
 			$sql = sprintf( 'ORDER BY p.post_title %s LIMIT 1', $order );
 		}
 		return $sql;
+	}
+
+
+	public function register_taxonomy_location() {
+		/**
+		 * Locations  Taxonomy.
+		 */
+		$labels = array(
+			'name'                       => _x( 'Locations', 'Taxonomy General Name', '5o5' ),
+			'singular_name'              => _x( 'Locations', 'Taxonomy Singular Name', '5o5' ),
+			'menu_name'                  => __( 'Locations', '5o5' ),
+			'all_items'                  => __( 'All Locations', '5o5' ),
+			'new_item_name'              => __( 'New Locations Name', '5o5' ),
+			'add_new_item'               => __( 'Add New Locations ', '5o5' ),
+			'edit_item'                  => __( 'Edit Locations ', '5o5' ),
+			'update_item'                => __( 'Update Locations ', '5o5' ),
+			'view_item'                  => __( 'View Locations ', '5o5' ),
+			'separate_items_with_commas' => __( 'Separate Locations with commas', '5o5' ),
+			'add_or_remove_items'        => __( 'Add or remove Locations', '5o5' ),
+			'choose_from_most_used'      => __( 'Choose from the most used', '5o5' ),
+			'popular_items'              => __( 'Popular Locations ', '5o5' ),
+			'search_items'               => __( 'Search Locations ', '5o5' ),
+			'not_found'                  => __( 'Not Found', '5o5' ),
+			'no_terms'                   => __( 'No items', '5o5' ),
+			'items_list'                 => __( 'Locations list', '5o5' ),
+			'items_list_navigation'      => __( 'Locations list navigation', '5o5' ),
+		);
+		$args = array(
+			'labels'                     => $labels,
+			'hierarchical'               => true,
+			'public'                     => true,
+			'show_admin_column'          => true,
+			'show_in_nav_menus'          => true,
+			'show_tagcloud'              => true,
+			'show_ui'                    => true,
+			'show_in_quick_edit'         => true,
+			'rewrite' => array(
+				'slug' => 'dinghy-locations',
+			),
+		);
+		register_taxonomy( $this->taxonomy_name_location, array( $this->post_type_name ), $args );
 	}
 }
 
