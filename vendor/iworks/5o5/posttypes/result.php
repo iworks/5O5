@@ -110,7 +110,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$atts = shortcode_atts( array(
 			'year' => date( 'Y' ),
 			'serie' => null,
+			'title' => __( 'Results', '5o5' ),
+			'title_show' => 'on',
 		), $atts, 'dinghy_results_list' );
+		$content = '';
 		/**
 		 * params: year
 		 */
@@ -121,10 +124,6 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				return '';
 			}
 		}
-		/**
-		 * params: year
-		 */
-		$serie = $atts['serie'];
 		/**
 		 * WP Query base args
 		 */
@@ -157,12 +156,12 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * serie
 		 */
-		if ( ! empty( $serie ) ) {
-			if ( preg_match( '/^\d+$/', $serie ) ) {
+		if ( ! empty( $atts['serie'] ) ) {
+			if ( preg_match( '/^\d+$/', $atts['serie'] ) ) {
 				$args['tax_query'] = array(
 					array(
 						'taxonomy' => $this->taxonomy_name_serie,
-						'terms' => $serie,
+						'terms' => $atts['serie'],
 					),
 				);
 			} else {
@@ -170,22 +169,26 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 					array(
 						'taxonomy' => $this->taxonomy_name_serie,
 						'field' => 'name',
-						'terms' => $serie,
+						'terms' => $atts['serie'],
 					),
 				);
 			}
 		}
 		/**
+		 * title
+		 */
+		if ( 'on' === $atts['title_show'] && ! empty( $atts['title'] ) ) {
+			$content .= sprintf( '<h2>%s</h2>', $atts['title'] );
+		}
+		/**
 		 * start
 		 */
 		$format = get_option( 'date_format' );
-		$content = '';
 		/**
 		 * WP_Query
 		 */
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
-			$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Results', '5o5' ) );
 			remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 			$content .= '<table class="dinghy-results dinghy-results-list">';
 			$content .= '<thead>';
@@ -240,6 +243,14 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$content .= '</table>';
 			/* Restore original Post Data */
 			wp_reset_postdata();
+		} else {
+			$content .= sprintf( '<p class="no-results">%s</p>', __( 'There is no results.', '5o5' ) );
+		}
+		/**
+		 * wrap content
+		 */
+		if ( $content ) {
+			$content = sprintf( '<div class="dinghy-results">%s</content>', $content );
 		}
 		return $content;
 	}
