@@ -330,7 +330,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			"select * from {$table_name_regatta} where year = %d order by date, year desc",
 			$year
 		);
-		return $wpdb->get_results( $sql );
+		return $this->add_dates_and_sort( $wpdb->get_results( $sql ) );
 	}
 
 	private function get_list_by_sailor_id( $sailor_id ) {
@@ -341,13 +341,51 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$sailor_id,
 			$sailor_id
 		);
-		return $wpdb->get_results( $sql );
+		return $this->add_dates_and_sort( $wpdb->get_results( $sql ) );
+	}
+
+	private function add_dates_and_sort( $regattas ) {
+		if ( empty( $regattas ) ) {
+			return $regattas;
+		}
+		$ref = array();
+		$ids = array();
+		$i = 0;
+		foreach ( $regattas as $regatta ) {
+			$ids[] = $regatta->post_regata_id;
+			$ref[ $regatta->post_regata_id ] = $i++;
+		}
+		$args = array(
+			'post_type' => $this->post_type_name,
+			'post__in' => $ids,
+			'fields' => 'ids',
+		);
+		$query = new WP_Query( $args );
+		if ( ! empty( $query->posts ) ) {
+			$start = $this->options->get_option_name( 'result_date_start' );
+			$end = $this->options->get_option_name( 'result_date_end' );
+			foreach ( $query->posts as $post_id ) {
+				$regattas[ $ref[ $post_id ] ]->date_start = get_post_meta( $post_id, $start, true );
+				$regattas[ $ref[ $post_id ] ]->date_end = get_post_meta( $post_id, $end, true );
+			}
+		}
+		uasort( $regattas, array( $this, 'sort_by_date_start' ) );
+		return $regattas;
+	}
+
+	private function sort_by_date_start( $a, $b ) {
+		if (
+			! isset( $a->date_start )
+			|| ! isset( $b->date_start )
+		) {
+			return 0;
+		}
+		return ( $a->date_start < $b->date_start )? 1 : -1;
 	}
 
 	private function get_list_by_boat_id( $boat_id ) {
 		global $wpdb;
 		$table_name_regatta = $wpdb->prefix . '505_regatta';
-
 		$boat_title = get_the_title( $boat_id );
 		if ( empty( $boat_title ) ) {
 			return array();
@@ -379,9 +417,16 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$content .= sprintf( '<th class="place">%s</th>', esc_html__( 'Place (of)', '5o5' ) );
 			$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
 			$content .= '</tr></thead><tbody>';
+
+			$format = get_option( 'date_format' );
 			foreach ( $regattas as $regatta ) {
+				$dates = sprintf(
+					'%s - %s',
+					date_i18n( $format, $regatta->date_start ),
+					date_i18n( $format, $regatta->date_end )
+				);
 				$content .= '<tr>';
-				$content .= sprintf( '<td class="year">%d</td>', $regatta->year );
+				$content .= sprintf( '<td class="year" title="%s">%d</td>', esc_attr( $dates ), $regatta->year );
 				$content .= sprintf( '<td class="name"><a href="%s">%s</a></td>', get_permalink( $regatta->post_regata_id ), get_the_title( $regatta->post_regata_id ) );
 				/**
 				 * Helmsman
