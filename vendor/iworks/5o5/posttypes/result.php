@@ -886,6 +886,8 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$query = $wpdb->prepare( "SELECT * FROM {$table_name_regatta_race} where post_regata_id = %d order by regata_id, number", $post_id );
 		$r = $wpdb->get_results( $query );
 
+		$show = current_user_can( 'manage_options' );
+
 		$races = array();
 		foreach ( $r as $one ) {
 			if ( ! isset( $races[ $one->regata_id ] ) ) {
@@ -929,7 +931,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			 * helmsman
 			 */
 			if ( ! empty( $one->helm_id ) ) {
-				$content .= sprintf( '<td class="helm_name"><a href="%s">%s</a></td>', get_permalink( $one->helm_id ), $one->helm_name );
+				$extra = '';
+				if ( $show ) {
+					$extra = $this->get_extra_data( $one->helm_id );
+				}
+				$content .= sprintf( '<td class="helm_name"><a href="%s">%s</a>%s</td>', get_permalink( $one->helm_id ), $one->helm_name, $extra );
 			} else {
 				$content .= sprintf( '<td class="helm_name">%s</td>', $one->helm_name );
 			}
@@ -937,7 +943,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			 * crew
 			 */
 			if ( ! empty( $one->crew_id ) ) {
-				$content .= sprintf( '<td class="crew_name"><a href="%s">%s</a></td>', get_permalink( $one->crew_id ), $one->crew_name );
+				$extra = '';
+				if ( $show ) {
+					$extra = $this->get_extra_data( $one->crew_id );
+				}
+				$content .= sprintf( '<td class="crew_name"><a href="%s">%s</a>%s</td>', get_permalink( $one->crew_id ), $one->crew_name, $extra );
 			} else {
 				$content .= sprintf( '<td class="crew_name">%s</td>', $one->crew_name );
 			}
@@ -1000,6 +1010,23 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			esc_attr( preg_replace( '/_/', '-', $name ) ),
 			esc_html( $value )
 		);
+	}
+
+	private function get_extra_data( $user_id ) {
+		$extra = '';
+		$name = $this->options->get_option_name( 'personal_birth_year' );
+		$year = get_post_meta( $user_id, $name, true );
+		if ( empty( $year ) ) {
+			$extra .= sprintf(
+				' <a href="%s" class="dinghy-missing-data dinghy-missing-data-year" title="%s">EY</a>',
+				get_edit_post_link( $user_id ),
+				esc_attr__( 'Edit Sailor - Missing Birth Year', '5o5' )
+			);
+		}
+		if ( empty( $extra ) ) {
+			return $extra;
+		}
+		return sprintf( '<small>%s</small>', $extra );
 	}
 }
 
