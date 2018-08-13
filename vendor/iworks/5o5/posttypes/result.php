@@ -425,7 +425,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 					date_i18n( $format, $regatta->date_start ),
 					date_i18n( $format, $regatta->date_end )
 				);
-				$content .= '<tr>';
+				$content .= sprintf( '<tr class="dinghy-place-%d">', $regatta->place );
 				$content .= sprintf( '<td class="year" title="%s">%d</td>', esc_attr( $dates ), $regatta->year );
 				$content .= sprintf( '<td class="name"><a href="%s">%s</a></td>', get_permalink( $regatta->post_regata_id ), get_the_title( $regatta->post_regata_id ) );
 				/**
@@ -919,7 +919,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$content .= '</thead>';
 		$content .= '<tbody>';
 		foreach ( $regatta as $one ) {
-			$content .= '<tr>';
+			$content .= sprintf( '<tr class="dinghy-place-%d">', $one->place );
 			$content .= sprintf( '<td class="place">%d</td>', $one->place );
 			$content .= sprintf(
 				'<td class="boat_id country-%s">%s %d</td>',
