@@ -480,7 +480,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
 			$content .= '</tr></thead><tbody>';
 			foreach ( $regattas as $regatta ) {
-				$content .= '<tr>';
+				$content .= sprintf( '<tr class="dinghy-place-%d">', $regatta->place );
 				$content .= sprintf( '<td class="year">%d</td>', $regatta->year );
 				$content .= sprintf( '<td class="name"><a href="%s">%s</a></td>', get_permalink( $regatta->post_regata_id ), get_the_title( $regatta->post_regata_id ) );
 				/**
