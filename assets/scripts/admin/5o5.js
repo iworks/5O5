@@ -1,4 +1,4 @@
-/*! 5O5 Class inventory - v1.1.0
+/*! 5O5 Class inventory - v1.2.0
  * https://iworks.pl/
  * Copyright (c) 2018; * Licensed GPLv2+
  */
