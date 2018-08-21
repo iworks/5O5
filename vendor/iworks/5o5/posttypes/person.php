@@ -72,15 +72,17 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		 */
 		$this->fields = array(
 			'personal' => array(
-				'birth_year' => array( 'label' => __( 'Birth year', '5o5' ) ),
+				'birth_year' => array( 'label' => __( 'Birth Year', '5o5' ) ),
+				'birth_date' => array( 'type' => 'date', 'label' => __( 'Birth Date', '5o5' ) ),
 			),
 			'social' => array(
-				'website' => array( 'label' => __( 'Web site', '5o5' ) ),
+				'website' => array( 'label' => __( 'Website', '5o5' ) ),
 				'facebook' => array( 'label' => __( 'Facebook', '5o5' ) ),
 				'twitter' => array( 'label' => __( 'Twitter', '5o5' ) ),
 				'instagram' => array( 'label' => __( 'Instagram', '5o5' ) ),
 				'gplus' => array( 'label' => __( 'G+', '5o5' ) ),
 				'endomondo' => array( 'label' => __( 'Endomondo', '5o5' ) ),
+				'skype' => array( 'label' => __( 'Skype', '5o5' ) ),
 			),
 			'contact' => array(
 				'mobile' => array( 'label' => __( 'Mobile', '5o5' ) ),

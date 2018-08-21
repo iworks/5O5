@@ -1,29 +1,2 @@
-.iworks-5o5-row {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-  padding-bottom: .5em;
-}
-.iworks-5o5-row label {
-  width: 100px;
-  padding: 5px 10px 5px 0;
-}
-.iworks-5o5-row .select2 {
-  min-width: 200px;
-  width: 100%;
-}
 
-.post-type-iworks_5o5_boat .iworks-crews-list-container {
-  border-collapse: collapse;
-  margin-bottom: 10px;
-}
-.post-type-iworks_5o5_boat .iworks-crews-list-container td {
-  border-top: 1px solid #aaa;
-  padding: 10px;
-}
-.post-type-iworks_5o5_boat .iworks-crews-list-container select {
-  min-width: 200px;
-  width: 100%;
-}
 
