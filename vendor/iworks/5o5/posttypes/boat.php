@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -47,6 +47,7 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		parent::__construct();
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
 		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
+		add_filter( 'the_content', array( $this, 'add_media' ), 999, 2 );
 		add_filter( 'default_title', array( $this, 'default_title' ), 10, 2 );
 		add_filter( 'international_5o5_posted_on', array( $this, 'get_manufacturer' ), 10, 2 );
 		/**
@@ -660,20 +661,25 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		}
 
 		/**
-		 * attach gallery
-		 */
-		$ids = $this->get_media( $post_id );
-		if ( ! empty( $ids ) ) {
-			$shortcode = sprintf( '[gallery ids="%s" link="file"]', implode( ',', $ids ) );
-			$content .= do_shortcode( $shortcode );
-		}
-		/**
 		 * regatta
 		 */
 		$content .= apply_filters( 'iworks_5o5_result_boat_regatta_list', '', $post_id );
 		/**
 		 * return content
 		 */
+		return $content;
+	}
+
+		/**
+		 * attach gallery
+		 */
+	public function add_media( $content, $post_id ) {
+		$ids = $this->get_media( $post_id );
+		if ( ! empty( $ids ) ) {
+			$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Gallery', '5o5' ) );
+			$shortcode = sprintf( '[gallery ids="%s" link="file"]', implode( ',', $ids ) );
+			$content .= do_shortcode( $shortcode );
+		}
 		return $content;
 	}
 
