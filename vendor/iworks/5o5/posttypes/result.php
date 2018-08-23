@@ -123,6 +123,15 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		 * shortcodes
 		 */
 		add_shortcode( 'dinghy_regattas_list', array( $this, 'shortcode_list' ) );
+		/**
+		 * sort next/previous links by title
+		 */
+		add_filter( 'get_previous_post_sort', array( $this, 'adjacent_post_sort' ), 10, 3 );
+		add_filter( 'get_next_post_sort', array( $this, 'adjacent_post_sort' ), 10, 3 );
+		add_filter( 'get_previous_post_where', array( $this, 'adjacent_post_where' ), 10, 5 );
+		add_filter( 'get_next_post_where', array( $this, 'adjacent_post_where' ), 10, 5 );
+		add_filter( 'get_previous_post_join', array( $this, 'adjacent_post_join' ), 10, 5 );
+		add_filter( 'get_next_post_join', array( $this, 'adjacent_post_join' ), 10, 5 );
 	}
 
 	public function shortcode_list( $atts ) {
@@ -1115,6 +1124,52 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			);
 		}
 		return false;
+	}
+
+	/**
+	 * add where order to prev/next post links
+	 *
+	 * @since 1.0.0
+	 */
+	public function adjacent_post_where( $sql, $in_same_term, $excluded_terms, $taxonomy, $post ) {
+		if ( $post->post_type === $this->post_type_name ) {
+			global $wpdb;
+			$key = $this->options->get_option_name( 'result_date_start' );
+			$value = get_post_meta( $post->ID, $key, true );
+			$sql = preg_replace(
+				'/p.post_date ([<> ]+) \'[^\']+\'/',
+				"{$wpdb->postmeta}.meta_value $1 {$value} and {$wpdb->postmeta}.meta_key = '{$key}'",
+				$sql
+			);
+		}
+		return $sql;
+	}
+
+	/**
+	 * add sort order to prev/next post links
+	 *
+	 * @since 1.0.0
+	 */
+	public function adjacent_post_sort( $sql, $post, $order ) {
+		if ( $post->post_type === $this->post_type_name ) {
+			global $wpdb;
+			$sql = sprintf( 'ORDER BY %s.meta_value %s LIMIT 1', $wpdb->postmeta, $order );
+		}
+		return $sql;
+	}
+
+	/**
+	 * add sort order to prev/next post links
+	 *
+	 * @since 1.0.0
+	 */
+	public function adjacent_post_join( $join, $in_same_term, $excluded_terms, $taxonomy, $post ) {
+		if ( $post->post_type === $this->post_type_name ) {
+			global $wpdb;
+			$key = $this->options->get_option_name( 'result_date_start' );
+			$join .= "LEFT JOIN {$wpdb->postmeta} ON p.ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '{$key}'";
+		}
+		return $join;
 	}
 }
 

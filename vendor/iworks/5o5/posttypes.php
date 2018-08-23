@@ -229,7 +229,6 @@ class iworks_5o5_posttypes {
 		return $sql;
 	}
 
-
 	public function register_taxonomy_location() {
 		/**
 		 * Locations  Taxonomy.
