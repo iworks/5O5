@@ -38,7 +38,7 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 
 	public function __construct() {
 		parent::__construct();
-		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
+		add_filter( 'the_content', array( $this, 'the_content' ) );
 		add_filter( 'international_5o5_posted_on', array( $this, 'get_club' ), 10, 2 );
 		/**
 		 * change default columns
@@ -459,90 +459,14 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 			return $content;
 		}
 		$post_id = get_the_ID();
-
 		/**
-		 * boats
+		 * add social media
 		 */
-		$boats = get_post_meta( $post_id, '_iworks_5o5_boat' );
-		if ( ! empty( $boats ) ) {
-			$meta_name = $this->options->get_option_name( 'crew' );
-			$boats = array_unique( $boats );
-			$currently_sails_on = $sails_on = array();
-			$done = array();
-			/**
-			 * past
-			 */
-			foreach ( $boats as $boat_id ) {
-				$crew = get_post_meta( $boat_id, $meta_name, true );
-				if ( ! isset( $crew['crew'] ) ) {
-					continue;
-				}
-				/**
-				 * current
-				 */
-				if ( isset( $crew['current'] ) && isset( $crew['crew'][ $crew['current'] ] ) ) {
-					$value = $crew['crew'][ $crew['current'] ];
-					unset( $crew['crew'][ $crew['current'] ] );
-					if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
-						$currently_sails_on[] = sprintf(
-							__( 'Sail on %s as helmsman.', '5o5' ),
-							$this->get_boat( $boat_id )
-						);
-						$done[] = $this->get_done_key( 'helmsman', $boat_id, $post_id );
-					}
-					if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
-						$currently_sails_on[] = sprintf(
-							__( 'Sail on %s as crew.', '5o5' ),
-							$this->get_boat( $boat_id )
-						);
-					}
-				}
-				/**
-				 * past
-				 */
-				foreach ( $crew['crew'] as $key => $value ) {
-					if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
-						$done_key = $this->get_done_key( 'helmsman', $boat_id, $post_id );
-						if ( in_array( $done_key, $done ) ) {
-							continue;
-						}
-						$done[] = $done_key;
-						$sails_on[] = sprintf(
-							__( 'Sailed on %s as helmsman.', '5o5' ),
-							$this->get_boat( $boat_id )
-						);
-					}
-					if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
-						$done_key = $this->get_done_key( 'crew', $boat_id, $post_id );
-						if ( in_array( $done_key, $done ) ) {
-							continue;
-						}
-						$done[] = $done_key;
-						$sails_on[] = sprintf(
-							__( 'Sailed on %s as crew.', '5o5' ),
-							$this->get_boat( $boat_id )
-						);
-					}
-				}
-			}
-			if ( ! empty( $sails_on ) || ! empty( $currently_sails_on ) ) {
-				$content .= sprintf( '<h2>%s</h2>', __( 'Sail or sailed', '5o5' ) );
-				$content .= '<ul>';
-				if ( ! empty( $currently_sails_on ) ) {
-					rsort( $currently_sails_on );
-					foreach ( $currently_sails_on as $one ) {
-						$content .= sprintf( '<li class="int5o5-current">%s</li>', $one );
-					}
-				}
-				if ( ! empty( $sails_on ) ) {
-					rsort( $sails_on );
-					foreach ( $sails_on as $one ) {
-						$content .= sprintf( '<li>%s</li>', $one );
-					}
-				}
-				$content .= '</ul>';
-			}
-		}
+		$content .= $this->social_media( $post_id );
+		/**
+		 * add boats
+		 */
+		$content .= $this->boats( $post_id );
 		/**
 		 * regatta
 		 */
@@ -578,6 +502,125 @@ class iworks_5o5_posttypes_person extends iworks_5o5_posttypes {
 		}
 		$this->boats_list[ $boat_id ] = $content;
 		return $this->boats_list[ $boat_id ];
+	}
+
+	private function social_media( $post_id ) {
+		$content = '';
+		$show = $this->options->get_option( 'person_show_social_media' );
+		if ( empty( $show ) ) {
+			return $content;
+		}
+		foreach ( $this->fields['social'] as $key => $data ) {
+			$name = $this->options->get_option_name( 'social_'.$key );
+			$value = get_post_meta( $post_id, $name, true );
+			if ( empty( $value ) ) {
+				continue;
+			}
+			$content .= sprintf(
+				'<li><a href="%s" class="icon icon-%s" title="%s"></a></li>',
+				esc_url( $value ),
+				esc_attr( $key ),
+				esc_attr( $data['label'] )
+			);
+		}
+		if ( empty( $content ) ) {
+			return $content;
+		}
+		$content = sprintf( '<ul class="dinghy-person-social-media">%s</ul>', $content );
+		return $content;
+	}
+
+	private function boats( $post_id ) {
+		$content = '';
+		$show = $this->options->get_option( 'person_show_boats_table' );
+		if ( empty( $show ) ) {
+			return $content;
+		}
+		/**
+		 * boats
+		 */
+		$boats = get_post_meta( $post_id, '_iworks_5o5_boat' );
+		if ( empty( $boats ) ) {
+			return $content;
+		}
+		$meta_name = $this->options->get_option_name( 'crew' );
+		$boats = array_unique( $boats );
+		$currently_sails_on = $sails_on = array();
+		$done = array();
+		/**
+		 * past
+		 */
+		foreach ( $boats as $boat_id ) {
+			$crew = get_post_meta( $boat_id, $meta_name, true );
+			if ( ! isset( $crew['crew'] ) ) {
+				continue;
+			}
+			/**
+			 * current
+			 */
+			if ( isset( $crew['current'] ) && isset( $crew['crew'][ $crew['current'] ] ) ) {
+				$value = $crew['crew'][ $crew['current'] ];
+				unset( $crew['crew'][ $crew['current'] ] );
+				if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
+					$currently_sails_on[] = sprintf(
+						__( 'Sail on %s as helmsman.', '5o5' ),
+						$this->get_boat( $boat_id )
+					);
+					$done[] = $this->get_done_key( 'helmsman', $boat_id, $post_id );
+				}
+				if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
+					$currently_sails_on[] = sprintf(
+						__( 'Sail on %s as crew.', '5o5' ),
+						$this->get_boat( $boat_id )
+					);
+				}
+			}
+			/**
+			 * past
+			 */
+			foreach ( $crew['crew'] as $key => $value ) {
+				if ( isset( $value['helmsman'] ) && $post_id == $value['helmsman'] ) {
+					$done_key = $this->get_done_key( 'helmsman', $boat_id, $post_id );
+					if ( in_array( $done_key, $done ) ) {
+						continue;
+					}
+					$done[] = $done_key;
+					$sails_on[] = sprintf(
+						__( 'Sailed on %s as helmsman.', '5o5' ),
+						$this->get_boat( $boat_id )
+					);
+				}
+				if ( isset( $value['crew'] ) && $post_id == $value['crew'] ) {
+					$done_key = $this->get_done_key( 'crew', $boat_id, $post_id );
+					if ( in_array( $done_key, $done ) ) {
+						continue;
+					}
+					$done[] = $done_key;
+					$sails_on[] = sprintf(
+						__( 'Sailed on %s as crew.', '5o5' ),
+						$this->get_boat( $boat_id )
+					);
+				}
+			}
+		}
+		if ( ! empty( $sails_on ) || ! empty( $currently_sails_on ) ) {
+			$content .= sprintf( '<h2>%s</h2>', __( 'Sail or sailed', '5o5' ) );
+			$content .= '<ul>';
+			if ( ! empty( $currently_sails_on ) ) {
+				rsort( $currently_sails_on );
+				foreach ( $currently_sails_on as $one ) {
+					$content .= sprintf( '<li class="int5o5-current">%s</li>', $one );
+				}
+			}
+			if ( ! empty( $sails_on ) ) {
+				rsort( $sails_on );
+				foreach ( $sails_on as $one ) {
+					$content .= sprintf( '<li>%s</li>', $one );
+				}
+			}
+			$content .= '</ul>';
+		}
+		return $content;
 	}
 
 	/**

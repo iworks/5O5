@@ -9,10 +9,48 @@ function iworks_5o5_options() {
 
 	$iworks_5o5_options['index'] = array(
 		'version'  => '0.0',
+		'use_tabs' => true,
 		'page_title' => __( 'Configuration', '5o5' ),
 		'menu' => 'submenu',
 		'parent' => $parent,
-		'options'  => array(),
+		'options'  => array(
+			array(
+				'type'              => 'heading',
+				'label'             => __( 'General', '5o5' ),
+			),
+			array(
+				'type'              => 'heading',
+				'label'             => __( 'Results', '5o5' ),
+			),
+			array(
+				'name'              => 'results_show_points',
+				'type'              => 'checkbox',
+				'th'                => __( 'Show points', '5o5' ),
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+				'classes' => array( 'switch-button' ),
+			),
+			array(
+				'type'              => 'heading',
+				'label'             => __( 'Persons', '5o5' ),
+			),
+			array(
+				'name'              => 'person_show_social_media',
+				'type'              => 'checkbox',
+				'th'                => __( 'Show social media links', '5o5' ),
+				'default'           => 1,
+				'sanitize_callback' => 'absint',
+				'classes' => array( 'switch-button' ),
+			),
+			array(
+				'name'              => 'person_show_boats_table',
+				'type'              => 'checkbox',
+				'th'                => __( 'Show boats table', '5o5' ),
+				'default'           => 0,
+				'sanitize_callback' => 'absint',
+				'classes' => array( 'switch-button' ),
+			),
+		),
 		//      'metaboxes' => array(),
 		'pages' => array(
 			'new-boat' => array(

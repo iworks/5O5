@@ -46,8 +46,8 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 	public function __construct() {
 		parent::__construct();
 		add_filter( 'enter_title_here', array( $this, 'enter_title_here' ), 10, 2 );
-		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
-		add_filter( 'the_content', array( $this, 'add_media' ), 999, 2 );
+		add_filter( 'the_content', array( $this, 'the_content' ), 10 );
+		add_filter( 'the_content', array( $this, 'add_media' ), 999 );
 		add_filter( 'default_title', array( $this, 'default_title' ), 10, 2 );
 		add_filter( 'international_5o5_posted_on', array( $this, 'get_manufacturer' ), 10, 2 );
 		/**
@@ -673,7 +673,11 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		/**
 		 * attach gallery
 		 */
-	public function add_media( $content, $post_id ) {
+	public function add_media( $content ) {
+		if ( ! is_singular() ) {
+			return $content;
+		}
+		$post_id = get_the_ID();
 		$ids = $this->get_media( $post_id );
 		if ( ! empty( $ids ) ) {
 			$content .= sprintf( '<h2>%s</h2>', esc_html__( 'Gallery', '5o5' ) );

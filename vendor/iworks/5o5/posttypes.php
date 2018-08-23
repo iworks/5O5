@@ -30,7 +30,6 @@ class iworks_5o5_posttypes {
 	protected $post_type_name;
 	protected $options;
 	protected $fields;
-	protected $post_type_objects = array();
 	protected $base;
 	protected $taxonomy_name_location = 'iworks_dinghy_location';
 
@@ -269,6 +268,28 @@ class iworks_5o5_posttypes {
 			),
 		);
 		register_taxonomy( $this->taxonomy_name_location, array( $this->post_type_name ), $args );
+	}
+
+	protected function get_cache_key( $data, $prefix = '' ) {
+		$key = sprintf(
+			'dingy-%s-%s',
+			$prefix,
+			md5( serialize( $data ) )
+		);
+		$key = substr( $key, 0, 172 );
+		return $key;
+	}
+
+	protected function get_cache( $key ) {
+		$cache = get_transient( $key );
+		return $cache;
+	}
+
+	protected function set_cache( $data, $key, $expiration = false ) {
+		if ( empty( $expiration ) ) {
+			$expiration = DAY_IN_SECONDS;
+		}
+		set_transient( $key, $data, $expiration );
 	}
 }
 

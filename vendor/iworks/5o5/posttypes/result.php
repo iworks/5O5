@@ -30,6 +30,9 @@ require_once( dirname( dirname( __FILE__ ) ) . '/posttypes.php' );
 
 class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 
+	/**
+	 * Post type name
+	 */
 	protected $post_type_name = 'iworks_5o5_result';
 	/**
 	 * Sinle crew meta field name
@@ -44,10 +47,26 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 	 * sailors to id
 	 */
 	private $sailors = array();
+	/**
+	 * show points
+	 */
+	private $show_points = false;
+
+	/**
+	 * Dinghy post type of Boat
+	 */
+	private $boat_post_type;
 
 	public function __construct() {
 		parent::__construct();
-		add_filter( 'the_content', array( $this, 'the_content' ), 10, 2 );
+		/**
+		 * set show points
+		 */
+		$this->show_points = ! empty( $this->options->get_option( 'results_show_points' ) );
+		/**
+		 * filter content
+		 */
+		add_filter( 'the_content', array( $this, 'the_content' ) );
 		/**
 		 * change default columns
 		 */
@@ -330,7 +349,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			"select * from {$table_name_regatta} where year = %d order by date, year desc",
 			$year
 		);
-		return $this->add_dates_and_sort( $wpdb->get_results( $sql ) );
+		return $this->add_results_metadata( $wpdb->get_results( $sql ) );
 	}
 
 	private function get_list_by_sailor_id( $sailor_id ) {
@@ -341,12 +360,17 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$sailor_id,
 			$sailor_id
 		);
-		return $this->add_dates_and_sort( $wpdb->get_results( $sql ) );
+		return $this->add_results_metadata( $wpdb->get_results( $sql ) );
 	}
 
-	private function add_dates_and_sort( $regattas ) {
+	private function add_results_metadata( $regattas ) {
 		if ( empty( $regattas ) ) {
 			return $regattas;
+		}
+		$cache_key = $this->get_cache_key( $regattas, __FUNCTION__ );
+		$cache = $this->get_cache( $cache_key );
+		if ( false !== $cache ) {
+			return $cache;
 		}
 		$ref = array();
 		$ids = array();
@@ -361,15 +385,26 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			'fields' => 'ids',
 		);
 		$query = new WP_Query( $args );
+		/**
+		 * Get boat post type
+		 */
 		if ( ! empty( $query->posts ) ) {
 			$start = $this->options->get_option_name( 'result_date_start' );
 			$end = $this->options->get_option_name( 'result_date_end' );
-			foreach ( $query->posts as $post_id ) {
-				$regattas[ $ref[ $post_id ] ]->date_start = get_post_meta( $post_id, $start, true );
-				$regattas[ $ref[ $post_id ] ]->date_end = get_post_meta( $post_id, $end, true );
+			foreach ( $ref as $post_id => $index ) {
+				$regattas[ $index ]->date_start = get_post_meta( $post_id, $start, true );
+				$regattas[ $index ]->date_end = get_post_meta( $post_id, $end, true );
+				/**
+				 * add boat data
+				 */
+				$boat = $this->get_boat_data_by_number( $regattas[ $index ]->boat_id );
+				if ( false !== $boat ) {
+					$regattas[ $index ]->boat = $boat;
+				}
 			}
 		}
 		uasort( $regattas, array( $this, 'sort_by_date_start' ) );
+		$this->set_cache( $regattas, $cache_key );
 		return $regattas;
 	}
 
@@ -412,10 +447,13 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$content = '<table class="dinghy-results"><thead><tr>';
 			$content .= sprintf( '<th class="year">%s</th>', esc_html__( 'Year', '5o5' ) );
 			$content .= sprintf( '<th class="name">%s</th>', esc_html__( 'Name', '5o5' ) );
+			$content .= sprintf( '<th class="boat">%s</th>', esc_html__( 'Boat', '5o5' ) );
 			$content .= sprintf( '<th class="helmsman">%s</th>', esc_html__( 'Helmsman', '5o5' ) );
 			$content .= sprintf( '<th class="crew">%s</th>', esc_html__( 'Crew', '5o5' ) );
 			$content .= sprintf( '<th class="place">%s</th>', esc_html__( 'Place (of)', '5o5' ) );
-			$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
+			if ( $this->show_points ) {
+				$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
+			}
 			$content .= '</tr></thead><tbody>';
 
 			$format = get_option( 'date_format' );
@@ -428,6 +466,20 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				$content .= sprintf( '<tr class="dinghy-place-%d">', $regatta->place );
 				$content .= sprintf( '<td class="year" title="%s">%d</td>', esc_attr( $dates ), $regatta->year );
 				$content .= sprintf( '<td class="name"><a href="%s">%s</a></td>', get_permalink( $regatta->post_regata_id ), get_the_title( $regatta->post_regata_id ) );
+				/**
+				 * Boat
+				 */
+				$content .= '<td class="boat">';
+				if ( isset( $regatta->boat ) ) {
+					$content .= sprintf(
+						'<a href="%s">%s</a>',
+						esc_url( $regatta->boat['url'] ),
+						esc_html( $regatta->boat['post_title'] )
+					);
+				} else {
+					$content .= '&ndash;';
+				}
+				$content .= '</td>';
 				/**
 				 * Helmsman
 				 */
@@ -450,7 +502,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				}
 				$x = get_post_meta( $regatta->post_regata_id, $this->options->get_option_name( 'result_number_of_competitors' ), true );
 				$content .= sprintf( '<td class="place">%d (%d)</td>', $regatta->place, $x );
-				$content .= sprintf( '<td class="points">%d</td>', $regatta->points );
+				if ( $this->show_points ) {
+					$content .= sprintf( '<td class="points">%d</td>', $regatta->points );
+				}
 				$content .= '</tr>';
 			}
 			$content .= '</tbody></table>';
@@ -476,8 +530,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$content .= sprintf( '<th class="name">%s</th>', esc_html__( 'Name', '5o5' ) );
 			$content .= sprintf( '<th class="helmsman">%s</th>', esc_html__( 'Helmsman', '5o5' ) );
 			$content .= sprintf( '<th class="crew">%s</th>', esc_html__( 'Crew', '5o5' ) );
-			$content .= sprintf( '<th class="place">%s</th>', esc_html__( 'Place', '5o5' ) );
-			$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
+			$content .= sprintf( '<th class="place">%s</th>', esc_html__( 'Place (of)', '5o5' ) );
+			if ( $this->show_points ) {
+				$content .= sprintf( '<th class="points">%s</th>', esc_html__( 'Points', '5o5' ) );
+			}
 			$content .= '</tr></thead><tbody>';
 			foreach ( $regattas as $regatta ) {
 				$content .= sprintf( '<tr class="dinghy-place-%d">', $regatta->place );
@@ -503,8 +559,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				} else {
 					$content .= sprintf( '<td class="crew">%s</td>', $regatta->crew_name );
 				}
-				$content .= sprintf( '<td class="place">%d</td>', $regatta->place );
-				$content .= sprintf( '<td class="points">%d</td>', $regatta->points );
+				$x = get_post_meta( $regatta->post_regata_id, $this->options->get_option_name( 'result_number_of_competitors' ), true );
+				$content .= sprintf( '<td class="place">%d (%d)</td>', $regatta->place, $x );
+				if ( $this->show_points ) {
+					$content .= sprintf( '<td class="points">%d</td>', $regatta->points );
+				}
 				$content .= '</tr>';
 			}
 			$content .= '</tbody></table>';
@@ -895,7 +954,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			}
 			$races[ $one->regata_id ][ $one->number ] = $one->points;
 			if ( empty( $one->points ) ) {
-				$races[ $one->regata_id ][ $one->number ] = $one->code;
+				$races[ $one->regata_id ][ $one->number ] = strtoupper( $one->code );
 			} else if ( ! empty( $one->code ) ) {
 				$races[ $one->regata_id ][ $one->number ] .= sprintf( ' (%s)', strtoupper( $one->code ) );
 			}
@@ -921,12 +980,25 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		foreach ( $regatta as $one ) {
 			$content .= sprintf( '<tr class="dinghy-place-%d">', $one->place );
 			$content .= sprintf( '<td class="place">%d</td>', $one->place );
+
+			/**
+			 * boat
+			 */
 			$content .= sprintf(
-				'<td class="boat_id country-%s">%s %d</td>',
-				esc_attr( strtolower( $one->country ) ),
-				$one->country,
-				$one->boat_id
+				'<td class="boat_id country-%s">',
+				esc_attr( strtolower( $one->country ) )
 			);
+			$boat = $this->get_boat_data_by_number( $one->boat_id );
+			if ( false === $boat ) {
+				$content .= sprintf( '%s %d', $one->country, $one->boat_id );
+			} else {
+				$content .= sprintf(
+					'<a href="%s">%s</a>',
+					esc_url( $boat['url'] ),
+					esc_html( $boat['post_title'] )
+				);
+			}
+			$content .= '</td>';
 			/**
 			 * helmsman
 			 */
@@ -1027,6 +1099,22 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			return $extra;
 		}
 		return sprintf( '<small>%s</small>', $extra );
+	}
+
+	private function get_boat_data_by_number( $number ) {
+		if ( empty( $this->boat_post_type ) ) {
+			global $iworks_5o5;
+			$this->boat_post_type = $iworks_5o5->get_post_type_name( 'boat' );
+		}
+		$boat = get_page_by_title( 'POL '. $number, OBJECT, $this->boat_post_type );
+		if ( is_a( $boat, 'WP_Post' ) ) {
+			return array(
+				'ID' => $boat->ID,
+				'post_title' => $boat->post_title,
+				'url' => get_permalink( $boat ),
+			);
+		}
+		return false;
 	}
 }
 
