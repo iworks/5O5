@@ -62,7 +62,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * set show points
 		 */
-		$this->show_points = ! empty( $this->options->get_option( 'results_show_points' ) );
+		if ( is_object( $this->options ) ) {
+			$this->show_points = ! empty( $this->options->get_option( 'results_show_points' ) );
+		}
 		/**
 		 * filter content
 		 */
