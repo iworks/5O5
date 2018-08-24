@@ -677,6 +677,10 @@ class iworks_5o5_posttypes_boat extends iworks_5o5_posttypes {
 		if ( ! is_singular() ) {
 			return $content;
 		}
+		$post_type = get_post_type();
+		if ( $post_type != $this->post_type_name ) {
+			return $content;
+		}
 		$post_id = get_the_ID();
 		$ids = $this->get_media( $post_id );
 		if ( ! empty( $ids ) ) {
