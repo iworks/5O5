@@ -1000,13 +1000,14 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				esc_attr( strtolower( $one->country ) )
 			);
 			$boat = $this->get_boat_data_by_number( $one->boat_id );
+			$boat_name = sprintf( '%s %d', $one->country, $one->boat_id );
 			if ( false === $boat ) {
-				$content .= sprintf( '%s %d', $one->country, $one->boat_id );
+				$content .= esc_html( $boat_name );
 			} else {
 				$content .= sprintf(
 					'<a href="%s">%s</a>',
 					esc_url( $boat['url'] ),
-					esc_html( $boat['post_title'] )
+					esc_html( $boat_name )
 				);
 			}
 			$content .= '</td>';
