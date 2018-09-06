@@ -264,9 +264,17 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 					get_permalink(),
 					get_the_title()
 				);
-				$content .= $this->get_td( 'location', get_the_ID() );
-				$content .= $this->get_td( 'number_of_races', get_the_ID() );
-				$content .= $this->get_td( 'number_of_competitors', get_the_ID() );
+				$check = $this->has_races( get_the_ID() );
+				if ( $check ) {
+					$content .= $this->get_td( 'location', get_the_ID() );
+					$content .= $this->get_td( 'number_of_races', get_the_ID() );
+					$content .= $this->get_td( 'number_of_competitors', get_the_ID() );
+				} else {
+					$content .= sprintf(
+						'<td class="dinghy-no-results" colspan="3">%s</td>',
+						esc_html__( 'No race results.', '5o5' )
+					);
+				}
 				$content .= '</tr>';
 			}
 			$content .= '</tbody>';
@@ -808,6 +816,17 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		return $columns;
 	}
 
+	private function has_races( $regatta_id ) {
+		global $wpdb;
+		$table_name_regatta_race = $wpdb->prefix . '505_regatta_race';
+		$query = $wpdb->prepare(
+			sprintf( 'SELECT COUNT(*) from %s WHERE `post_regata_id` = %%d', $table_name_regatta_race ),
+			$regatta_id
+		);
+		$val = $wpdb->get_var( $query );
+		return 0 < $val;
+	}
+
 	public function upload() {
 		if ( ! isset( $_POST['id'] ) ) {
 			wp_send_json_error();
@@ -972,6 +991,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			if ( $one->discard ) {
 				$races[ $one->regata_id ][ $one->number ] .= '<span class="discard">*</span>';
 			}
+		}
+		if ( empty( $r ) ) {
+			$content .= __( 'There is no race data.', '5o5' );
+			return $content;
 		}
 		$content .= '<table class="dinghy-results dinghy-results-person">';
 		$content .= '<thead>';
