@@ -909,10 +909,8 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				}
 				$one = preg_replace( '/\*/', '', $one );
 				$one = trim( $one );
-				if ( preg_match( '/^[a-z]+$/i', $one ) ) {
-					$race['code'] = $one;
-				}
-				$race['points'] = $one;
+				$race['code'] = preg_replace( '/[^a-z]+/i', '', $one );
+				$race['points'] = preg_replace( '/[^\d]+/', '', $one );
 				$wpdb->insert( $table_name_regatta_race, $race );
 			}
 		}
@@ -982,11 +980,16 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			if ( ! isset( $races[ $one->regata_id ] ) ) {
 				$races[ $one->regata_id ] = array();
 			}
-			$races[ $one->regata_id ][ $one->number ] = $one->points;
-			if ( empty( $one->points ) ) {
-				$races[ $one->regata_id ][ $one->number ] = strtoupper( $one->code );
-			} else if ( ! empty( $one->code ) ) {
-				$races[ $one->regata_id ][ $one->number ] .= sprintf( ' (%s)', strtoupper( $one->code ) );
+			$races[ $one->regata_id ][ $one->number ] = '';
+			if ( empty( $one->code ) ) {
+				$races[ $one->regata_id ][ $one->number ] .= $one->points;
+			} else {
+				$races[ $one->regata_id ][ $one->number ] .= sprintf(
+					'<small style="dinghy-results-code dinghy-results-code-%s" title="%d">%s</small>',
+					esc_attr( strtolower( $one->code ) ),
+					$one->points,
+					esc_html( strtoupper( $one->code ) )
+				);
 			}
 			if ( $one->discard ) {
 				$races[ $one->regata_id ][ $one->number ] .= '<span class="discard">*</span>';
