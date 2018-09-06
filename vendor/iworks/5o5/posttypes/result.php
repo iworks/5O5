@@ -271,7 +271,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 					$content .= $this->get_td( 'number_of_competitors', get_the_ID() );
 				} else {
 					$content .= sprintf(
-						'<td class="dinghy-no-results" colspan="3">%s</td>',
+						'<td class="dinghy-no-results" colspan="3"><span>%s</span></td>',
 						esc_html__( 'No race results.', '5o5' )
 					);
 				}
