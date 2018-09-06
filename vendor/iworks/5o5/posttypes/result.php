@@ -77,6 +77,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		add_filter( "manage_edit-{$this->post_type_name}_sortable_columns", array( $this, 'add_sortable_columns' ) );
 		add_action( 'manage_posts_custom_column' , array( $this, 'custom_columns' ), 10, 2 );
 		/**
+		 * download results
+		 */
+		add_action( 'template_redirect', array( $this, 'download' ) );
+		/**
 		 * fields
 		 */
 		$this->fields = array(
@@ -134,6 +138,57 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		add_filter( 'get_next_post_where', array( $this, 'adjacent_post_where' ), 10, 5 );
 		add_filter( 'get_previous_post_join', array( $this, 'adjacent_post_join' ), 10, 5 );
 		add_filter( 'get_next_post_join', array( $this, 'adjacent_post_join' ), 10, 5 );
+	}
+
+	/**
+	 * allow to download results
+	 */
+	public function download() {
+		global $wpdb;
+		if ( ! is_singular( $this->post_type_name ) ) {
+			return;
+		}
+		$action = filter_input( INPUT_GET, 'dinghy', FILTER_SANITIZE_STRING );
+		switch ( $action ) {
+			case 'download':
+				$file = sanitize_title( get_the_title() ).'.csv';
+				header( 'Content-Type: text/csv' );
+				header( 'Content-Disposition: attachment; filename='.$file );
+				$out = fopen( 'php://output', 'w' );
+				$post_id = get_the_ID();
+				$row = array();
+				$row[] = __( 'Place', '5o5' );
+				$row[] = __( 'Boat', '5o5' );
+				$row[] = __( 'Helm', '5o5' );
+				$row[] = __( 'Crew', '5o5' );
+				$number = intval( get_post_meta( $post_id, 'iworks_5o5_result_number_of_races', true ) );
+				for ( $i = 1; $i <= $number; $i++ ) {
+					$row[] = 'R'.$i;
+				}
+				$row[] = __( 'Sum', '5o5' );
+				fputcsv( $out, $row );
+				$races = $this->get_races_data( $post_id, 'csv' );
+				$table_name_regatta = $wpdb->prefix . '505_regatta';
+				$query = $wpdb->prepare( "SELECT * FROM {$table_name_regatta} where post_regata_id = %d order by place", $post_id );
+				$regatta = $wpdb->get_results( $query );
+				foreach ( $regatta as $one ) {
+					$row = array();
+					$row[] = $one->place;
+					$boat = $this->get_boat_data_by_number( $one->boat_id );
+					$row[] = sprintf( '%s %d', $one->country, $one->boat_id );
+					$row[] = $one->helm_name;
+					$row[] = $one->crew_name;
+					if ( isset( $races[ $one->ID ] ) && ! empty( $races[ $one->ID ] ) ) {
+						foreach ( $races[ $one->ID ] as $race_number => $race_points ) {
+							$row[] = $race_points;
+						}
+					}
+					$row[] = $one->points;
+					fputcsv( $out, $row );
+				}
+				fclose( $out );
+			exit;
+		}
 	}
 
 	public function shortcode_list( $atts ) {
@@ -970,35 +1025,24 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * get regata races data
 		 */
-		$query = $wpdb->prepare( "SELECT * FROM {$table_name_regatta_race} where post_regata_id = %d order by regata_id, number", $post_id );
-		$r = $wpdb->get_results( $query );
-
-		$show = current_user_can( 'manage_options' );
-
-		$races = array();
-		foreach ( $r as $one ) {
-			if ( ! isset( $races[ $one->regata_id ] ) ) {
-				$races[ $one->regata_id ] = array();
-			}
-			$races[ $one->regata_id ][ $one->number ] = '';
-			if ( empty( $one->code ) ) {
-				$races[ $one->regata_id ][ $one->number ] .= $one->points;
-			} else {
-				$races[ $one->regata_id ][ $one->number ] .= sprintf(
-					'<small style="dinghy-results-code dinghy-results-code-%s" title="%d">%s</small>',
-					esc_attr( strtolower( $one->code ) ),
-					$one->points,
-					esc_html( strtoupper( $one->code ) )
-				);
-			}
-			if ( $one->discard ) {
-				$races[ $one->regata_id ][ $one->number ] .= '<span class="discard">*</span>';
-			}
-		}
-		if ( empty( $r ) ) {
+		$races = $this->get_races_data( $post_id );
+		if ( empty( $races ) ) {
 			$content .= __( 'There is no race data.', '5o5' );
 			return $content;
 		}
+		/**
+		 * CSV link
+		 */
+		$args = array(
+			'dinghy' => 'download',
+			'format' => 'csv',
+		);
+		$url = add_query_arg( $args );
+		$content .= sprintf(
+			'<div class="dinghy-results-get"><a href="%s" class="dinghy-results-csv">%s</a></div>',
+			$url,
+			__( 'Download', '5o5' )
+		);
 		$content .= '<table class="dinghy-results dinghy-results-person">';
 		$content .= '<thead>';
 		$content .= '<tr>';
@@ -1014,6 +1058,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$content .= '</tr>';
 		$content .= '</thead>';
 		$content .= '<tbody>';
+		$show = current_user_can( 'manage_options' );
 		foreach ( $regatta as $one ) {
 			$content .= sprintf( '<tr class="dinghy-place-%d">', $one->place );
 			$content .= sprintf( '<td class="place">%d</td>', $one->place );
@@ -1199,6 +1244,46 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			$join .= "LEFT JOIN {$wpdb->postmeta} ON p.ID = {$wpdb->postmeta}.post_id AND {$wpdb->postmeta}.meta_key = '{$key}'";
 		}
 		return $join;
+	}
+
+	/**
+	 * Get race data
+	 *
+	 */
+	private function get_races_data( $post_id, $output = 'html' ) {
+		global $wpdb;
+		$races = array();
+		$table_name_regatta_race = $wpdb->prefix . '505_regatta_race';
+		$query = $wpdb->prepare( "SELECT * FROM {$table_name_regatta_race} where post_regata_id = %d order by regata_id, number", $post_id );
+		$r = $wpdb->get_results( $query );
+		$pattern = '<small style="dinghy-results-code dinghy-results-code-%3$s" title="%2$d">%1$s</small>';
+		if ( 'csv' === $output ) {
+			$pattern = '%2$d %1$s';
+		}
+		foreach ( $r as $one ) {
+			if ( ! isset( $races[ $one->regata_id ] ) ) {
+				$races[ $one->regata_id ] = array();
+			}
+			$races[ $one->regata_id ][ $one->number ] = '';
+			if ( empty( $one->code ) ) {
+				$races[ $one->regata_id ][ $one->number ] .= $one->points;
+			} else {
+				$races[ $one->regata_id ][ $one->number ] .= sprintf(
+					$pattern,
+					esc_html( strtoupper( $one->code ) ),
+					$one->points,
+					esc_attr( strtolower( $one->code ) )
+				);
+			}
+			if ( $one->discard ) {
+				if ( 'csv' === $output ) {
+					$races[ $one->regata_id ][ $one->number ] .= '*';
+				} else {
+					$races[ $one->regata_id ][ $one->number ] .= '<span class="discard">*</span>';
+				}
+			}
+		}
+		return $races;
 	}
 }
 
