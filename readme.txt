@@ -41,6 +41,11 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 1.2.1 =
+
+* Added sort order for "dinghy_regattas_list" shortcode.
+* Remove year from table for "dinghy_regattas_list" shortcode.
+
 = 1.2.0 =
 
 * Added shortcode "dinghy_regattas_list".

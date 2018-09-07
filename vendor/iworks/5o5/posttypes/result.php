@@ -197,6 +197,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			'serie' => null,
 			'title' => __( 'Results', '5o5' ),
 			'title_show' => 'on',
+			'order' => 'DESC',
 		), $atts, 'dinghy_results_list' );
 		$content = '';
 		/**
@@ -210,12 +211,17 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			}
 		}
 		/**
+		 * params: order
+		 */
+		$order = 'asc' === strtolower( $atts['order'] )? 'ASC':'DESC';
+		/**
 		 * WP Query base args
 		 */
 		$args = array(
 			'post_type' => $this->post_type_name,
 			'nopaging' => true,
 			'orderby' => 'meta_value_num',
+			'order' => $order,
 		);
 		/**
 		 * year
@@ -304,12 +310,12 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				/**
 				 * start date
 				 */
-				$value = $this->get_date( 'start', get_the_ID() );
+				$value = $this->get_date( 'start', get_the_ID(), 'j F' );
 				$content .= sprintf( '<td class="date-start">%s</td>', esc_html( $value ) );
 				/**
 				 * end date
 				 */
-				$value = $this->get_date( 'end', get_the_ID() );
+				$value = $this->get_date( 'end', get_the_ID(), 'j F' );
 				$content .= sprintf( '<td class="date-end">%s</td>', esc_html( $value ) );
 				/**
 				 * title
