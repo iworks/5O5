@@ -361,8 +361,16 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		if (
 			$query->is_main_query()
 			&& isset( $query->query )
-			&& isset( $query->query['post_type'] )
-			&& $this->post_type_name === $query->query['post_type']
+			&& (
+				(
+					isset( $query->query['post_type'] )
+					&& $this->post_type_name === $query->query['post_type']
+				)
+				|| (
+					isset( $query->query[ $this->taxonomy_name_serie ] )
+					&& ! empty( $query->query[ $this->taxonomy_name_serie ] )
+				)
+			)
 		) {
 			$query->set( 'meta_key', $this->options->get_option_name( 'result_date_start' ) );
 			$query->set( 'meta_value_num', 0 );

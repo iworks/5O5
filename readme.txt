@@ -44,6 +44,7 @@ There are 3 ways to install this plugin:
 = 1.2.1 =
 
 * Added sort order for "dinghy_regattas_list" shortcode.
+* Added sort order in custom taxonomies "series".
 * Remove year from table for "dinghy_regattas_list" shortcode.
 
 = 1.2.0 =
