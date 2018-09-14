@@ -41,6 +41,11 @@ There are 3 ways to install this plugin:
 
 == Changelog ==
 
+= 1.2.2 =
+* Show regatta city instead area.
+* Improved dates.
+* Improved shortcode "dinghy_regattas_list" for all years.
+
 = 1.2.1 =
 
 * Added sort order for "dinghy_regattas_list" shortcode.

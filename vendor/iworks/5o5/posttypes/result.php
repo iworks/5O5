@@ -85,7 +85,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		 */
 		$this->fields = array(
 			'result' => array(
-				'location' => array( 'label' => __( 'Location', '5o5' ) ),
+				'location' => array( 'label' => __( 'Area', '5o5' ) ),
 				'organizer' => array( 'label' => __( 'Organizer', '5o5' ) ),
 				'secretary' => array( 'label' => __( 'Secretary', '5o5' ) ),
 				'arbiter' => array( 'label' => __( 'Arbiter', '5o5' ) ),
@@ -191,6 +191,21 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		}
 	}
 
+	public function shortcode_list_helper_table_start() {
+		$content = '<table class="dinghy-results dinghy-results-list">';
+		$content .= '<thead>';
+		$content .= '<tr>';
+		$content .= sprintf( '<th class="dates">%s</th>', esc_attr__( 'Dates', '5o5' ) );
+		$content .= sprintf( '<th class="title">%s</th>', esc_attr__( 'Title', '5o5' ) );
+		$content .= sprintf( '<th class="area">%s</th>', esc_attr__( 'Area', '5o5' ) );
+		$content .= sprintf( '<th class="races">%s</th>', esc_attr__( 'Races', '5o5' ) );
+		$content .= sprintf( '<th class="teams">%s</th>', esc_attr__( 'Teams', '5o5' ) );
+		$content .= '</tr>';
+		$content .= '<thead>';
+		$content .= '<tbody>';
+		return $content;
+	}
+
 	public function shortcode_list( $atts ) {
 		$atts = shortcode_atts( array(
 			'year' => date( 'Y' ),
@@ -226,7 +241,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * year
 		 */
+		$by_year = false;
 		if ( 'all' === $year ) {
+			$by_year = true;;
 			$args['meta_key'] = $this->options->get_option_name( 'result_date_start' );
 		} else {
 			$args['meta_query'] = array(
@@ -281,63 +298,68 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		$the_query = new WP_Query( $args );
 		if ( $the_query->have_posts() ) {
 			remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
-			$content .= '<table class="dinghy-results dinghy-results-list">';
-			$content .= '<thead>';
-			$content .= '<tr>';
-			$content .= sprintf( '<th class="date-start">%s</th>', esc_attr__( 'Start date', '5o5' ) );
-			$content .= sprintf( '<th class="date-end">%s</th>', esc_attr__( 'End date', '5o5' ) );
-			$content .= sprintf( '<th class="title">%s</th>', esc_attr__( 'Title', '5o5' ) );
-			$content .= sprintf( '<th class="place">%s</th>', esc_attr__( 'Place', '5o5' ) );
-			$content .= sprintf( '<th class="races">%s</th>', esc_attr__( 'Races', '5o5' ) );
-			$content .= sprintf( '<th class="teams">%s</th>', esc_attr__( 'Teams', '5o5' ) );
-			$content .= '</tr>';
-			$content .= '<thead>';
-			$content .= '<tbody>';
+			if ( ! $by_year ) {
+				$content .= $this->shortcode_list_helper_table_start();
+			}
 			$current = 0;
+			$rows = '';
 			while ( $the_query->have_posts() ) {
+				$tbody = '';
 				$the_query->the_post();
-				if ( 'all' === $year ) {
+				if ( $by_year ) {
 					$value = $this->get_date( 'start', get_the_ID(), 'Y' );
 					if ( $current != $value ) {
-						$content .= sprintf(
-							'<tr class="year"><td colspan="6">%s</td></tr>',
-							$value
-						);
+						if (  $by_year ) {
+							if ( 0 < $current ) {
+								$content .= $rows;
+								$content .= '</tbody></table>';
+								$rows = '';
+							}
+							$content .= sprintf( '<h2>%s</h2>', $value );
+							$content .= $this->shortcode_list_helper_table_start();
+						}
 						$current = $value;
 					}
 				}
-				$content .= '<tr>';
+				$tbody .= '<tr>';
 				/**
 				 * start date
 				 */
-				$value = $this->get_date( 'start', get_the_ID(), 'j F' );
-				$content .= sprintf( '<td class="date-start">%s</td>', esc_html( $value ) );
-				/**
-				 * end date
-				 */
-				$value = $this->get_date( 'end', get_the_ID(), 'j F' );
-				$content .= sprintf( '<td class="date-end">%s</td>', esc_html( $value ) );
+				$start = $this->get_date( 'start', get_the_ID(), 'U' );
+				$end  = $this->get_date( 'end', get_the_ID(), 'U' );
+				$date = $this->get_dates( $start, $end );
+				$tbody .= sprintf( '<td class="dates">%s</td>', $date );
 				/**
 				 * title
 				 */
-				$content .= sprintf(
+				$tbody .= sprintf(
 					'<td class="title"><a href="%s">%s</a></td>',
 					get_permalink(),
 					get_the_title()
 				);
 				$check = $this->has_races( get_the_ID() );
 				if ( $check ) {
-					$content .= $this->get_td( 'location', get_the_ID() );
-					$content .= $this->get_td( 'number_of_races', get_the_ID() );
-					$content .= $this->get_td( 'number_of_competitors', get_the_ID() );
+					$terms = get_the_term_list( get_the_ID(), $this->taxonomy_name_location );
+					$tbody .= sprintf( '<td class="area">%s</td>', $terms );
+					$tbody .= $this->get_td( 'number_of_races', get_the_ID() );
+					$tbody .= $this->get_td( 'number_of_competitors', get_the_ID() );
 				} else {
-					$content .= sprintf(
+					$tbody .= sprintf(
 						'<td class="dinghy-no-results" colspan="3"><span>%s</span></td>',
 						esc_html__( 'No race results.', '5o5' )
 					);
 				}
-				$content .= '</tr>';
+				$tbody .= '</tr>';
+				if ( $by_year ) {
+					$rows = $tbody . $rows;
+				} else {
+					$content .= $tbody;
+				}
 			}
+			if ( $by_year ) {
+				$content .= $rows;
+			}
+			$content .= $tbody;
 			$content .= '</tbody>';
 			$content .= '</table>';
 			/* Restore original Post Data */
@@ -1002,11 +1024,22 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		 * regata meta
 		 */
 		$meta = '';
+		$terms = get_the_term_list( $post_id, $this->taxonomy_name_location );
+		if ( ! empty( $terms ) ) {
+			$meta = sprintf(
+				'<tr><td>%s</td><td>%s</td></tr>',
+				esc_html__( 'Location', '5o5' ),
+				$terms
+			);
+		}
 		$format = get_option( 'date_format' );
 		foreach ( $this->fields['result'] as $key => $data ) {
 			if ( preg_match( '/^wind/', $key ) ) {
 				continue;
 			}
+			$classes = array(
+				sprintf( 'dinghy-results-%s', $key ),
+			);
 			$name = $this->options->get_option_name( 'result_'.$key );
 			$value = trim( get_post_meta( $post_id, $name, true ) );
 			if ( empty( $value ) ) {
@@ -1016,20 +1049,30 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				case 'date_start':
 				case 'date_end':
 					$value = date_i18n( $format, $value );
+					$classes[] = 'dinghy-results-date';
 				break;
 				case 'location':
 					$url = add_query_arg( 'q', $value, 'https://maps.google.com/' );
 					$value = sprintf( '<a href="%s">%s</a>', $url, $value );
-				break;
+					break;
+				case 'number_of_races':
+				case 'number_of_competitors':
+					$classes[] = 'dinghy-results-number';
+					break;
 			}
 			$meta .= sprintf(
-				'<dt>%s</dt><dd>%s</dd>',
+				'<tr class="%s"><td>%s</td><td>%s</td></tr>',
+				esc_attr( implode( ' ', $classes ) ),
 				$data['label'],
 				$value
 			);
 		}
 		if ( ! empty( $meta ) ) {
-			$content .= sprintf( '<dl>%s</dl>', $meta );
+            $content .= sprintf(
+                '<table class="dinghy-results-meta hidden" data-show="%s">%s</table>',
+                esc_attr__( 'Show meta', '5o5' ),
+                $meta
+            );
 		}
 		/**
 		 * get regata data
@@ -1298,6 +1341,32 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			}
 		}
 		return $races;
+	}
+
+	private function get_dates( $start, $end ) {
+		$start_year = date( 'Y', $start );
+		$end_year = date( 'Y', $end );
+		$start_month = date( 'F', $start );
+		$end_month = date( 'F', $end );
+		$start_day = date( 'j', $start );
+		$end_day = date( 'j', $end );
+		if (
+			$start_day === $end_day
+			&& $start_month === $end_month
+			&& $start_year === $end_year
+		) {
+			return date_i18n( 'j F', $start );
+		}
+		if (
+			$start_year === $end_year
+			&& $start_month === $end_month
+		) {
+			return sprintf( '%d - %s', date_i18n( 'j', $start ), date_i18n( 'j F', $end ) );
+		}
+		if ( $start_year === $end_year ) {
+			return sprintf( '%s - %s', date_i18n( 'j M', $start ), date_i18n( 'j M', $end ) );
+		}
+		return sprintf( '%s - %s', date_i18n( 'j M Y', $start ), date_i18n( 'j M y', $end ) );
 	}
 }
 
