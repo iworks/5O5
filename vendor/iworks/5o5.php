@@ -1,7 +1,7 @@
 <?php
 /*
 
-Copyright 2017 Marcin Pietrzak (marcin@iworks.pl)
+Copyright 2017-2018 Marcin Pietrzak (marcin@iworks.pl)
 
 this program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License, version 2, as
@@ -59,6 +59,22 @@ class iworks_5o5 extends iworks {
 		 * shortcodes
 		 */
 		add_shortcode( 'dinghy_stats', array( $this, 'stats' ) );
+		/**
+		 * Add SVG to allowed files.
+		 *
+		 * @since 1.2.2
+		 */
+		add_filter( 'upload_mimes', array( $this, 'add_mime_types' ) );
+	}
+
+	/**
+	 * Add SVG to allowed files.
+	 *
+	 * @since 1.2.2
+	 */
+	public function add_mime_types( $mimes ) {
+		$mimes['svg'] = 'image/svg+xml';
+		return $mimes;
 	}
 
 	/**
