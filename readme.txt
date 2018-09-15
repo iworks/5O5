@@ -45,7 +45,8 @@ There are 3 ways to install this plugin:
 * Show regatta city instead area.
 * Improved dates.
 * Improved shortcode "dinghy_regattas_list" for all years.
-- Added SVG file type to allowed mime types.
+* Added SVG file type to allowed mime types.
+* Added serie thumbnail.
 
 = 1.2.1 =
 

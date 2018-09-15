@@ -191,11 +191,14 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		}
 	}
 
-	public function shortcode_list_helper_table_start() {
+	public function shortcode_list_helper_table_start( $serie_show_image ) {
 		$content = '<table class="dinghy-results dinghy-results-list">';
 		$content .= '<thead>';
 		$content .= '<tr>';
 		$content .= sprintf( '<th class="dates">%s</th>', esc_attr__( 'Dates', '5o5' ) );
+		if ( $serie_show_image ) {
+			$content .= sprintf( '<th class="Serie">%s</th>', '&nbsp' );
+		}
 		$content .= sprintf( '<th class="title">%s</th>', esc_attr__( 'Title', '5o5' ) );
 		$content .= sprintf( '<th class="area">%s</th>', esc_attr__( 'Area', '5o5' ) );
 		$content .= sprintf( '<th class="races">%s</th>', esc_attr__( 'Races', '5o5' ) );
@@ -264,7 +267,9 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		/**
 		 * serie
 		 */
+		$serie_show_image = true;
 		if ( ! empty( $atts['serie'] ) ) {
+			$serie_show_image = false;
 			if ( preg_match( '/^\d+$/', $atts['serie'] ) ) {
 				$args['tax_query'] = array(
 					array(
@@ -299,10 +304,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 		if ( $the_query->have_posts() ) {
 			remove_filter( 'the_title', array( $this, 'add_year_to_title' ), 10, 2 );
 			if ( ! $by_year ) {
-				$content .= $this->shortcode_list_helper_table_start();
+				$content .= $this->shortcode_list_helper_table_start( $serie_show_image );
 			}
 			$current = 0;
 			$rows = '';
+			$serie_image = array();
 			while ( $the_query->have_posts() ) {
 				$tbody = '';
 				$the_query->the_post();
@@ -316,7 +322,7 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 								$rows = '';
 							}
 							$content .= sprintf( '<h2>%s</h2>', $value );
-							$content .= $this->shortcode_list_helper_table_start();
+							$content .= $this->shortcode_list_helper_table_start( $serie_show_image );
 						}
 						$current = $value;
 					}
@@ -330,6 +336,40 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 				$date = $this->get_dates( $start, $end );
 				$tbody .= sprintf( '<td class="dates">%s</td>', $date );
 				/**
+				 * serie images
+				 */
+				if ( $serie_show_image ) {
+					$t = array();
+					$terms = wp_get_post_terms( get_the_ID(), $this->taxonomy_name_serie );
+					foreach ( $terms as $term ) {
+						if ( ! isset( $serie_image[ $term->term_id ] ) ) {
+							$image_id = get_term_meta( $term->term_id, 'image', true );
+
+							$serie_image[ $term->term_id ] = array( 'id' => $image_id ) ;
+							if ( ! empty( $image_id ) ) {
+								$serie_image[ $term->term_id ]['url'] = get_term_link( $term->term_id );
+								$serie_image[ $term->term_id ]['image'] = wp_get_attachment_image_src( $image_id, array( 48, 48 ) );
+							}
+						}
+						if ( empty( $serie_image[ $term->term_id ]['id'] ) ) {
+							continue;
+						}
+
+						$t[] = sprintf(
+							'<a href="%s"><img src="%s" alt="%s" title="%s" width="24" height="24" /></a>',
+							$serie_image[ $term->term_id ]['url'],
+							$serie_image[ $term->term_id ]['image'][0],
+							esc_attr( $term->name ),
+							esc_attr( $term->name )
+						);
+					}
+					if ( empty( $t ) ) {
+						$tbody .= '<td class="series series-empty">&ndash;</td>';
+					} else {
+						$tbody .= sprintf( '<td class="series"><span>%s</span></td>', implode( ' ', $t ) );
+					}
+				}
+				/**
 				 * title
 				 */
 				$tbody .= sprintf(
@@ -337,15 +377,15 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 					get_permalink(),
 					get_the_title()
 				);
+				$terms = get_the_term_list( get_the_ID(), $this->taxonomy_name_location );
+				$tbody .= sprintf( '<td class="area">%s</td>', $terms );
 				$check = $this->has_races( get_the_ID() );
 				if ( $check ) {
-					$terms = get_the_term_list( get_the_ID(), $this->taxonomy_name_location );
-					$tbody .= sprintf( '<td class="area">%s</td>', $terms );
 					$tbody .= $this->get_td( 'number_of_races', get_the_ID() );
 					$tbody .= $this->get_td( 'number_of_competitors', get_the_ID() );
 				} else {
 					$tbody .= sprintf(
-						'<td class="dinghy-no-results" colspan="3"><span>%s</span></td>',
+						'<td class="dinghy-no-results" colspan="2"><span>%s</span></td>',
 						esc_html__( 'No race results.', '5o5' )
 					);
 				}
@@ -586,8 +626,10 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 						esc_url( $regatta->boat['url'] ),
 						esc_html( $regatta->boat['post_title'] )
 					);
-				} else {
+				} else if ( empty( $regatta->country ) && empty( $regatta->boat_id ) ) {
 					$content .= '&ndash;';
+				} else {
+					$content .= sprintf( '%s %s', $regatta->country, $regatta->boat_id );
 				}
 				$content .= '</td>';
 				/**
@@ -1068,11 +1110,11 @@ class iworks_5o5_posttypes_result extends iworks_5o5_posttypes {
 			);
 		}
 		if ( ! empty( $meta ) ) {
-            $content .= sprintf(
-                '<table class="dinghy-results-meta hidden" data-show="%s">%s</table>',
-                esc_attr__( 'Show meta', '5o5' ),
-                $meta
-            );
+			$content .= sprintf(
+				'<table class="dinghy-results-meta hidden" data-show="%s">%s</table>',
+				esc_attr__( 'Show meta', '5o5' ),
+				$meta
+			);
 		}
 		/**
 		 * get regata data
